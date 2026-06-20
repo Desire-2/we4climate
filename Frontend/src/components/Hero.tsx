@@ -33,11 +33,6 @@ export default function Hero({ onScrollToSection, treesPledgedTotal }: HeroProps
 
       {/* Hero Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 text-center">
-        {/* Youth-led Badge */}
-        <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-900/60 border border-emerald-400/30 text-emerald-300 text-xs font-semibold uppercase tracking-wider mb-8 shadow-sm">
-          <Globe className="h-4 w-4 animate-spin-slow" />
-          <span>Established in Kigali, Rwanda</span>
-        </div>
 
         {/* Display Typography Title */}
         <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-[1.1] max-w-5xl mx-auto">

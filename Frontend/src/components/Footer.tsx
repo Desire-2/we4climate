@@ -1,4 +1,4 @@
-import { TreePine, Facebook, Twitter, Instagram, Linkedin, ArrowUp } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Linkedin, ArrowUp } from 'lucide-react';
 
 export default function Footer() {
   const scrollToTop = () => {
@@ -21,14 +21,33 @@ export default function Footer() {
           <div className="md:col-span-2 space-y-4">
             <button 
               onClick={scrollToTop} 
-              className="flex items-center space-x-2 focus:outline-none text-left"
+              className="flex items-center space-x-3 group focus:outline-none text-left"
             >
-              <div className="p-2 bg-emerald-500 rounded-xl text-emerald-950">
-                <TreePine className="h-5 w-5" />
+              <div className="relative flex-shrink-0">
+                {/* Glow effect */}
+                <div className="absolute -inset-1.5 bg-gradient-to-br from-emerald-400/30 via-emerald-500/10 to-transparent rounded-xl blur-md group-hover:blur-lg transition-all duration-500 group-hover:scale-110" />
+                {/* Gradient border ring */}
+                <div className="absolute -inset-[2px] rounded-[10px] bg-gradient-to-br from-emerald-400/50 via-emerald-500/20 to-emerald-800/30 group-hover:from-emerald-300/70 group-hover:via-emerald-400/40 group-hover:to-emerald-600/50 transition-all duration-500" />
+                {/* Logo container */}
+                <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-[10px] overflow-hidden ring-2 ring-inset ring-white/10 group-hover:ring-emerald-300/30 transition-all duration-500 group-hover:scale-105 group-active:scale-95 shadow-lg">
+                  <img 
+                    src="/logo.jpeg" 
+                    alt="We4Climate Logo" 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                  />
+                </div>
+                {/* Corner accent dots */}
+                <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:animate-ping" />
+                <span className="absolute -bottom-0.5 -left-0.5 w-1.5 h-1.5 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:animate-ping delay-150" />
               </div>
-              <span className="font-display font-bold text-lg tracking-tight text-white">
-                We<span className="text-emerald-400">4</span>Climate
-              </span>
+              <div className="flex flex-col items-start">
+                <span className="font-display font-bold text-lg sm:text-xl tracking-tight text-white group-hover:text-emerald-50 transition-colors duration-300">
+                  We<span className="text-emerald-400 group-hover:text-emerald-300 transition-colors duration-300">4</span>Climate
+                </span>
+                <span className="text-[10px] text-emerald-400/60 uppercase font-mono tracking-widest">
+                  Community-driven
+                </span>
+              </div>
             </button>
             <p className="text-emerald-100/70 text-xs sm:text-sm leading-relaxed max-w-sm">
               We4Climate is an influential, community-driven, non-profit organization located in Kigali, Rwanda, promoting collaboration and community partnership networks for sustainable development, climate action, and green jobs.

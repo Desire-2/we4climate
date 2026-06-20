@@ -169,24 +169,32 @@ export default function Navbar() {
           isScrolled ? 'py-3 sm:py-4' : 'py-4 sm:py-6'
         }`}>
           <div className="flex items-center justify-between">
-            {/* Brand Logo - Scaled elegantly on mobile to prevent wrapping */}
+            {/* Brand Logo - creatively styled with glow ring and hover animations */}
             <button 
               id="logo-button"
               onClick={() => handleNavClick('/')} 
               className="flex items-center space-x-2.5 sm:space-x-3 group focus:outline-none"
             >
-              <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl sm:rounded-2xl overflow-hidden group-hover:scale-105 transition-transform duration-300 shadow-md flex-shrink-0">
-                <img 
-                  src="/logo.jpeg" 
-                  alt="We4Climate Logo" 
-                  className="w-full h-full object-cover"
-                />
+              <div className="relative flex-shrink-0">
+                {/* Glow ring behind the logo */}
+                <div className="absolute -inset-1 bg-gradient-to-br from-emerald-400/40 via-emerald-500/20 to-transparent rounded-2xl blur-md group-hover:blur-xl transition-all duration-500 group-hover:scale-110" />
+                {/* Decorative border ring */}
+                <div className="absolute -inset-[2px] rounded-xl sm:rounded-2xl bg-gradient-to-br from-emerald-400/60 via-emerald-500/30 to-emerald-800/40 group-hover:from-emerald-300/80 group-hover:via-emerald-400/50 group-hover:to-emerald-600/60 transition-all duration-500" />
+                {/* Inner container with the image */}
+                <div className="relative w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl sm:rounded-2xl overflow-hidden ring-2 ring-inset ring-white/10 group-hover:ring-emerald-300/40 transition-all duration-500 group-hover:scale-105 group-active:scale-95">
+                  <img 
+                    src="/logo.jpeg" 
+                    alt="We4Climate Logo" 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                  />
+                </div>
+                {/* Corner accent dots */}
+                <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:animate-ping" />
+                <span className="absolute -bottom-0.5 -left-0.5 w-1.5 h-1.5 bg-emerald-400 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:animate-ping delay-150" />
               </div>
               <div className="flex flex-col items-start text-left">
-                <span className="font-display font-black text-xl sm:text-2xl md:text-3xl tracking-tight text-white leading-none">
-                  We<span className="text-emerald-400">4</span>Climate
-                </span>
-                <span className="text-[10px] sm:text-xs text-emerald-300/90 uppercase font-mono tracking-widest mt-0.5 sm:mt-1 font-bold">
+                <span className="font-display font-black text-xl sm:text-2xl md:text-3xl tracking-tight text-white leading-none group-hover:text-emerald-50 transition-colors duration-300">
+                  We<span className="text-emerald-400 group-hover:text-emerald-300 transition-colors duration-300">4</span>Climate
                 </span>
               </div>
             </button>
@@ -297,12 +305,16 @@ export default function Navbar() {
       >
         {/* Sticky Header inside the drawer */}          <div className="p-4 border-b border-white/10 flex items-center justify-between bg-[#011f18]">
           <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0">
-              <img 
-                src="/logo.jpeg" 
-                alt="We4Climate Logo" 
-                className="w-full h-full object-cover"
-              />
+            <div className="relative flex-shrink-0">
+              <div className="absolute -inset-1 bg-gradient-to-br from-emerald-400/30 to-transparent rounded-lg blur-sm" />
+              <div className="absolute -inset-[1px] rounded-lg bg-gradient-to-br from-emerald-400/40 to-emerald-700/30" />
+              <div className="relative w-8 h-8 rounded-lg overflow-hidden ring-1 ring-inset ring-white/10">
+                <img 
+                  src="/logo.jpeg" 
+                  alt="We4Climate Logo" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
             </div>
             <span className="font-display font-black text-lg text-white">We4Climate Menu</span>
           </div>
