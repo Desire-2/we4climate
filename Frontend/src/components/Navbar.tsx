@@ -3,7 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   Menu, X, Mail, Facebook, Twitter, Instagram, 
   Linkedin, Youtube, ChevronDown, ChevronRight, Home, Info, 
-  Award, BarChart3, Heart, Briefcase, BookOpen, HelpCircle, Phone 
+  Award, BarChart3, Heart, Briefcase, BookOpen, HelpCircle, Phone,
+  Zap
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -371,7 +372,7 @@ export default function Navbar() {
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <span className="text-lg">⚡</span>
+                <Zap className="h-5 w-5 text-emerald-400" />
                 <span>Take Action Hub</span>
               </div>
               <ChevronDown className={`h-5 w-5 transform transition-transform duration-300 ${isMobileTakeActionOpen ? 'rotate-180' : ''}`} />
