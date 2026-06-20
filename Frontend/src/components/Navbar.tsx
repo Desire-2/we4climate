@@ -149,18 +149,16 @@ export default function Navbar() {
                 <Youtube className="h-4 w-4" />
               </a>
               
-              {/* Flickr Custom dots indicators on the far right */}
-              <a 
-                href="https://flickr.com" 
-                target="_blank" 
-                rel="noreferrer" 
-                className="flex items-center gap-1 hover:opacity-90 transition-all transform hover:scale-110 py-0.5"
-                title="Flickr Stream"
-                aria-label="Flickr link"
+              {/* Flickr-styled Admin Portal dots — navigates to admin login */}
+              <button
+                onClick={(e) => { e.preventDefault(); handleNavClick('/admin/login'); }}
+                className="flex items-center gap-1 hover:opacity-90 transition-all transform hover:scale-110 py-0.5 group/flickr cursor-pointer"
+                title="Admin Portal"
+                aria-label="Open admin portal"
               >
-                <span className="w-2.5 h-2.5 bg-[#0063db] rounded-full inline-block" />
-                <span className="w-2.5 h-2.5 bg-[#ff0084] rounded-full inline-block" />
-              </a>
+                <span className="w-2.5 h-2.5 bg-[#0063db] rounded-full inline-block animate-pulse group-hover/flickr:animate-none" style={{ animationDelay: '0ms', animationDuration: '2s' }} />
+                <span className="w-2.5 h-2.5 bg-[#ff0084] rounded-full inline-block animate-pulse group-hover/flickr:animate-none" style={{ animationDelay: '300ms', animationDuration: '2.4s' }} />
+              </button>
             </div>
           </div>
         </div>
@@ -436,10 +434,15 @@ export default function Navbar() {
               <a href="https://www.linkedin.com/company/we4climate/" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors border border-transparent p-1 rounded">
                 <Linkedin className="h-5 w-5" />
               </a>
-              <a href="https://flickr.com" target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:opacity-100 transition-opacity p-1 border border-transparent rounded">
-                <span className="w-2.5 h-2.5 bg-[#0063db] rounded-full inline-block" />
-                <span className="w-2.5 h-2.5 bg-[#ff0084] rounded-full inline-block" />
-              </a>
+              <button
+                onClick={() => { handleNavClick('/admin/login'); }}
+                className="flex items-center gap-1 hover:opacity-100 transition-opacity p-1 border border-transparent rounded group/flickr cursor-pointer"
+                title="Admin Portal"
+                aria-label="Open admin portal"
+              >
+                <span className="w-2.5 h-2.5 bg-[#0063db] rounded-full inline-block animate-pulse group-hover/flickr:animate-none" style={{ animationDelay: '0ms', animationDuration: '2s' }} />
+                <span className="w-2.5 h-2.5 bg-[#ff0084] rounded-full inline-block animate-pulse group-hover/flickr:animate-none" style={{ animationDelay: '300ms', animationDuration: '2.4s' }} />
+              </button>
             </div>
           </div>
         </div>

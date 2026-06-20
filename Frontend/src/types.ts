@@ -15,6 +15,8 @@ export interface Opportunity {
   deadline: string;
   description: string;
   requirements: string[];
+  is_external?: boolean;
+  external_url?: string | null;
 }
 
 export interface Webinar {

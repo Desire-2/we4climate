@@ -1,6 +1,8 @@
 import { useState, useEffect, FormEvent } from 'react';
-import { Award, Trees, CheckCircle2, AlertCircle, XCircle, Share2, HelpCircle, ChevronRight, UserCheck, MapPin, Sprout, Target, Sparkles, Printer, RefreshCw, Users, Globe, Calendar, BadgeCheck, BookOpen, Leaf, Star } from 'lucide-react';
+import { Award, Trees, CheckCircle2, AlertCircle, XCircle, Share2, HelpCircle, ChevronRight, UserCheck, MapPin, Sprout, Target, Sparkles, Printer, RefreshCw, Users, Globe, Calendar, BadgeCheck, BookOpen, Leaf, Star, Mail, Loader2 } from 'lucide-react';
 import { Pledge } from '../types';
+import { fetchPledges, createPledge, issueCertificate, fetchActiveWeeklyChallenge, recordChallengeCompletion } from '../api/client';
+import type { ApiWeeklyChallengeQuestion } from '../api/client';
 
 interface InteractiveDeskProps {
   onPledgeAdded: (treesCount: number) => void;
@@ -15,17 +17,14 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
   const [pledgeAction, setPledgeAction] = useState('Organizing an environmental club event');
   const [pledgeSuccess, setPledgeSuccess] = useState(false);
 
-  // Quiz State
-  const [quizStarted, setQuizStarted] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [isAnswered, setIsAnswered] = useState(false);
-  const [quizScore, setQuizScore] = useState(0);
-  const [quizFinished, setQuizFinished] = useState(false);
-  const [candidateName, setCandidateName] = useState('');
-  const [quizError, setQuizError] = useState('');
+  // Weekly Challenge State (dynamic questions from backend)
+  const [challengeTitle, setChallengeTitle] = useState<string | null>(null);
+  const [challengeWeek, setChallengeWeek] = useState<string>('');
+  const [questions, setQuestions] = useState<ApiWeeklyChallengeQuestion[] | null>(null);
+  const [challengeLoading, setChallengeLoading] = useState(true);
 
-  const questions = [
+  // Fallback hardcoded questions when no active challenge is set
+  const fallbackQuestions: ApiWeeklyChallengeQuestion[] = [
     {
       text: "Which prominent wetland forest in Kigali is a focus of Rwandan ecosystem restoration?",
       options: [
@@ -61,6 +60,41 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
     }
   ];
 
+  // Quiz State
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [isAnswered, setIsAnswered] = useState(false);
+  const [quizScore, setQuizScore] = useState(0);
+  const [quizFinished, setQuizFinished] = useState(false);
+  const [candidateName, setCandidateName] = useState('');
+  const [candidateEmail, setCandidateEmail] = useState('');
+  const [certificateCode, setCertificateCode] = useState<string | null>(null);
+  const [issuingCert, setIssuingCert] = useState(false);
+  const [quizError, setQuizError] = useState('');
+
+  // Compute the active questions — use API challenge or fallback
+  const activeQuestions = questions ?? fallbackQuestions;
+  const questionCount = activeQuestions.length;
+
+  // Fetch the weekly challenge from the API on mount
+  useEffect(() => {
+    fetchActiveWeeklyChallenge().then((challenge) => {
+      if (challenge && challenge.questions.length > 0) {
+        setChallengeTitle(challenge.title);
+        setChallengeWeek(
+          `${new Date(challenge.week_start).toLocaleDateString()} – ${new Date(challenge.week_end).toLocaleDateString()}`
+        );
+        setQuestions(challenge.questions);
+      } else {
+        // Use fallback
+        setChallengeTitle(null);
+        setQuestions(null);
+      }
+      setChallengeLoading(false);
+    });
+  }, []);
+
   const rwandanDistricts = [
     'Kicukiro (Kigali)', 'Nyarugenge (Kigali)', 'Gasabo (Kigali)',
     'Musanze', 'Rubavu', 'Huye', 'Kayonza', 'Rwamagana', 'Gicumbi', 'Bugesera', 'Karongi'
@@ -74,67 +108,98 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
     'Researching local biodiversity issues'
   ];
 
-  // Load existing pledges from LocalStorage
+  // Load existing pledges – try API first, fall back to LocalStorage
   useEffect(() => {
-    const cached = localStorage.getItem('we4climate_pledges');
-    if (cached) {
-      try {
-        setPledgedList(JSON.parse(cached));
-      } catch (e) {
-        // Fallback standard
+    const load = async () => {
+      const apiData = await fetchPledges();
+      if (apiData.length > 0) {
+        const mapped: Pledge[] = apiData.map((p) => ({
+          id: String(p.id),
+          name: p.name,
+          district: p.district,
+          treesCount: p.trees_count,
+          action: p.tree_type,
+          timestamp: new Date(p.timestamp).toLocaleDateString(),
+        }));
+        setPledgedList(mapped);
+        localStorage.setItem('we4climate_pledges', JSON.stringify(mapped));
+        return;
       }
-    } else {
-      // Default inspiring list
-      const defaults: Pledge[] = [
-        {
-          id: '1',
-          name: 'Iradukunda Alice',
-          district: 'Kicukiro (Kigali)',
-          treesCount: 25,
-          action: 'Planting indigenous tree species (e.g., Markhamia)',
-          timestamp: new Date().toLocaleDateString()
-        },
-        {
-          id: '2',
-          name: 'Niyonsaba Moses',
-          district: 'Musanze',
-          treesCount: 50,
-          action: 'Sensitizing local children and nursery cohorts',
-          timestamp: new Date().toLocaleDateString()
-        },
-        {
-          id: '3',
-          name: 'Keza Diane',
-          district: 'Gasabo (Kigali)',
-          treesCount: 15,
-          action: 'Organizing an environmental club event',
-          timestamp: new Date().toLocaleDateString()
+      // Fallback to localStorage
+      const cached = localStorage.getItem('we4climate_pledges');
+      if (cached) {
+        try {
+          setPledgedList(JSON.parse(cached));
+        } catch {
+          /* ignore */
         }
-      ];
-      setPledgedList(defaults);
-      localStorage.setItem('we4climate_pledges', JSON.stringify(defaults));
-    }
+      } else {
+        // Default inspiring list
+        const defaults: Pledge[] = [
+          {
+            id: '1', name: 'Iradukunda Alice', district: 'Kicukiro (Kigali)',
+            treesCount: 25, action: 'Planting indigenous tree species (e.g., Markhamia)',
+            timestamp: new Date().toLocaleDateString(),
+          },
+          {
+            id: '2', name: 'Niyonsaba Moses', district: 'Musanze',
+            treesCount: 50, action: 'Sensitizing local children and nursery cohorts',
+            timestamp: new Date().toLocaleDateString(),
+          },
+          {
+            id: '3', name: 'Keza Diane', district: 'Gasabo (Kigali)',
+            treesCount: 15, action: 'Organizing an environmental club event',
+            timestamp: new Date().toLocaleDateString(),
+          },
+        ];
+        setPledgedList(defaults);
+        localStorage.setItem('we4climate_pledges', JSON.stringify(defaults));
+      }
+    };
+    load();
   }, []);
 
   // Handle Pledge Submission
-  const handlePledgeSubmit = (e: FormEvent) => {
+  const handlePledgeSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!pledgeName.trim()) return;
 
-    const newPledge: Pledge = {
-      id: Date.now().toString(),
+    // Try API first
+    const apiResult = await createPledge({
       name: pledgeName.trim(),
       district: pledgeDistrict,
-      treesCount: pledgeCount,
-      action: pledgeAction,
-      timestamp: new Date().toLocaleDateString()
-    };
+      trees_count: pledgeCount,
+      tree_type: pledgeAction,
+    });
 
-    const updated = [newPledge, ...pledgedList];
-    setPledgedList(updated);
-    localStorage.setItem('we4climate_pledges', JSON.stringify(updated));
+    if (apiResult) {
+      const newPledge: Pledge = {
+        id: String(apiResult.id),
+        name: apiResult.name,
+        district: apiResult.district,
+        treesCount: apiResult.trees_count,
+        action: apiResult.tree_type,
+        timestamp: new Date(apiResult.timestamp).toLocaleDateString(),
+      };
+      const updated = [newPledge, ...pledgedList];
+      setPledgedList(updated);
+      localStorage.setItem('we4climate_pledges', JSON.stringify(updated));
+    } else {
+      // Fallback: save locally
+      const newPledge: Pledge = {
+        id: Date.now().toString(),
+        name: pledgeName.trim(),
+        district: pledgeDistrict,
+        treesCount: pledgeCount,
+        action: pledgeAction,
+        timestamp: new Date().toLocaleDateString(),
+      };
+      const updated = [newPledge, ...pledgedList];
+      setPledgedList(updated);
+      localStorage.setItem('we4climate_pledges', JSON.stringify(updated));
+    }
+
     onPledgeAdded(pledgeCount);
-
     setPledgeName('');
     setPledgeSuccess(true);
     setTimeout(() => setPledgeSuccess(false), 4000);
@@ -145,7 +210,7 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
     if (isAnswered) return;
     setSelectedAnswer(index);
     setIsAnswered(true);
-    if (index === questions[currentQuestion].correct) {
+    if (index === activeQuestions[currentQuestion].correct) {
       setQuizScore(prev => prev + 1);
     }
   };
@@ -153,7 +218,7 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
   const handleNextQuestion = () => {
     setSelectedAnswer(null);
     setIsAnswered(false);
-    if (currentQuestion + 1 < questions.length) {
+    if (currentQuestion + 1 < activeQuestions.length) {
       setCurrentQuestion(prev => prev + 1);
     } else {
       setQuizFinished(true);
@@ -177,10 +242,37 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
   const handleResetQuiz = () => {
     setQuizStarted(false);
     setCandidateName('');
+    setCandidateEmail('');
+    setCertificateCode(null);
+    setCurrentQuestion(0);
+    setQuizScore(0);
+    setQuizFinished(false);
+    setSelectedAnswer(null);
+    setIsAnswered(false);
   };
 
   const printCertificate = () => {
     window.print();
+  };
+
+  const handleIssueAndPrint = async () => {
+    if (issuingCert) return;
+    setIssuingCert(true);
+    const email = candidateEmail.trim() || candidateName.toLowerCase().replace(/\s+/g, '.') + '@we4climate.org';
+    const cert = await issueCertificate({
+      recipient_name: candidateName.trim(),
+      recipient_email: email,
+      score: 3,
+    });
+    if (cert) {
+      setCertificateCode(cert.certificate_code);
+      // Record participation on the active weekly challenge
+      if (challengeTitle) {
+        recordChallengeCompletion();
+      }
+    }
+    setIssuingCert(false);
+    printCertificate();
   };
 
   return (
@@ -370,11 +462,19 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                     <h3 className="font-display font-bold text-xl text-white">We4Climate Advocacy Passport</h3>
                     <p className="text-xs text-emerald-200/60 mt-0.5">Test expertise, unlock credentials</p>
                   </div>
-                </div>
-
-                <p className="text-sm text-emerald-100/80 leading-relaxed max-w-sm">
-                  Earn your customized digital **Community Climate Advocate Certificate**. Complete a short three-question climate challenges evaluation base 3/3 score.
-                </p>
+                </div>                  <p className="text-sm text-emerald-100/80 leading-relaxed max-w-sm">
+                    {challengeLoading ? 'Loading this week\'s challenge…' : challengeTitle ? (
+                      <>Earn your certificate by conquering <strong>this week\'s challenge:</strong> &ldquo;{challengeTitle}&rdquo;</>
+                    ) : (
+                      <>Earn your customized digital <strong>Community Climate Advocate Certificate</strong>. Complete the climate challenge with a perfect score.</>
+                    )}
+                  </p>
+                  {challengeWeek && (
+                    <div className="flex items-center gap-1.5 text-[10px] font-mono text-emerald-300/60 bg-emerald-950/50 rounded-full px-3 py-1 w-fit mx-auto">
+                      <Calendar className="h-3 w-3" />
+                      {challengeWeek}
+                    </div>
+                  )}
 
                 <div className="space-y-3">
                   <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80 flex items-center gap-1.5">
@@ -386,6 +486,17 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                     value={candidateName}
                     onChange={(e) => setCandidateName(e.target.value)}
                     placeholder="Enter full name for signing"
+                    className="w-full bg-emerald-900/60 border border-emerald-800 focus:border-emerald-400 rounded-xl px-4 py-3 text-sm text-white placeholder-emerald-100/35 focus:outline-none transition-all"
+                  />
+                  <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80 flex items-center gap-1.5">
+                    <Mail className="h-3.5 w-3.5 text-emerald-400" />
+                    Email (for certificate record)
+                  </label>
+                  <input
+                    type="email"
+                    value={candidateEmail}
+                    onChange={(e) => setCandidateEmail(e.target.value)}
+                    placeholder="alice@example.org (optional)"
                     className="w-full bg-emerald-900/60 border border-emerald-800 focus:border-emerald-400 rounded-xl px-4 py-3 text-sm text-white placeholder-emerald-100/35 focus:outline-none transition-all"
                   />
                   {quizError && (
@@ -411,11 +522,11 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-mono text-emerald-400 font-semibold uppercase flex items-center gap-1.5">
                     <HelpCircle className="h-3.5 w-3.5" />
-                    Question {currentQuestion + 1} of {questions.length}
+                    Question {currentQuestion + 1} of {activeQuestions.length}
                   </span>
                   <span className="text-xs bg-emerald-900 border border-emerald-800 text-emerald-300 px-2 py-0.5 rounded-full font-mono flex items-center gap-1">
                     <Award className="h-3 w-3" />
-                    {quizScore}/{questions.length}
+                    {quizScore}/{activeQuestions.length}
                   </span>
                 </div>
 
@@ -423,19 +534,17 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                 <div className="w-full bg-emerald-900 h-1.5 rounded-full overflow-hidden">
                   <div 
                     className="bg-emerald-400 h-full transition-all duration-300"
-                    style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
+                    style={{ width: `${((currentQuestion + 1) / activeQuestions.length) * 100}%` }}
                   />
-                </div>
-
-                <h4 className="font-display font-bold text-base leading-snug text-white">
-                  {questions[currentQuestion].text}
+                </div>                  <h4 className="font-display font-bold text-base leading-snug text-white">
+                  {activeQuestions[currentQuestion].text}
                 </h4>
 
                 <div className="space-y-2.5">
-                  {questions[currentQuestion].options.map((opt, oIdx) => {
+                  {activeQuestions[currentQuestion].options.map((opt, oIdx) => {
                     let btnClass = "bg-emerald-900/40 border border-emerald-850 hover:bg-emerald-900/70 hover:border-emerald-700 text-gray-200";
                     if (isAnswered) {
-                      if (oIdx === questions[currentQuestion].correct) {
+                      if (oIdx === activeQuestions[currentQuestion].correct) {
                         btnClass = "bg-emerald-500/20 border-emerald-400 text-emerald-300 font-medium";
                       } else if (selectedAnswer === oIdx) {
                         btnClass = "bg-rose-500/20 border-rose-500 text-rose-300";
@@ -459,14 +568,14 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                 {isAnswered && (
                   <div className="p-4 bg-emerald-900/60 border border-emerald-800 rounded-2xl text-xs space-y-2 animate-fade-in">
                     <span className="font-bold flex items-center gap-1.5">
-                      {selectedAnswer === questions[currentQuestion].correct ? (
+                      {selectedAnswer === activeQuestions[currentQuestion].correct ? (
                         <><CheckCircle2 className="h-4 w-4 text-emerald-400" /><span className="text-emerald-300">Clean Insight!</span></>
                       ) : (
                         <><XCircle className="h-4 w-4 text-rose-400" /><span className="text-rose-300">Learning Moment:</span></>
                       )}
                     </span>
                     <p className="text-emerald-100/80 leading-relaxed">
-                      {questions[currentQuestion].explanation}
+                      {activeQuestions[currentQuestion].explanation}
                     </p>
                     <button
                       onClick={handleNextQuestion}
@@ -485,7 +594,7 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
               <div id="quiz-finish-panel" className="space-y-6">
                 
                 {/* Score Success 3/3 */}
-                {quizScore === questions.length ? (
+                {quizScore === activeQuestions.length ? (
                   <div id="certificate-display-block" className="space-y-6">
                     <div className="text-center">
                       <div className="inline-flex p-3 bg-amber-500/15 rounded-full border border-amber-400/20 text-amber-400 mb-2 animate-pulse relative">
@@ -535,6 +644,13 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                         <span className="text-[8px] font-mono uppercase text-gray-500 block">Has completed the Core Climate Literacy and Ecosystem Restoration assessment</span>
                       </div>
 
+                      {certificateCode && (
+                        <div className="bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-1.5 mx-auto max-w-[200px]">
+                          <span className="text-[6px] font-mono uppercase tracking-widest text-emerald-600 block">Certification Code</span>
+                          <span className="font-mono font-bold text-emerald-800 text-xs tracking-wider select-all">{certificateCode}</span>
+                        </div>
+                      )}
+
                       {/* Core values */}
                       <p className="text-[7px] max-w-[280px] mx-auto text-gray-400 italic leading-normal">
                         "Empowering Rwandan communities to achieve sustainable development, elevate climate dialog platforms, and promote collaborative environmental equity."
@@ -558,11 +674,15 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
 
                     <div className="flex flex-col sm:flex-row gap-2.5">
                       <button
-                        onClick={printCertificate}
-                        className="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 rounded-xl font-bold text-xs uppercase tracking-wider transition-all focus:outline-none flex items-center justify-center gap-2"
+                        onClick={handleIssueAndPrint}
+                        disabled={issuingCert}
+                        className="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-60 text-emerald-950 rounded-xl font-bold text-xs uppercase tracking-wider transition-all focus:outline-none flex items-center justify-center gap-2"
                       >
-                        <Printer className="h-4 w-4" />
-                        Print/Save PDF
+                        {issuingCert ? (
+                          <><Loader2 className="h-4 w-4 animate-spin" /> Saving…</>
+                        ) : (
+                          <><Printer className="h-4 w-4" /> Print/Save PDF</>
+                        )}
                       </button>
                       <button
                         onClick={handleResetQuiz}
@@ -579,9 +699,9 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                     <div className="inline-flex p-3 bg-rose-500/10 rounded-full border border-rose-500/20 text-rose-400 mb-2">
                       <AlertCircle className="h-8 w-8 animate-bounce" />
                     </div>
-                    <h3 className="font-display font-extrabold text-xl text-rose-300">Score: {quizScore}/3</h3>
+                    <h3 className="font-display font-extrabold text-xl text-rose-300">Score: {quizScore}/{activeQuestions.length}</h3>
                     <p className="text-sm text-emerald-100/70 max-w-sm mx-auto leading-normal">
-                      Excellent attempt, {candidateName}! To qualify for the official credential, We4Climate requires a perfect 3/3 score.
+                      Excellent attempt, {candidateName}! To qualify for the official credential, We4Climate requires a perfect {activeQuestions.length}/{activeQuestions.length} score.
                     </p>                      <button
                         onClick={handleStartQuiz}
                         className="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-emerald-950 rounded-xl font-bold text-xs uppercase tracking-wider transition-all inline-block focus:outline-none flex items-center gap-2"
