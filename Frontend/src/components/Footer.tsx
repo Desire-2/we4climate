@@ -1,4 +1,4 @@
-import { Facebook, Twitter, Instagram, Linkedin, ArrowUp } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Linkedin, ArrowUp, Mail } from 'lucide-react';
 
 export default function Footer() {
   const scrollToTop = () => {
@@ -118,7 +118,7 @@ export default function Footer() {
               </a>
             </div>
             <div className="text-xs text-emerald-100/60 leading-normal pt-1 flex items-center gap-1.5">
-              <span>📧 info@we4climate.org</span>
+              <span className="flex items-center gap-1.5"><Mail className="h-3.5 w-3.5" /> info@we4climate.org</span>
             </div>
           </div>
 
