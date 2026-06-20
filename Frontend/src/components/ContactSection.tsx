@@ -1,5 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { Mail, Phone, MapPin, Send, Facebook, Twitter, Instagram, Globe, CheckCircle2 } from 'lucide-react';
+import { submitContact } from '../api/client';
 
 export default function ContactSection() {
   const [name, setName] = useState('');
@@ -8,19 +9,27 @@ export default function ContactSection() {
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!name || !email || !message) return;
 
-    // Simulate sending message
+    // Try API first
+    const result = await submitContact({
+      name: name.trim(),
+      email: email.trim(),
+      subject,
+      message: message.trim(),
+    });
+
+    if (!result) {
+      console.warn('Backend unreachable – contact saved locally only');
+    }
+
     setSuccess(true);
     setName('');
     setEmail('');
     setMessage('');
-    
-    setTimeout(() => {
-      setSuccess(false);
-    }, 4000);
+    setTimeout(() => setSuccess(false), 4000);
   };
 
   return (

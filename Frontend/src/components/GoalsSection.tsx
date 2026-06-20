@@ -1,96 +1,34 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Users, Lightbulb, GraduationCap, Users2, ShieldAlert, 
   Globe2, Landmark, ShieldCheck, HeartHandshake, Eye,
   ArrowRight, X, Sparkles, CheckCircle2, Target
 } from 'lucide-react';
-import { Goal } from '../types';
+import { fetchImpactGoals, type ApiImpactGoal } from '../api/client';
+
+// Fallback goals when API is unavailable (10 original pillars)
+const FALLBACK_GOALS: ApiImpactGoal[] = [
+  { id: 1, title: "Positive Community Perceptions", description: "Cultivate positive environmental priorities and habits in Rwanda's communities without causing generational friction.", icon: "Eye", milestone: "92% Positive feedback in regional neighborhood campaigns", action_details: "Participate in local eco-dialogues, share inspirational updates with your peers, and organize environment days in your community.", sort_order: 1, is_active: true, created_at: '' },
+  { id: 2, title: "Community & Expert Dialogues", description: "Establish strong, respectful channels for environmental dialogue between local communities and senior climate professionals.", icon: "Users", milestone: "24 Climate Webinars & 12 Roundtables completed", action_details: "Register for our upcoming Dialogue series where we challenge policy-makers together.", sort_order: 2, is_active: true, created_at: '' },
+  { id: 3, title: "Nature-Based Solutions (NBS)", description: "Train Rwandan community members to design and deploy nature-based systems for land restoration and climate resilience.", icon: "Lightbulb", milestone: "4 Local soil preservation pilots running in Kicukiro", action_details: "Join local training cohorts on terracing, agroforestry design, and watershed management.", sort_order: 3, is_active: true, created_at: '' },
+  { id: 4, title: "Ecology Education", description: "Conduct dynamic environment, wildlife, and resource conservation classes across all rural and urban sectors.", icon: "GraduationCap", milestone: "45 Countryside learning modules distributed", action_details: "Volunteer as an environment guide to teach primary school children the fundamentals of ecosystem preservation.", sort_order: 4, is_active: true, created_at: '' },
+  { id: 5, title: "Empower Local Communities", description: "Guarantee active community involvement and benefits inside every conservation project we sponsor.", icon: "Users2", milestone: "1,200+ Local residents directly employed", action_details: "Contribute to town hall agendas, hire local community caretakers, and buy local biological seeds.", sort_order: 5, is_active: true, created_at: '' },
+  { id: 6, title: "Early-Age Sensitization", description: "Introduce nature protection values to children from infancy to nurture a generation of natural guardians.", icon: "ShieldAlert", milestone: "8 Primary school nature nurseries started", action_details: "Download we4climate children stories and coordinate environmental club playgroups in your estate.", sort_order: 6, is_active: true, created_at: '' },
+  { id: 7, title: "National & Global Advocacy", description: "Represent the voices and insights of Rwandan communities in high-profile international summits like UNEP and COP.", icon: "Globe2", milestone: "Delegate entries submitted to COY and regional bodies", action_details: "Contribute to our annual policy recommendations report compiled by community leaders.", sort_order: 7, is_active: true, created_at: '' },
+  { id: 8, title: "District Environmental Clubs", description: "Integrate, support, and connect active high-school and community club units coordinates at district levels.", icon: "Landmark", milestone: "15 Registered district clubs actively operating", action_details: "Register your local village group or school class as an official We4Climate district branch.", sort_order: 8, is_active: true, created_at: '' },
+  { id: 9, title: "International Accord Support", description: "Promote education and local compliance with major biodiversity and safety targets (e.g., Paris Agreement, CBD).", icon: "ShieldCheck", milestone: "10 compliance toolkits compiled for local municipal leaders", action_details: "Review our compiled legal handbooks on local carbon offsets, municipal water protocols, and wildlife treaties.", sort_order: 9, is_active: true, created_at: '' },
+  { id: 10, title: "Capacity & Skills Training", description: "Reinforce our membership resources with masterclasses, advice, research publications, and legal counsel.", icon: "HeartHandshake", milestone: "240 Trained leaders granted certificates of capability", action_details: "Enroll in the We4Climate Core Training program to secure verified conservation credentials.", sort_order: 10, is_active: true, created_at: '' },
+];
 
 export default function GoalsSection() {
-  const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
+  const [selectedGoal, setSelectedGoal] = useState<ApiImpactGoal | null>(null);
+  const [goals, setGoals] = useState<ApiImpactGoal[]>(FALLBACK_GOALS);
 
-  const goals: Goal[] = [
-    {
-      id: 1,
-      title: "Positive Community Perceptions",
-      description: "Cultivate positive environmental priorities and habits in Rwanda's communities without causing generational friction.",
-      icon: "Eye",
-      milestone: "92% Positive feedback in regional neighborhood campaigns",
-      actionDetails: "Participate in local eco-dialogues, share inspirational updates with your peers, and organize environment days in your community."
-    },
-    {
-      id: 2,
-      title: "Community & Expert Dialogues",
-      description: "Establish strong, respectful channels for environmental dialogue between local communities and senior climate professionals.",
-      icon: "Users",
-      milestone: "24 Climate Webinars & 12 Roundtables completed",
-      actionDetails: "Register for our upcoming Dialogue series where we challenge policy-makers together."
-    },
-    {
-      id: 3,
-      title: "Nature-Based Solutions (NBS)",
-      description: "Train Rwandan community members to design and deploy nature-based systems for land restoration and climate resilience.",
-      icon: "Lightbulb",
-      milestone: "4 Local soil preservation pilots running in Kicukiro",
-      actionDetails: "Join local training cohorts on terracing, agroforestry design, and watershed management."
-    },
-    {
-      id: 4,
-      title: "Ecology Education",
-      description: "Conduct dynamic environment, wildlife, and resource conservation classes across all rural and urban sectors.",
-      icon: "GraduationCap",
-      milestone: "45 Countryside learning modules distributed",
-      actionDetails: "Volunteer as an environment guide to teach primary school children the fundamentals of ecosystem preservation."
-    },
-    {
-      id: 5,
-      title: "Empower Local Communities",
-      description: "Guarantee active community involvement and benefits inside every conservation project we sponsor.",
-      icon: "Users2",
-      milestone: "1,200+ Local residents directly employed",
-      actionDetails: "Contribute to town hall agendas, hire local community caretakers, and buy local biological seeds."
-    },
-    {
-      id: 6,
-      title: "Early-Age Sensitization",
-      description: "Introduce nature protection values to children from infancy to nurture a generation of natural guardians.",
-      icon: "ShieldAlert",
-      milestone: "8 Primary school nature nurseries started",
-      actionDetails: "Download we4climate children stories and coordinate environmental club playgroups in your estate."
-    },
-    {
-      id: 7,
-      title: "National & Global Advocacy",
-      description: "Represent the voices and insights of Rwandan communities in high-profile international summits like UNEP and COP.",
-      icon: "Globe2",
-      milestone: "Delegate entries submitted to COY and regional bodies",
-      actionDetails: "Contribute to our annual policy recommendations report compiled by community leaders."
-    },
-    {
-      id: 8,
-      title: "District Environmental Clubs",
-      description: "Integrate, support, and connect active high-school and community club units coordinates at district levels.",
-      icon: "Landmark",
-      milestone: "15 Registered district clubs actively operating",
-      actionDetails: "Register your local village group or school class as an official We4Climate district branch."
-    },
-    {
-      id: 9,
-      title: "International Accord Support",
-      description: "Promote education and local compliance with major biodiversity and safety targets (e.g., Paris Agreement, CBD).",
-      icon: "ShieldCheck",
-      milestone: "10 compliance toolkits compiled for local municipal leaders",
-      actionDetails: "Review our compiled legal handbooks on local carbon offsets, municipal water protocols, and wildlife treaties."
-    },
-    {
-      id: 10,
-      title: "Capacity & Skills Training",
-      description: "Reinforce our membership resources with masterclasses, advice, research publications, and legal counsel.",
-      icon: "HeartHandshake",
-      milestone: "240 Trained leaders granted certificates of capability",
-      actionDetails: "Enroll in the We4Climate Core Training program to secure verified conservation credentials."
-    }
-  ];
+  useEffect(() => {
+    fetchImpactGoals().then((data) => {
+      if (data.length > 0) setGoals(data);
+    });
+  }, []);
 
   const getIcon = (iconName: string) => {
     switch (iconName) {
@@ -104,6 +42,7 @@ export default function GoalsSection() {
       case 'Landmark': return <Landmark className="h-6 w-6 text-emerald-400" />;
       case 'ShieldCheck': return <ShieldCheck className="h-6 w-6 text-emerald-400" />;
       case 'HeartHandshake': return <HeartHandshake className="h-6 w-6 text-emerald-400" />;
+      case 'Target': return <Target className="h-6 w-6 text-emerald-400" />;
       default: return <Sparkles className="h-6 w-6 text-emerald-400" />;
     }
   };
@@ -216,7 +155,7 @@ export default function GoalsSection() {
                 <div className="bg-amber-50 border border-amber-200/60 rounded-2xl p-4">
                   <span className="text-[10px] uppercase font-mono font-bold text-amber-800 block">How Rwandan Communities Can Support This</span>
                   <p className="text-gray-700 text-sm mt-1.5 leading-relaxed">
-                    {selectedGoal.actionDetails}
+                    {selectedGoal.action_details}
                   </p>
                 </div>
               </div>
