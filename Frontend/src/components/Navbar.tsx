@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
-  Menu, X, TreePine, Mail, Facebook, Twitter, Instagram, 
+  Menu, X, Mail, Facebook, Twitter, Instagram, 
   Linkedin, Youtube, ChevronDown, ChevronRight, Home, Info, 
   Award, BarChart3, Heart, Briefcase, BookOpen, HelpCircle, Phone 
 } from 'lucide-react';
@@ -97,7 +97,6 @@ export default function Navbar() {
               </a>
               <span className="text-white/40 hidden sm:inline">|</span>
               <span className="text-white/90 font-mono text-[11px] sm:text-xs tracking-wider hidden sm:inline">
-                Community Climate Nexus
               </span>
             </div>
 
@@ -176,15 +175,18 @@ export default function Navbar() {
               onClick={() => handleNavClick('/')} 
               className="flex items-center space-x-2.5 sm:space-x-3 group focus:outline-none"
             >
-              <div className="p-2.5 sm:p-3 bg-emerald-500 rounded-xl sm:rounded-2xl group-hover:scale-105 transition-transform duration-300 shadow-md">
-                <TreePine className="h-6 w-6 sm:h-7 sm:w-7 text-emerald-950" />
+              <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl sm:rounded-2xl overflow-hidden group-hover:scale-105 transition-transform duration-300 shadow-md flex-shrink-0">
+                <img 
+                  src="/logo.jpeg" 
+                  alt="We4Climate Logo" 
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="flex flex-col items-start text-left">
                 <span className="font-display font-black text-xl sm:text-2xl md:text-3xl tracking-tight text-white leading-none">
                   We<span className="text-emerald-400">4</span>Climate
                 </span>
                 <span className="text-[10px] sm:text-xs text-emerald-300/90 uppercase font-mono tracking-widest mt-0.5 sm:mt-1 font-bold">
-                  Community-driven • Rwanda
                 </span>
               </div>
             </button>
@@ -293,11 +295,14 @@ export default function Navbar() {
           isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        {/* Sticky Header inside the drawer */}
-        <div className="p-4 border-b border-white/10 flex items-center justify-between bg-[#011f18]">
+        {/* Sticky Header inside the drawer */}          <div className="p-4 border-b border-white/10 flex items-center justify-between bg-[#011f18]">
           <div className="flex items-center space-x-2.5">
-            <div className="p-2 bg-emerald-500 rounded-lg">
-              <TreePine className="h-5 w-5 text-emerald-950" />
+            <div className="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0">
+              <img 
+                src="/logo.jpeg" 
+                alt="We4Climate Logo" 
+                className="w-full h-full object-cover"
+              />
             </div>
             <span className="font-display font-black text-lg text-white">We4Climate Menu</span>
           </div>
