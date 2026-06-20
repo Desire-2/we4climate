@@ -1,4 +1,4 @@
-import { ArrowRight, TreePine, Award, Heart, HelpCircle, BookOpen, Briefcase } from 'lucide-react';
+import { ArrowRight, TreePine, Award, Heart, HelpCircle, BookOpen, Map, Globe, Sparkles } from 'lucide-react';
 import Hero from '../components/Hero';
 import { useNavigate } from 'react-router-dom';
 
@@ -35,10 +35,12 @@ export default function HomePage({ treesPledgedTotal, handleScrollToSection }: H
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* About Pillar */}
-            <div className="bg-white p-8 rounded-2xl border border-emerald-500/10 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+            <div className="bg-white p-8 rounded-2xl border border-emerald-500/10 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
               <div>
-                <div className="p-3 bg-emerald-50 rounded-xl w-fit text-[#5cb85c] mb-6">
-                  <TreePine className="h-6 w-6" />
+                <div className="relative p-3 bg-emerald-50 rounded-xl w-fit text-[#5cb85c] mb-6 group-hover:scale-105 transition-transform duration-300">
+                  <div className="absolute -inset-1 bg-emerald-400/10 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <TreePine className="h-6 w-6 relative" />
+                  <Globe className="h-2.5 w-2.5 absolute -bottom-0.5 -right-0.5 text-emerald-400/50" />
                 </div>
                 <h3 className="font-display font-bold text-xl text-gray-900 mb-3">Our Dedicated Story</h3>
                 <p className="text-sm text-gray-600 leading-relaxed mb-6">
@@ -55,10 +57,12 @@ export default function HomePage({ treesPledgedTotal, handleScrollToSection }: H
             </div>
 
             {/* Programs Pillar */}
-            <div className="bg-white p-8 rounded-2xl border border-emerald-500/10 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+            <div className="bg-white p-8 rounded-2xl border border-emerald-500/10 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
               <div>
-                <div className="p-3 bg-emerald-50 rounded-xl w-fit text-[#5cb85c] mb-6">
-                  <Award className="h-6 w-6" />
+                <div className="relative p-3 bg-emerald-50 rounded-xl w-fit text-[#5cb85c] mb-6 group-hover:scale-105 transition-transform duration-300">
+                  <div className="absolute -inset-1 bg-emerald-400/10 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <Award className="h-6 w-6 relative" />
+                  <Sparkles className="h-2.5 w-2.5 absolute -top-0.5 -right-0.5 text-amber-400/60" />
                 </div>
                 <h3 className="font-display font-bold text-xl text-gray-900 mb-3">Core Action Programs</h3>
                 <p className="text-sm text-gray-600 leading-relaxed mb-6">
@@ -75,10 +79,12 @@ export default function HomePage({ treesPledgedTotal, handleScrollToSection }: H
             </div>
 
             {/* Impact Map Pillar */}
-            <div className="bg-white p-8 rounded-2xl border border-emerald-500/10 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+            <div className="bg-white p-8 rounded-2xl border border-emerald-500/10 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
               <div>
-                <div className="p-3 bg-emerald-50 rounded-xl w-fit text-[#5cb85c] mb-6">
-                  <span className="text-xl">🗺️</span>
+                <div className="relative p-3 bg-emerald-50 rounded-xl w-fit text-[#5cb85c] mb-6 group-hover:scale-105 transition-transform duration-300">
+                  <div className="absolute -inset-1 bg-emerald-400/10 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <Map className="h-6 w-6 relative" />
+                  <Globe className="h-2.5 w-2.5 absolute -bottom-0.5 -right-0.5 text-emerald-400/50" />
                 </div>
                 <h3 className="font-display font-bold text-xl text-gray-900 mb-3">Interactive District Map</h3>
                 <p className="text-sm text-gray-600 leading-relaxed mb-6">
@@ -95,10 +101,12 @@ export default function HomePage({ treesPledgedTotal, handleScrollToSection }: H
             </div>
 
             {/* Resources Pillar */}
-            <div className="bg-white p-8 rounded-2xl border border-emerald-500/10 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+            <div className="bg-white p-8 rounded-2xl border border-emerald-500/10 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
               <div>
-                <div className="p-3 bg-emerald-50 rounded-xl w-fit text-[#5cb85c] mb-6">
-                  <BookOpen className="h-6 w-6" />
+                <div className="relative p-3 bg-emerald-50 rounded-xl w-fit text-[#5cb85c] mb-6 group-hover:scale-105 transition-transform duration-300">
+                  <div className="absolute -inset-1 bg-emerald-400/10 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <BookOpen className="h-6 w-6 relative" />
+                  <Sparkles className="h-2.5 w-2.5 absolute -top-0.5 -right-0.5 text-amber-400/60" />
                 </div>
                 <h3 className="font-display font-bold text-xl text-gray-900 mb-3">Manuals & Publications</h3>
                 <p className="text-sm text-gray-600 leading-relaxed mb-6">
@@ -115,10 +123,12 @@ export default function HomePage({ treesPledgedTotal, handleScrollToSection }: H
             </div>
 
             {/* Donate Pillar */}
-            <div className="bg-white p-8 rounded-2xl border border-emerald-500/10 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+            <div className="bg-white p-8 rounded-2xl border border-emerald-500/10 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
               <div>
-                <div className="p-3 bg-emerald-50 rounded-xl w-fit text-[#5cb85c] mb-6">
-                  <Heart className="h-6 w-6 text-rose-500" />
+                <div className="relative p-3 bg-rose-50 rounded-xl w-fit mb-6 group-hover:scale-105 transition-transform duration-300">
+                  <div className="absolute -inset-1 bg-rose-400/10 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <Heart className="h-6 w-6 text-rose-500 relative" />
+                  <Sparkles className="h-2.5 w-2.5 absolute -top-0.5 -right-0.5 text-rose-400/60" />
                 </div>
                 <h3 className="font-display font-bold text-xl text-gray-900 mb-3">Secure Giving Terminal</h3>
                 <p className="text-sm text-gray-600 leading-relaxed mb-6">
@@ -135,10 +145,12 @@ export default function HomePage({ treesPledgedTotal, handleScrollToSection }: H
             </div>
 
             {/* Action Desk */}
-            <div className="bg-white p-8 rounded-2xl border border-emerald-500/10 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+            <div className="bg-white p-8 rounded-2xl border border-emerald-500/10 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
               <div>
-                <div className="p-3 bg-emerald-50 rounded-xl w-fit text-[#5cb85c] mb-6">
-                  <HelpCircle className="h-6 w-6" />
+                <div className="relative p-3 bg-emerald-50 rounded-xl w-fit text-[#5cb85c] mb-6 group-hover:scale-105 transition-transform duration-300">
+                  <div className="absolute -inset-1 bg-emerald-400/10 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <HelpCircle className="h-6 w-6 relative" />
+                  <Sparkles className="h-2.5 w-2.5 absolute -top-0.5 -right-0.5 text-amber-400/60" />
                 </div>
                 <h3 className="font-display font-bold text-xl text-gray-900 mb-3">Quiz & Climate Pledge</h3>
                 <p className="text-sm text-gray-600 leading-relaxed mb-6">

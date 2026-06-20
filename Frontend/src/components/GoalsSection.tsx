@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { 
   Users, Lightbulb, GraduationCap, Users2, ShieldAlert, 
   Globe2, Landmark, ShieldCheck, HeartHandshake, Eye,
-  ArrowRight, X, Sparkles, CheckCircle2
+  ArrowRight, X, Sparkles, CheckCircle2, Target
 } from 'lucide-react';
 import { Goal } from '../types';
 
@@ -154,7 +154,10 @@ export default function GoalsSection() {
               </p>
 
               <div className="mt-5 pt-4 border-t border-emerald-900/60 flex items-center justify-between text-xs text-emerald-400">
-                <span className="font-mono font-medium truncate max-w-[180px]">🎯 {goal.milestone}</span>
+                <span className="font-mono font-medium truncate max-w-[180px] flex items-center gap-1.5">
+                  <Target className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0" />
+                  {goal.milestone}
+                </span>
                 <span className="font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
                   Explore <ArrowRight className="h-3 w-3" />
                 </span>

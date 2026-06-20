@@ -1,5 +1,5 @@
 import { useState, useEffect, FormEvent } from 'react';
-import { Award, Trees, CheckCircle2, AlertCircle, Share2, HelpCircle, ChevronRight, UserCheck } from 'lucide-react';
+import { Award, Trees, CheckCircle2, AlertCircle, XCircle, Share2, HelpCircle, ChevronRight, UserCheck, MapPin, Sprout, Target, Sparkles, Printer, RefreshCw, Users, Globe, Calendar, BadgeCheck, BookOpen, Leaf, Star } from 'lucide-react';
 import { Pledge } from '../types';
 
 interface InteractiveDeskProps {
@@ -209,8 +209,9 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
           {/* Module 1: Pledge Terminal (Left - Col 7) */}
           <div className="lg:col-span-7 bg-emerald-950/65 rounded-3xl p-6 sm:p-8 border border-white/10 shadow-xl relative backdrop-blur-sm">
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-3 bg-emerald-500/10 rounded-xl border border-emerald-400/20 text-emerald-300">
+              <div className="p-3 bg-emerald-500/10 rounded-xl border border-emerald-400/20 text-emerald-300 relative">
                 <Trees className="h-6 w-6" />
+                <Globe className="h-3 w-3 absolute -bottom-0.5 -right-0.5 text-emerald-400/60" />
               </div>
               <div>
                 <h3 className="font-display font-bold text-xl text-white">Community Tree Pledge Registry</h3>
@@ -221,7 +222,10 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
             <form onSubmit={handlePledgeSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80 mb-1.5">Your Full Name</label>
+                  <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80 mb-1.5 flex items-center gap-1.5">
+                    <BadgeCheck className="h-3.5 w-3.5 text-emerald-400" />
+                    Your Full Name
+                  </label>
                   <input 
                     type="text" 
                     value={pledgeName}
@@ -232,7 +236,10 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                   />
                 </div>
                 <div>
-                  <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80 mb-1.5">Country / Rwanda District</label>
+                  <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80 mb-1.5 flex items-center gap-1.5">
+                    <MapPin className="h-3.5 w-3.5 text-emerald-400" />
+                    Country / Rwanda District
+                  </label>
                   <select 
                     value={pledgeDistrict}
                     onChange={(e) => setPledgeDistrict(e.target.value)}
@@ -247,7 +254,10 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80 mb-1.5">Indigenous Trees Proposed</label>
+                  <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80 mb-1.5 flex items-center gap-1.5">
+                    <Sprout className="h-3.5 w-3.5 text-emerald-400" />
+                    Indigenous Trees Proposed
+                  </label>
                   <div className="flex items-center space-x-2">
                     <input 
                       type="number" 
@@ -258,11 +268,17 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                       className="w-24 bg-emerald-900/60 border border-emerald-800 focus:border-emerald-400 rounded-xl px-4 py-2 text-sm text-white text-center focus:outline-none transition-all"
                       required
                     />
-                    <span className="text-xs text-emerald-200/70">Markhamia, Newtonia, etc.</span>
+                    <span className="text-xs text-emerald-200/70 flex items-center gap-1">
+                      <Leaf className="h-3 w-3 text-emerald-400/60" />
+                      Markhamia, Newtonia, etc.
+                    </span>
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80 mb-1.5">Operational Activity Target</label>
+                  <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80 mb-1.5 flex items-center gap-1.5">
+                    <Target className="h-3.5 w-3.5 text-emerald-400" />
+                    Operational Activity Target
+                  </label>
                   <select 
                     value={pledgeAction}
                     onChange={(e) => setPledgeAction(e.target.value)}
@@ -295,23 +311,43 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
             {/* Pledging list ledger */}
             <div className="mt-8 border-t border-white/10 pt-6">
               <h4 className="text-xs uppercase tracking-wider font-mono text-emerald-300/80 mb-4 flex items-center justify-between">
-                <span>Recent Community Commitments Ledger</span>
-                <span className="bg-emerald-950 text-emerald-400 px-2.5 py-0.5 rounded-full text-[10px]">Real-time Feed</span>
+                <span className="flex items-center gap-1.5">
+                  <Users className="h-3.5 w-3.5 text-emerald-400" />
+                  Recent Community Commitments Ledger
+                </span>
+                <span className="bg-emerald-950 text-emerald-400 px-2.5 py-0.5 rounded-full text-[10px] flex items-center gap-1">
+                  <Share2 className="h-2.5 w-2.5" />
+                  Real-time Feed
+                </span>
               </h4>
               
               <div className="space-y-3.5 max-h-[220px] overflow-y-auto pr-1">
                 {pledgedList.map((pledge) => (
-                  <div key={pledge.id} className="p-3.5 bg-emerald-900/30 border border-emerald-500/10 rounded-2xl flex items-center justify-between gap-3 hover:bg-emerald-900/50 transition-colors">
-                    <div className="truncate">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-sm text-white truncate">{pledge.name}</span>
-                        <span className="text-[10px] bg-emerald-800/80 text-emerald-300 px-2 py-0.5 rounded-md uppercase font-mono">{pledge.district}</span>
+                  <div key={pledge.id} className="p-3.5 bg-emerald-900/30 border border-emerald-500/10 rounded-2xl flex items-center justify-between gap-3 hover:bg-emerald-900/50 transition-colors group">
+                    <div className="truncate flex items-center gap-3">
+                      <div className="hidden sm:flex w-8 h-8 rounded-full bg-emerald-800/50 border border-emerald-700/30 items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <UserCheck className="h-4 w-4 text-emerald-400" />
                       </div>
-                      <p className="text-xs text-gray-300 mt-1 truncate">{pledge.action}</p>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-sm text-white truncate">{pledge.name}</span>
+                          <span className="text-[10px] bg-emerald-800/80 text-emerald-300 px-2 py-0.5 rounded-md uppercase font-mono flex items-center gap-0.5">
+                            <MapPin className="h-2.5 w-2.5" />
+                            {pledge.district}
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-300 mt-1 truncate flex items-center gap-1">
+                          <Sprout className="h-3 w-3 text-emerald-500/60 flex-shrink-0" />
+                          {pledge.action}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex-shrink-0 text-right">
                       <span className="font-display font-black text-emerald-400 block text-lg">+{pledge.treesCount}</span>
-                      <span className="text-[9px] uppercase font-mono text-emerald-300/50 block">Trees</span>
+                      <span className="text-[9px] uppercase font-mono text-emerald-300/50 block flex items-center gap-1 justify-end">
+                        <Trees className="h-2.5 w-2.5" />
+                        Trees
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -326,8 +362,9 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
             {!quizStarted && !quizFinished && (
               <div id="quiz-intro-panel" className="space-y-6">
                 <div className="flex items-center gap-3">
-                  <div className="p-3 bg-emerald-500/10 rounded-xl border border-emerald-400/20 text-emerald-300">
+                  <div className="p-3 bg-emerald-500/10 rounded-xl border border-emerald-400/20 text-emerald-300 relative">
                     <Award className="h-6 w-6" />
+                    <Sparkles className="h-3 w-3 absolute -top-0.5 -right-0.5 text-amber-400/70" />
                   </div>
                   <div>
                     <h3 className="font-display font-bold text-xl text-white">We4Climate Advocacy Passport</h3>
@@ -340,7 +377,10 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                 </p>
 
                 <div className="space-y-3">
-                  <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80">Advocate Name for Certificate</label>
+                  <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80 flex items-center gap-1.5">
+                  <BadgeCheck className="h-3.5 w-3.5 text-emerald-400" />
+                  Advocate Name for Certificate
+                </label>
                   <input 
                     type="text" 
                     value={candidateName}
@@ -356,9 +396,11 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                 <button
                   onClick={handleStartQuiz}
                   id="start-quiz-btn"
-                  className="w-full py-3 bg-amber-500 hover:bg-amber-400 text-emerald-950 rounded-xl font-bold text-sm shadow-md transition-all duration-300 focus:outline-none"
+                  className="w-full py-3 bg-amber-500 hover:bg-amber-400 text-emerald-950 rounded-xl font-bold text-sm shadow-md transition-all duration-300 focus:outline-none flex items-center justify-center gap-2"
                 >
-                  Initiate Challenge
+                  <BookOpen className="h-4 w-4" />
+                  <span>Initiate Challenge</span>
+                  <ChevronRight className="h-4 w-4" />
                 </button>
               </div>
             )}
@@ -367,8 +409,14 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
             {quizStarted && !quizFinished && (
               <div id="quiz-question-panel" className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono text-emerald-400 font-semibold uppercase">Question {currentQuestion + 1} of {questions.length}</span>
-                  <span className="text-xs bg-emerald-900 border border-emerald-800 text-emerald-300 px-2 py-0.5 rounded-full font-mono">Score: {quizScore}/{questions.length}</span>
+                  <span className="text-xs font-mono text-emerald-400 font-semibold uppercase flex items-center gap-1.5">
+                    <HelpCircle className="h-3.5 w-3.5" />
+                    Question {currentQuestion + 1} of {questions.length}
+                  </span>
+                  <span className="text-xs bg-emerald-900 border border-emerald-800 text-emerald-300 px-2 py-0.5 rounded-full font-mono flex items-center gap-1">
+                    <Award className="h-3 w-3" />
+                    {quizScore}/{questions.length}
+                  </span>
                 </div>
 
                 {/* Progress bar */}
@@ -410,8 +458,12 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
 
                 {isAnswered && (
                   <div className="p-4 bg-emerald-900/60 border border-emerald-800 rounded-2xl text-xs space-y-2 animate-fade-in">
-                    <span className="font-bold text-emerald-300 flex items-center gap-1">
-                      {selectedAnswer === questions[currentQuestion].correct ? '✓ Clean Insight!' : '✗ Learning Moment:'}
+                    <span className="font-bold flex items-center gap-1.5">
+                      {selectedAnswer === questions[currentQuestion].correct ? (
+                        <><CheckCircle2 className="h-4 w-4 text-emerald-400" /><span className="text-emerald-300">Clean Insight!</span></>
+                      ) : (
+                        <><XCircle className="h-4 w-4 text-rose-400" /><span className="text-rose-300">Learning Moment:</span></>
+                      )}
                     </span>
                     <p className="text-emerald-100/80 leading-relaxed">
                       {questions[currentQuestion].explanation}
@@ -436,10 +488,15 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                 {quizScore === questions.length ? (
                   <div id="certificate-display-block" className="space-y-6">
                     <div className="text-center">
-                      <div className="inline-flex p-3 bg-amber-500/15 rounded-full border border-amber-400/20 text-amber-400 mb-2 animate-pulse">
+                      <div className="inline-flex p-3 bg-amber-500/15 rounded-full border border-amber-400/20 text-amber-400 mb-2 animate-pulse relative">
                         <Award className="h-8 w-8" />
+                        <Sparkles className="h-4 w-4 absolute -top-1 -right-1 text-amber-300 animate-ping" />
                       </div>
-                      <h3 className="font-display font-extrabold text-xl text-emerald-300">Perfect Score! 3/3 Checked</h3>
+                      <h3 className="font-display font-extrabold text-xl text-emerald-300 flex items-center justify-center gap-2">
+                        <Star className="h-5 w-5 text-amber-400 fill-amber-400" />
+                        Perfect Score! 3/3 Checked
+                        <Star className="h-5 w-5 text-amber-400 fill-amber-400" />
+                      </h3>
                       <p className="text-xs text-slate-300 mt-1">Your official We4Climate Community Advocate Certificate is generated</p>
                     </div>
 
@@ -450,11 +507,16 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                     >
                       {/* Gold Vector seal */}
                       <div className="absolute -bottom-8 -right-8 w-24 h-24 bg-amber-500 opacity-20 rounded-full blur-sm" />
+                      <div className="absolute -top-8 -left-8 w-24 h-24 bg-emerald-500 opacity-10 rounded-full blur-sm" />
                       <div className="absolute top-4 right-4 flex flex-col items-center opacity-40">
                         <div className="p-1 bg-emerald-800 rounded-full text-white">
                           <UserCheck className="h-5 w-5" />
                         </div>
                         <span className="text-[6px] font-mono font-bold mt-0.5">VERIFIED</span>
+                      </div>
+                      {/* Decorative globe icon */}
+                      <div className="absolute bottom-4 left-4 opacity-15">
+                        <Globe className="h-10 w-10 text-emerald-700" />
                       </div>
 
                       {/* Header */}
@@ -480,11 +542,14 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
 
                       {/* Date & Signature block */}
                       <div className="mt-4 flex justify-between items-end border-t border-gray-100 pt-3 text-[7px] font-mono uppercase tracking-widest">
-                        <div className="text-left w-20">
-                          <span className="text-gray-400 border-b border-gray-200 pb-0.5 block">{new Date().toLocaleDateString()}</span>
+                        <div className="text-left">
+                          <div className="flex items-center gap-1 border-b border-gray-200 pb-0.5">
+                            <Calendar className="h-2.5 w-2.5 text-gray-400" />
+                            <span className="text-gray-400">{new Date().toLocaleDateString()}</span>
+                          </div>
                           <span className="text-emerald-800/80 block mt-1">Issue Date</span>
                         </div>
-                        <div className="w-16 h-1 w-12 text-center opacity-30 select-none">
+                        <div className="text-center opacity-30 select-none">
                           <span className="font-serif italic font-bold text-gray-800 text-xs text-center border-b border-gray-200 block -mt-2">W4C Kigali</span>
                           <span className="text-emerald-800/80 block mt-1 text-[7px]">Secretary</span>
                         </div>
@@ -494,14 +559,16 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                     <div className="flex flex-col sm:flex-row gap-2.5">
                       <button
                         onClick={printCertificate}
-                        className="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 rounded-xl font-bold text-xs uppercase tracking-wider transition-all focus:outline-none"
+                        className="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 rounded-xl font-bold text-xs uppercase tracking-wider transition-all focus:outline-none flex items-center justify-center gap-2"
                       >
+                        <Printer className="h-4 w-4" />
                         Print/Save PDF
                       </button>
                       <button
                         onClick={handleResetQuiz}
-                        className="w-full py-2.5 bg-emerald-900 border border-emerald-800 text-emerald-300 rounded-xl font-bold text-xs uppercase tracking-wider transition-all focus:outline-none"
+                        className="w-full py-2.5 bg-emerald-900 border border-emerald-800 text-emerald-300 rounded-xl font-bold text-xs uppercase tracking-wider transition-all focus:outline-none flex items-center justify-center gap-2"
                       >
+                        <RefreshCw className="h-4 w-4" />
                         Reset Quiz
                       </button>
                     </div>
@@ -515,13 +582,13 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                     <h3 className="font-display font-extrabold text-xl text-rose-300">Score: {quizScore}/3</h3>
                     <p className="text-sm text-emerald-100/70 max-w-sm mx-auto leading-normal">
                       Excellent attempt, {candidateName}! To qualify for the official credential, We4Climate requires a perfect 3/3 score.
-                    </p>
-                    <button
-                      onClick={handleStartQuiz}
-                      className="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-emerald-950 rounded-xl font-bold text-xs uppercase tracking-wider transition-all inline-block focus:outline-none"
-                    >
-                      Challenge Again
-                    </button>
+                    </p>                      <button
+                        onClick={handleStartQuiz}
+                        className="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-emerald-950 rounded-xl font-bold text-xs uppercase tracking-wider transition-all inline-block focus:outline-none flex items-center gap-2"
+                      >
+                        <RefreshCw className="h-4 w-4" />
+                        Challenge Again
+                      </button>
                   </div>
                 )}
 
