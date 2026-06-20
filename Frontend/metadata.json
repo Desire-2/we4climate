@@ -1,0 +1,6 @@
+{
+  "name": "We4Climate",
+  "description": "A youth-led, non-profit organization based in Kigali, Rwanda, empowering youth to achieve sustainable environmental conservation, elevate youth voices, and create green jobs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
