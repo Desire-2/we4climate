@@ -11,13 +11,18 @@ export default function AboutPage() {
       transition={{ duration: 0.3 }}
       className="pt-24 min-h-screen bg-brand-50"
     >
-      <div className="bg-emerald-950 text-white py-16 mb-8 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(16,185,129,0.1),transparent)]" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center md:text-left">
-          <span className="text-xs font-bold uppercase tracking-widest text-emerald-300">Who We Are</span>
-          <h1 className="mt-2 font-display font-medium text-4xl sm:text-5xl text-white tracking-tight">About We4Climate</h1>
-          <p className="mt-4 text-emerald-100/90 text-sm sm:text-base max-w-2xl leading-relaxed">
-            Leading collaborative environmental justice and training a restoration-driven generation of community advocates across Rwanda.
+      <div className="bg-emerald-950 text-white py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(16,185,129,0.15),transparent_60%)]" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+          <h1 className="font-display font-bold text-4xl sm:text-5xl md:text-6xl text-white tracking-tight">
+            Who We Are
+          </h1>
+          <p className="mt-4 text-emerald-100/80 text-sm sm:text-base max-w-3xl mx-auto leading-relaxed">
+            We4Climate is a Rwanda-based Community Benefit Initiative dedicated to advancing 
+            climate action through regenerative agriculture, ecosystem restoration, environmental 
+            education, research, and storytelling. We believe that restoring nature and empowering 
+            communities are inseparable, and that local action can create lasting global impact.
           </p>
         </div>
       </div>

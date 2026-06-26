@@ -43,7 +43,7 @@ export default function StoriesAndResources() {
       fileSize: '4.8 MB',
       pages: 36,
       description: 'A comprehensive, hand-drawn and localized guidebook specifying indigenous and protective tree species suitable for Rwanda\'s eastern and northern slopes, including ideal spacing and compound fertilization tips.',
-      coverImage: 'https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?auto=format&fit=crop&q=80&w=600',
+      coverImage: '/Images/IMG_2008.jpg',
       downloadCount: 420
     },
     {
@@ -53,7 +53,7 @@ export default function StoriesAndResources() {
       fileSize: '3.2 MB',
       pages: 24,
       description: 'Full strategic and financial ledger showing exact details of trees seeded, survival percentages, community cohort residency graduation counts, and detailed funding disbursements in Rwanda.',
-      coverImage: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=600',
+      coverImage: '/Images/IMG_2019.jpg',
       downloadCount: 290
     },
     {
@@ -63,7 +63,7 @@ export default function StoriesAndResources() {
       fileSize: '2.5 MB',
       pages: 18,
       description: 'A template guide designed for community climate assemblies, outlining step-by-step procedures for planning tree planting campaigns, conducting local plastic reduction cleanups, and managing digital story reels.',
-      coverImage: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=600',
+      coverImage: '/Images/IMG_2023.jpg',
       downloadCount: 512
     }
   ];
@@ -77,7 +77,7 @@ export default function StoriesAndResources() {
       date: 'May 12, 2026',
       readTime: '4 min read',
       teaser: 'How a combined force of school clubs and local smallholders re-established indigenous protections along 12 hectares of highly unstable ravines.',
-      storyImage: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=600'
+      storyImage: '/Images/IMG_2038.jpg'
     },
     {
       id: 'story-2',
@@ -87,7 +87,7 @@ export default function StoriesAndResources() {
       date: 'April 28, 2026',
       readTime: '5 min read',
       teaser: 'Exploring how local community-led hubs are transforming agricultural rice hulls into nutrient-binding compost to guard crops during drought.',
-      storyImage: 'https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?auto=format&fit=crop&q=80&w=600'
+      storyImage: '/Images/IMG_2132.jpg'
     },
     {
       id: 'story-3',
@@ -97,7 +97,7 @@ export default function StoriesAndResources() {
       date: 'March 15, 2026',
       readTime: '6 min read',
       teaser: 'An overview of our newly constructed permaculture training fields, composting stations, and the collaborative amphitheater space in Kamonyi.',
-      storyImage: 'https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&q=80&w=600'
+      storyImage: '/Images/IMG_2283.jpg'
     }
   ];
 

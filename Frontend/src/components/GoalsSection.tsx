@@ -1,193 +1,229 @@
-import { useState, useEffect } from 'react';
+import { useState, type ReactNode } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
-  Users, Lightbulb, GraduationCap, Users2, ShieldAlert, 
-  Globe2, Landmark, ShieldCheck, HeartHandshake, Eye,
-  ArrowRight, X, Sparkles, CheckCircle2, Target
+  Sprout, Users, Shield, Camera, Handshake, Lightbulb,
+  ArrowRight, X, Sparkles, Leaf, Heart
 } from 'lucide-react';
-import { fetchImpactGoals, type ApiImpactGoal } from '../api/client';
 
-// Fallback goals when API is unavailable (10 original pillars)
-const FALLBACK_GOALS: ApiImpactGoal[] = [
-  { id: 1, title: "Positive Community Perceptions", description: "Cultivate positive environmental priorities and habits in Rwanda's communities without causing generational friction.", icon: "Eye", milestone: "92% Positive feedback in regional neighborhood campaigns", action_details: "Participate in local eco-dialogues, share inspirational updates with your peers, and organize environment days in your community.", sort_order: 1, is_active: true, created_at: '' },
-  { id: 2, title: "Community & Expert Dialogues", description: "Establish strong, respectful channels for environmental dialogue between local communities and senior climate professionals.", icon: "Users", milestone: "24 Climate Webinars & 12 Roundtables completed", action_details: "Register for our upcoming Dialogue series where we challenge policy-makers together.", sort_order: 2, is_active: true, created_at: '' },
-  { id: 3, title: "Nature-Based Solutions (NBS)", description: "Train Rwandan community members to design and deploy nature-based systems for land restoration and climate resilience.", icon: "Lightbulb", milestone: "4 Local soil preservation pilots running in Kicukiro", action_details: "Join local training cohorts on terracing, agroforestry design, and watershed management.", sort_order: 3, is_active: true, created_at: '' },
-  { id: 4, title: "Ecology Education", description: "Conduct dynamic environment, wildlife, and resource conservation classes across all rural and urban sectors.", icon: "GraduationCap", milestone: "45 Countryside learning modules distributed", action_details: "Volunteer as an environment guide to teach primary school children the fundamentals of ecosystem preservation.", sort_order: 4, is_active: true, created_at: '' },
-  { id: 5, title: "Empower Local Communities", description: "Guarantee active community involvement and benefits inside every conservation project we sponsor.", icon: "Users2", milestone: "1,200+ Local residents directly employed", action_details: "Contribute to town hall agendas, hire local community caretakers, and buy local biological seeds.", sort_order: 5, is_active: true, created_at: '' },
-  { id: 6, title: "Early-Age Sensitization", description: "Introduce nature protection values to children from infancy to nurture a generation of natural guardians.", icon: "ShieldAlert", milestone: "8 Primary school nature nurseries started", action_details: "Download we4climate children stories and coordinate environmental club playgroups in your estate.", sort_order: 6, is_active: true, created_at: '' },
-  { id: 7, title: "National & Global Advocacy", description: "Represent the voices and insights of Rwandan communities in high-profile international summits like UNEP and COP.", icon: "Globe2", milestone: "Delegate entries submitted to COY and regional bodies", action_details: "Contribute to our annual policy recommendations report compiled by community leaders.", sort_order: 7, is_active: true, created_at: '' },
-  { id: 8, title: "District Environmental Clubs", description: "Integrate, support, and connect active high-school and community club units coordinates at district levels.", icon: "Landmark", milestone: "15 Registered district clubs actively operating", action_details: "Register your local village group or school class as an official We4Climate district branch.", sort_order: 8, is_active: true, created_at: '' },
-  { id: 9, title: "International Accord Support", description: "Promote education and local compliance with major biodiversity and safety targets (e.g., Paris Agreement, CBD).", icon: "ShieldCheck", milestone: "10 compliance toolkits compiled for local municipal leaders", action_details: "Review our compiled legal handbooks on local carbon offsets, municipal water protocols, and wildlife treaties.", sort_order: 9, is_active: true, created_at: '' },
-  { id: 10, title: "Capacity & Skills Training", description: "Reinforce our membership resources with masterclasses, advice, research publications, and legal counsel.", icon: "HeartHandshake", milestone: "240 Trained leaders granted certificates of capability", action_details: "Enroll in the We4Climate Core Training program to secure verified conservation credentials.", sort_order: 10, is_active: true, created_at: '' },
+interface TheoryOfChange {
+  id: number;
+  title: string;
+  statement: string;
+  icon: ReactNode;
+  image: string;
+  color: string;
+}
+
+const THEORIES: TheoryOfChange[] = [
+  {
+    id: 1,
+    title: 'Regenerate Ecosystems, Restore Life',
+    statement: 'When communities adopt regenerative agriculture, agroforestry, and ecosystem restoration practices, then degraded landscapes recover, biodiversity increases, soil health improves, and communities become more resilient to climate change.',
+    icon: <Sprout className="h-6 w-6" />,
+    image: '/Images/IMG_1132.jpg',
+    color: 'from-emerald-500 to-emerald-700',
+  },
+  {
+    id: 2,
+    title: 'Empower People, Transform Communities',
+    statement: 'When farmers, youth, women, and schools gain practical knowledge, skills, and leadership opportunities, then they become agents of change who restore their environments, strengthen livelihoods, and inspire others to take action.',
+    icon: <Users className="h-6 w-6" />,
+    image: '/Images/IMG_1259.jpg',
+    color: 'from-blue-500 to-blue-700',
+  },
+  {
+    id: 3,
+    title: 'Build Climate Resilience Through Nature',
+    statement: 'When communities invest in nature-based solutions such as food forests, rainwater harvesting, biodiversity conservation, and sustainable land management, then they become better prepared to withstand droughts, floods, and other climate-related challenges while securing food and water for future generations.',
+    icon: <Shield className="h-6 w-6" />,
+    image: '/Images/IMG_1295.jpg',
+    color: 'from-cyan-500 to-cyan-700',
+  },
+  {
+    id: 4,
+    title: 'Share Stories, Inspire Action',
+    statement: 'When local restoration efforts and community innovations are documented and shared through storytelling, media, and education, then more people become aware, inspired, and motivated to replicate successful environmental solutions within their own communities.',
+    icon: <Camera className="h-6 w-6" />,
+    image: '/Images/IMG_1406.jpg',
+    color: 'from-amber-500 to-amber-700',
+  },
+  {
+    id: 5,
+    title: 'Collaborate to Scale Impact',
+    statement: 'When communities, researchers, governments, businesses, and development partners collaborate and exchange knowledge, then innovative solutions can be scaled more effectively, accelerating ecosystem restoration and sustainable development across Rwanda and Africa.',
+    icon: <Handshake className="h-6 w-6" />,
+    image: '/Images/IMG_1408.jpg',
+    color: 'from-purple-500 to-purple-700',
+  },
+  {
+    id: 6,
+    title: 'Innovation Drives Regeneration',
+    statement: 'When scientific research, indigenous knowledge, digital technologies, and community experience are integrated into environmental action, then more effective, evidence-based, and locally appropriate solutions emerge to address climate change, land degradation, and biodiversity loss.',
+    icon: <Lightbulb className="h-6 w-6" />,
+    image: '/Images/IMG_1410.jpg',
+    color: 'from-rose-500 to-rose-700',
+  },
 ];
 
 export default function GoalsSection() {
-  const [selectedGoal, setSelectedGoal] = useState<ApiImpactGoal | null>(null);
-  const [goals, setGoals] = useState<ApiImpactGoal[]>(FALLBACK_GOALS);
-
-  useEffect(() => {
-    fetchImpactGoals().then((data) => {
-      if (data.length > 0) setGoals(data);
-    });
-  }, []);
-
-  const getIcon = (iconName: string) => {
-    switch (iconName) {
-      case 'Eye': return <Eye className="h-6 w-6 text-emerald-400" />;
-      case 'Users': return <Users className="h-6 w-6 text-emerald-400" />;
-      case 'Lightbulb': return <Lightbulb className="h-6 w-6 text-emerald-400" />;
-      case 'GraduationCap': return <GraduationCap className="h-6 w-6 text-emerald-400" />;
-      case 'Users2': return <Users2 className="h-6 w-6 text-emerald-400" />;
-      case 'ShieldAlert': return <ShieldAlert className="h-6 w-6 text-emerald-400" />;
-      case 'Globe2': return <Globe2 className="h-6 w-6 text-emerald-400" />;
-      case 'Landmark': return <Landmark className="h-6 w-6 text-emerald-400" />;
-      case 'ShieldCheck': return <ShieldCheck className="h-6 w-6 text-emerald-400" />;
-      case 'HeartHandshake': return <HeartHandshake className="h-6 w-6 text-emerald-400" />;
-      case 'Target': return <Target className="h-6 w-6 text-emerald-400" />;
-      default: return <Sparkles className="h-6 w-6 text-emerald-400" />;
-    }
-  };
+  const [selectedTheory, setSelectedTheory] = useState<TheoryOfChange | null>(null);
 
   return (
-    <section id="goals" className="py-24 bg-gradient-to-b from-white to-emerald-50 relative">
+    <section id="theories-of-change" className="py-24 bg-gradient-to-b from-white to-emerald-50 relative overflow-hidden">
+      {/* Background decorations */}
+      <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-100/30 rounded-full blur-3xl -z-10" />
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-emerald-100/20 rounded-full blur-3xl -z-10" />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="text-emerald-700 font-mono text-sm font-semibold tracking-wider uppercase bg-emerald-100 px-4 py-1.5 rounded-full inline-block mb-3">
-            Our Strategy
+            Our Framework
           </span>
           <h2 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-gray-900 tracking-tight">
-            10 Pillars of Change for Rwanda
+            Our Theories of Change
           </h2>
           <p className="mt-4 text-lg text-gray-600 leading-relaxed">
-            The charter objectives guiding We4Climate. Click any pillar card to explore milestones and live participation tactics.
+            We believe lasting environmental change happens when healthy ecosystems, empowered 
+            communities, innovation, and collaboration work together. These theories of change 
+            describe the pathways through which our work contributes to a more regenerative, 
+            climate-resilient, and sustainable future for Rwanda and Africa.
           </p>
         </div>
 
-        {/* Bento Grid layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {goals.map((goal) => (
-            <div 
-              key={goal.id} 
-              id={`goal-card-${goal.id}`}
-              onClick={() => setSelectedGoal(goal)}
-              className="bg-emerald-950 border border-emerald-900 rounded-3xl p-6 hover:border-emerald-500/40 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group cursor-pointer shadow-lg shadow-emerald-950/10"
+        {/* 6 Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {THEORIES.map((theory) => (
+            <motion.div
+              key={theory.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.5, delay: theory.id * 0.1 }}
+              onClick={() => setSelectedTheory(theory)}
+              className="group cursor-pointer bg-white rounded-3xl overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              
-              <div className="flex items-start justify-between">
-                <div className="p-3.5 bg-emerald-900/60 rounded-2xl border border-emerald-500/10">
-                  {getIcon(goal.icon)}
-                </div>
-                <span className="text-xs font-mono font-bold text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-full">
-                  Pillar {goal.id}
-                </span>
-              </div>
-
-              <h3 className="mt-6 font-display font-bold text-lg text-white leading-tight group-hover:text-emerald-300 transition-colors">
-                {goal.title}
-              </h3>
-
-              <p className="mt-2.5 text-sm text-gray-300 line-clamp-3 leading-relaxed">
-                {goal.description}
-              </p>
-
-              <div className="mt-5 pt-4 border-t border-emerald-900/60 flex items-center justify-between text-xs text-emerald-400">
-                <span className="font-mono font-medium truncate max-w-[180px] flex items-center gap-1.5">
-                  <Target className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0" />
-                  {goal.milestone}
-                </span>
-                <span className="font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  Explore <ArrowRight className="h-3 w-3" />
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Goal Detail Modal Overlay */}
-        {selectedGoal && (
-          <div 
-            id="goal-detail-modal"
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-emerald-950/85 backdrop-blur-sm"
-          >
-            <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 relative shadow-2xl border border-emerald-100 transform transition-all duration-300 scale-100 max-h-[85vh] overflow-y-auto">
-              
-              {/* Close Button */}
-              <button 
-                id="close-goal-modal"
-                onClick={() => setSelectedGoal(null)}
-                className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all focus:outline-none"
-              >
-                <X className="h-5 w-5" />
-              </button>
-
-              <div className="flex items-center gap-4 mb-6">
-                <div className="p-4 bg-emerald-900 rounded-2xl">
-                  {getIcon(selectedGoal.icon)}
-                </div>
-                <div>
-                  <span className="text-xs font-mono font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full uppercase">
-                    Pillar {selectedGoal.id}
-                  </span>
-                  <h3 className="font-display font-bold text-xl sm:text-2xl text-gray-900 mt-1">
-                    {selectedGoal.title}
-                  </h3>
-                </div>
-              </div>
-
-              <div className="space-y-5">
-                <div>
-                  <h4 className="text-xs uppercase tracking-wider font-mono font-semibold text-gray-400">Strategic Vision</h4>
-                  <p className="text-gray-700 text-sm sm:text-base mt-1.5 leading-relaxed">
-                    {selectedGoal.description}
-                  </p>
+              {/* Image section with overlay */}
+              <div className="relative h-48 overflow-hidden">
+                <img
+                  src={theory.image}
+                  alt={theory.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                
+                {/* Icon badge */}
+                <div className={`absolute top-4 left-4 p-2.5 bg-gradient-to-br ${theory.color} rounded-xl shadow-lg text-white group-hover:scale-110 transition-transform duration-300`}>
+                  {theory.icon}
                 </div>
 
-                <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 flex items-center gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0" />
-                  <div>
-                    <span className="text-[10px] uppercase font-mono font-bold text-emerald-700 block">Current Milestone Status</span>
-                    <span className="text-emerald-950 text-sm font-semibold">{selectedGoal.milestone}</span>
+                {/* Number badge */}
+                <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full border border-white/20">
+                  {String(theory.id).padStart(2, '0')}
+                </div>
+
+                {/* Bottom gradient label */}
+                <div className="absolute bottom-4 left-4 right-4">
+                  <div className="flex items-center gap-1.5">
+                    <Leaf className="h-3.5 w-3.5 text-emerald-400" />
+                    <span className="text-white text-xs font-medium">Theory of Change</span>
                   </div>
                 </div>
+              </div>
 
-                <div className="bg-amber-50 border border-amber-200/60 rounded-2xl p-4">
-                  <span className="text-[10px] uppercase font-mono font-bold text-amber-800 block">How Rwandan Communities Can Support This</span>
-                  <p className="text-gray-700 text-sm mt-1.5 leading-relaxed">
-                    {selectedGoal.action_details}
-                  </p>
+              {/* Content */}
+              <div className="p-6">
+                <h3 className="font-display font-bold text-lg text-gray-900 leading-snug group-hover:text-emerald-700 transition-colors">
+                  {theory.title}
+                </h3>
+                <p className="mt-3 text-sm text-gray-500 leading-relaxed line-clamp-3">
+                  "{theory.statement}"
+                </p>
+
+                {/* Read more */}
+                <div className="mt-5 pt-4 border-t border-gray-100 flex items-center justify-between">
+                  <span className="text-xs font-semibold text-emerald-600 group-hover:gap-2 transition-all flex items-center gap-1">
+                    Read more <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
+                  <Sparkles className="h-4 w-4 text-emerald-400/50 group-hover:text-emerald-400 transition-colors" />
                 </div>
               </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
 
-              <div className="mt-8 flex justify-end gap-3">
+      {/* Detail Modal */}
+      <AnimatePresence>
+        {selectedTheory && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={() => setSelectedTheory(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: 'spring', duration: 0.5 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl border border-gray-100"
+            >
+              {/* Modal image */}
+              <div className="relative h-56 overflow-hidden">
+                <img
+                  src={selectedTheory.image}
+                  alt={selectedTheory.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className={`absolute bottom-4 left-4 p-3 bg-gradient-to-br ${selectedTheory.color} rounded-xl shadow-lg text-white`}>
+                  {selectedTheory.icon}
+                </div>
                 <button
-                  id="modal-act-btn"
-                  onClick={() => {
-                    setSelectedGoal(null);
-                    const element = document.getElementById('interactive');
-                    if (element) {
-                      element.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }}
-                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-sm transition-all shadow-md focus:outline-none"
+                  onClick={() => setSelectedTheory(null)}
+                  className="absolute top-4 right-4 p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-all"
                 >
-                  Go to Action Desk
-                </button>
-                <button
-                  id="modal-close-btn"
-                  onClick={() => setSelectedGoal(null)}
-                  className="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm transition-all focus:outline-none"
-                >
-                  Close
+                  <X className="h-5 w-5" />
                 </button>
               </div>
 
-            </div>
-          </div>
-        )}
+              {/* Modal content */}
+              <div className="p-8">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className={`text-xs font-bold px-2.5 py-1 rounded-full bg-gradient-to-r ${selectedTheory.color} text-white`}>
+                    Theory {String(selectedTheory.id).padStart(2, '0')}
+                  </span>
+                  <span className="text-xs text-gray-400 font-mono">/ 06</span>
+                </div>
+                <h3 className="font-display font-bold text-2xl text-gray-900 mt-3 mb-4">
+                  {selectedTheory.title}
+                </h3>
+                <p className="text-gray-600 leading-relaxed text-base">
+                  "{selectedTheory.statement}"
+                </p>
 
-      </div>
+                {/* Bottom action */}
+                <div className="mt-8 pt-6 border-t border-gray-100 flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-sm text-gray-400">
+                    <Heart className="h-4 w-4 text-emerald-500" />
+                    <span>Theory of Change</span>
+                  </div>
+                  <button
+                    onClick={() => setSelectedTheory(null)}
+                    className="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-bold rounded-xl text-sm transition-all shadow-md"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

@@ -1,284 +1,291 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Landmark, Users2, Leaf, Target, MapPin, ArrowRight, Compass, Shield, BookOpen, Calendar } from 'lucide-react';
+import { motion } from 'motion/react';
+import { useState, useEffect } from 'react';
+import {
+  Landmark, Trees, Droplets, Globe, Apple, 
+  Hexagon, MapPin, ExternalLink, Sparkles, ArrowRight
+} from 'lucide-react';
 
-interface ProgramDetail {
+interface ProgramItem {
   id: string;
   title: string;
-  category: string;
-  heroImage: string;
-  tagline: string;
-  summary: string;
-  objectives: string[];
-  keyInclusion: string[];
-  metrics: { label: string; value: string }[];
-  location: string;
-  status: string;
+  icon: typeof Landmark;
+  description: string;
+  image: string;
+  link?: { text: string; url: string };
+  color: string;
+  gradientFrom: string;
 }
 
+const programs: ProgramItem[] = [
+  {
+    id: 'leonard',
+    title: 'Leonard Regeneration Center',
+    icon: Landmark,
+    description:
+      'Our flagship community regeneration hub in Muhanga District serves as a living laboratory for regenerative agriculture, food forests, agroforestry, biodiversity conservation, sustainable livelihoods, environmental education, and climate innovation. The center welcomes farmers, youth, schools, researchers, and visitors to learn, practice, and replicate regenerative solutions.',
+    image: '/Images/IMG_1422.jpg',
+    link: { text: 'View on Google Maps', url: 'https://maps.app.goo.gl/d3KMrb2sfRR2wk156' },
+    color: 'emerald',
+    gradientFrom: 'from-emerald-900/80',
+  },
+  {
+    id: 'nursery',
+    title: 'Community Tree Nursery Initiative',
+    icon: Trees,
+    description:
+      'We establish community tree nurseries to produce high-quality fruit trees, indigenous trees, and agroforestry seedlings that support ecosystem restoration, food security, and climate resilience. Beyond seedling production, the initiative provides hands-on training in nursery management, tree propagation, and restoration practices, enabling communities and schools to establish their own green spaces and food forests.',
+    image: '/Images/Nursery.jpg',
+    link: { text: 'Learn more about our nurseries', url: '#nursery-details' },
+    color: 'green',
+    gradientFrom: 'from-green-900/80',
+  },
+  {
+    id: 'rainwater',
+    title: 'Rainwater Harvesting & Water Resilience',
+    icon: Droplets,
+    description:
+      'We promote sustainable water management through rainwater harvesting, connected ponds, water storage systems, and landscape restoration. By capturing and conserving rainwater, we improve irrigation, increase resilience to drought, restore watershed functions, and demonstrate practical climate adaptation solutions for farming communities.',
+    image: '/Images/Rainwater.jpg',
+    color: 'sky',
+    gradientFrom: 'from-sky-900/80',
+  },
+  {
+    id: 'restoration',
+    title: 'Ecosystem Restoration & Climate Action',
+    icon: Globe,
+    description:
+      'We restore degraded landscapes through agroforestry, tree growing, watershed restoration, biodiversity conservation, and sustainable land management. Working alongside communities, we implement nature-based solutions that improve ecosystem health, strengthen climate resilience, and support sustainable food systems.',
+    image: '/Images/Restoration.jpg',
+    color: 'teal',
+    gradientFrom: 'from-teal-900/80',
+  },
+  {
+    id: 'kids4food',
+    title: 'Kids4Food',
+    icon: Apple,
+    description:
+      'Kids4Food inspires the next generation of environmental leaders by integrating food forests, school gardens, agriculture clubs, and climate education into schools. The program provides children with practical skills while nurturing a lifelong commitment to caring for nature and building resilient communities.',
+    image: '/Images/Kids4Food.jpg',
+    link: { text: 'Learn more about Kids4Food', url: '#kids4food-details' },
+    color: 'amber',
+    gradientFrom: 'from-amber-900/80',
+  },
+  {
+    id: 'apiary',
+    title: 'Community Apiary Project',
+    icon: Hexagon,
+    description:
+      'Our Community Apiary Project promotes sustainable beekeeping as a nature-based livelihood that supports biodiversity, pollination, and ecosystem health. We establish community-managed apiaries, provide practical training in modern beekeeping, and empower youth, women, and local cooperatives to produce high-quality honey and other bee products. By integrating beekeeping with food forests, agroforestry, and ecosystem restoration, the project creates sustainable income opportunities while enhancing pollination, increasing agricultural productivity, and fostering environmental stewardship within local communities.',
+    image: '/Images/Apiary.jpg',
+    color: 'orange',
+    gradientFrom: 'from-orange-900/80',
+  },
+];
+
+const colorMap: Record<string, { badge: string; border: string; shadow: string; accent: string }> = {
+  emerald: { badge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30', border: 'border-emerald-500/20 hover:border-emerald-500/40', shadow: 'shadow-emerald-500/5', accent: 'text-emerald-400' },
+  green: { badge: 'bg-green-500/20 text-green-300 border-green-500/30', border: 'border-green-500/20 hover:border-green-500/40', shadow: 'shadow-green-500/5', accent: 'text-green-400' },
+  sky: { badge: 'bg-sky-500/20 text-sky-300 border-sky-500/30', border: 'border-sky-500/20 hover:border-sky-500/40', shadow: 'shadow-sky-500/5', accent: 'text-sky-400' },
+  teal: { badge: 'bg-teal-500/20 text-teal-300 border-teal-500/30', border: 'border-teal-500/20 hover:border-teal-500/40', shadow: 'shadow-teal-500/5', accent: 'text-teal-400' },
+  amber: { badge: 'bg-amber-500/20 text-amber-300 border-amber-500/30', border: 'border-amber-500/20 hover:border-amber-500/40', shadow: 'shadow-amber-500/5', accent: 'text-amber-400' },
+  orange: { badge: 'bg-orange-500/20 text-orange-300 border-orange-500/30', border: 'border-orange-500/20 hover:border-orange-500/40', shadow: 'shadow-orange-500/5', accent: 'text-orange-400' },
+};
+
+const LEONARD_IMAGES = [
+  '/Images/Leonard/IMG_0874.jpg',
+  '/Images/Leonard/IMG_1132.jpg',
+  '/Images/Leonard/IMG_1259.jpg',
+  '/Images/Leonard/IMG_1295.jpg',
+  '/Images/Leonard/Copy of IMG_2403.jpg',
+  '/Images/Leonard/IMG_2556.jpg',
+  '/Images/Leonard/IMG_2576.jpg',
+  '/Images/Leonard/IMG_2578.jpg',
+  '/Images/Leonard/IMG_2988.jpg',
+  '/Images/Leonard/IMG_2989.jpg',
+  '/Images/Leonard/IMG_3038.jpg',
+  '/Images/Leonard/IMG_8536.jpg',
+  '/Images/Leonard/IMG_8681.jpg',
+];
+
 export default function ProgramsSection() {
-  const [activeTab, setActiveTab] = useState<string>('leonard');
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [leonardSlide, setLeonardSlide] = useState(0);
 
-  const programs: ProgramDetail[] = [
-    {
-      id: 'leonard',
-      title: 'Leonard Regeneration Center',
-      category: 'Flagship Initiative',
-      heroImage: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200',
-      tagline: 'A regional hub for agroecology, eco-storytelling, and community resilience in Rwanda.',
-      summary: 'The Leonard Regeneration Center represents We4Climate\'s crown jewel property. It functions as an experiential learning incubator, combining physical nursery assets, permaculture showfields, research facilities, and accommodation for community climate cohorts.',
-      objectives: [
-        'Establish a master-planned 5-hectare regenerative demonstration farm.',
-        'Train over 500 local farmers per year in advanced agroforestry systems.',
-        'Incubate community-focused eco-enterprises through continuous mentoring programs.',
-        'Develop sustainable rainwater harvesting and solar irrigation test beds.'
-      ],
-      keyInclusion: [
-        'Master Plan: Zoned permaculture, research quarters & eco-lodge cabins.',
-        'Organic Compost Refinery with local community biochar testing.',
-        'Native Seed Bank: Saving and multiplying 25 endangered indigenous tree varieties.',
-        'The Storytelling Amphitheater: Hosting regional community assemblies.'
-      ],
-      metrics: [
-        { label: 'Total Land Area', value: '5 Hectares' },
-        { label: 'Annually Trained', value: '500+ Farmers' },
-        { label: 'Indigenous Species', value: '25 Saved' },
-        { label: 'Eco Projects incubated', value: '12 Startups' }
-      ],
-      location: 'Kamonyi District, Southern Province',
-      status: 'Phase 2: Infrastructure Construction'
-    },
-    {
-      id: 'leadership',
-      title: 'Community Climate Leadership Hub',
-      category: 'Education & Capacity',
-      heroImage: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&q=80&w=1200',
-      tagline: 'Empowering local communities as climate champions.',
-      summary: 'Our community-driven model addresses the knowledge gap in environmental leadership. Through structured cohorts, we provide local organizers with technical skills, scientific tools, digital advocacy tactics, and micro-grants to initiate local restoration projects across Rwanda.',
-      objectives: [
-        'Deploy Community Eco-Clubs in neighborhoods to run local green campaigns.',
-        'Provide local community leaders with air quality and geographic monitoring tools.',
-        'Host the annual Rwanda Community Climate Nexus Symposium with 300+ delegates.',
-        'Deliver intensive digital storytelling bootcamps to scale climate empathy.'
-      ],
-      keyInclusion: [
-        'Nexus Cohort Residency: 6-week intensive climate-action masterclass.',
-        'Micro-grants for outstanding local community forest restoration campaigns.',
-        'Advocacy Toolkit: Translated localized teaching guides in Kinyarwanda.',
-        'Mentorship network connecting community members with global policy and research groups.'
-      ],
-      metrics: [
-        { label: 'Community Certifiers', value: '1,200+ Trained' },
-        { label: 'Active School Clubs', value: '45 Schools' },
-        { label: 'Advocacy campaigns', value: '18 Launched' },
-        { label: 'Seed Funding Shared', value: '15,000,000 RWF' }
-      ],
-      location: 'National (Rwanda-wide deployment)',
-      status: 'Active (Now recruiting 2026 cohorts)'
-    },
-    {
-      id: 'restoration',
-      title: 'Ecosystem Restoration & Agroforestry',
-      category: 'Ecology & Agriculture',
-      heroImage: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=1200',
-      tagline: 'Reclaiming degraded landscapes and securing biodiverse livelihood opportunities.',
-      summary: 'Climate change calls for urgent landscape rehabilitation. We work with local smallholders on degraded hillsides in Rwanda to plant native ecological protection trees alongside cash crops, improving family income while locking carbon and restoring microclimates.',
-      objectives: [
-        'Reforest 100+ hectares of critical watersheds and steep riparian buffer zones.',
-        'Intercrop nutrient-fixing trees directly into multi-layered farming plots.',
-        'Establish Community-led nursery setups owned and managed by rural women.',
-        'Measure direct biodiversity re-entry metrics (insects, bird populations).'
-      ],
-      keyInclusion: [
-        'Watershed protection in Gicumbi and Bugesera water catchment zones.',
-        'Women-run nurseries: Creating direct green jobs and financial security.',
-        'Agroforestry models (integrating fruit trees: avocado, mango, papaya).',
-        'Geo-tagged tracking system using community smartphone inputs.'
-      ],
-      metrics: [
-        { label: 'Watershed Hectares', value: '120+ Ha Protected' },
-        { label: 'Cooperative Nursery', value: '8 Female-led' },
-        { label: 'Active Smallholders', value: '1,400+ Families' },
-        { label: 'Survival Rate', value: '88% Verified' }
-      ],
-      location: 'Bugesera, Gicumbi, Kayonza, and Rubavu Districts',
-      status: 'Active Implementation Phase'
-    }
-  ];
+  // Auto-advance Leonard slideshow every 3 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setLeonardSlide((prev) => (prev + 1) % LEONARD_IMAGES.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
 
-  const currentProgram = programs.find(p => p.id === activeTab) || programs[0];
+  const toggleExpanded = (id: string) => {
+    setExpandedId(prev => (prev === id ? null : id));
+  };
 
   return (
-    <section id="programs" className="py-24 bg-emerald-950 text-white relative overflow-hidden">
-      {/* Visual Background Ornaments */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-400/5 rounded-full blur-3xl" />
+    <section className="py-24 bg-emerald-950 relative overflow-hidden">
+      {/* Subtle background glow */}
+      <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-emerald-400/3 rounded-full blur-3xl" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Title */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-semibold tracking-widest text-emerald-400 uppercase bg-emerald-900/50 px-3.5 py-1.5 rounded-full border border-emerald-500/30">
-            Our Key Pillars
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-16 relative z-10">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto mb-16"
+        >
+          <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-widest uppercase bg-emerald-900/50 text-emerald-400 px-4 py-2 rounded-full border border-emerald-500/20">
+            <Sparkles className="h-3.5 w-3.5" />
+            Our Initiatives
           </span>
-          <h2 className="mt-4 font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white">
-            Programs & Projects
+          <h2 className="mt-6 font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white">
+            Transforming Communities Through Action
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-emerald-100/80 leading-relaxed">
-            Strengthening local food systems, empowering communities, and restoring vital ecosystems through direct, grassroots models in Rwanda.
+          <p className="mt-4 text-emerald-100/70 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+            Each program is designed hand-in-hand with local communities — restoring landscapes, 
+            building skills, and creating lasting climate resilience across Rwanda.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Tab Selection Row */}
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-2 mb-12 bg-emerald-900/30 p-2 rounded-2xl max-w-4xl mx-auto border border-white/5">
-          {programs.map((program) => {
-            const isActive = activeTab === program.id;
+        {/* Program Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+          {programs.map((program, index) => {
+            const colors = colorMap[program.color];
+            const isExpanded = expandedId === program.id;
+            const Icon = program.icon;
+
             return (
-              <button
+              <motion.div
                 key={program.id}
-                onClick={() => setActiveTab(program.id)}
-                className={`w-full sm:w-auto flex-1 flex items-center justify-center gap-2.5 px-6 py-4 rounded-xl text-sm sm:text-base font-bold transition-all duration-300 focus:outline-none ${
-                  isActive
-                    ? 'bg-emerald-500 text-emerald-950 shadow-xl shadow-emerald-500/10 scale-[1.02]'
-                    : 'text-emerald-100/70 hover:text-white hover:bg-white/5'
-                }`}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className={`group relative rounded-3xl overflow-hidden border ${colors.border} ${colors.shadow} bg-emerald-900/30 backdrop-blur-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-1`}
               >
-                {program.id === 'leonard' && <Landmark className="h-5 w-5" />}
-                {program.id === 'leadership' && <Users2 className="h-5 w-5" />}
-                {program.id === 'restoration' && <Leaf className="h-5 w-5" />}
-                <span className="truncate">{program.title}</span>
-              </button>
+                {/* Image container */}
+                <div className="relative h-56 sm:h-64 overflow-hidden">
+                  {/* Slideshow for Leonard card, static image for others */}
+                  {program.id === 'leonard' ? (
+                    <>
+                      {LEONARD_IMAGES.map((img, i) => (
+                        <img
+                          key={i}
+                          src={img}
+                          alt={`Leonard Regeneration Center - ${i + 1}`}
+                          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                            i === leonardSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                          }`}
+                          fetchPriority={i < 2 ? 'high' : 'low'}
+                          decoding="async"
+                        />
+                      ))}
+                      {/* Slide indicator dots */}
+                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-1.5">
+                        {LEONARD_IMAGES.map((_, i) => (
+                          <span
+                            key={i}
+                            className={`block rounded-full transition-all duration-300 ${
+                              i === leonardSlide
+                                ? 'bg-emerald-400 w-3 h-1.5'
+                                : 'bg-white/30 w-1.5 h-1.5'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <img
+                      src={program.image}
+                      alt={program.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                  )}
+                  {/* Gradient overlay */}
+                  <div className={`absolute inset-0 bg-gradient-to-t ${program.gradientFrom} via-emerald-950/40 to-transparent`} />
+                  
+                  {/* Top badge */}
+                  <div className="absolute top-4 left-4 right-4 flex items-start justify-between">
+                    <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border ${colors.badge} backdrop-blur-sm`}>
+                      <Icon className="h-3.5 w-3.5" />
+                      {program.title.split(' ').slice(0, 1).join(' ')}
+                    </span>
+                  </div>
+
+                </div>
+
+                {/* Card body */}
+                <div className="p-5 sm:p-6">
+                  <h3 className="font-display font-bold text-xl sm:text-2xl text-white leading-tight mb-3">
+                    {program.title}
+                  </h3>
+                  <p className={`text-emerald-100/80 text-sm leading-relaxed transition-all duration-300 ${isExpanded ? '' : 'line-clamp-4'}`}>
+                    {program.description}
+                  </p>
+
+                  {/* Expand/Collapse toggle */}
+                  {program.description.length > 250 && (
+                    <button
+                      onClick={() => toggleExpanded(program.id)}
+                      className="mt-2 text-xs font-semibold uppercase tracking-wider text-emerald-400 hover:text-emerald-300 transition-colors"
+                    >
+                      {isExpanded ? 'Show less' : 'Read more'}
+                    </button>
+                  )}
+
+                  {/* Footer actions */}
+                  <div className="mt-5 pt-4 border-t border-white/5 flex items-center justify-between">
+                    {program.link ? (
+                      <a
+                        href={program.link.url}
+                        target={program.link.url.startsWith('http') ? '_blank' : undefined}
+                        rel={program.link.url.startsWith('http') ? 'noopener noreferrer' : undefined}
+                        className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-white bg-emerald-500 hover:bg-emerald-400 hover:text-emerald-950 px-4 py-2.5 rounded-xl transition-all duration-300 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 hover:-translate-y-0.5"
+                      >
+                        {program.link.text}
+                        {program.link.url.startsWith('http') ? (
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        ) : (
+                          <ArrowRight className="h-3.5 w-3.5" />
+                        )}
+                      </a>
+                    ) : (
+                      <div />
+                    )}
+                    <div className="flex items-center gap-1 text-emerald-100/40 text-xs">
+                      <MapPin className="h-3 w-3" />
+                      <span>Rwanda</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Hover glow effect */}
+                <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.06),transparent_70%)]" />
+              </motion.div>
             );
           })}
         </div>
 
-        {/* Program showcase Layout */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -30 }}
-            transition={{ duration: 0.4 }}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 bg-emerald-900/20 rounded-3xl p-6 sm:p-10 border border-white/10 shadow-2xl backdrop-blur-md"
-          >
-            {/* Visual Column */}
-            <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
-              <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-square shadow-xl group border border-white/5">
-                <img
-                  src={currentProgram.heroImage}
-                  alt={currentProgram.title}
-                  className="w-full h-full object-cover transform duration-700 group-hover:scale-105"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/80 via-transparent to-transparent" />
-                <span className="absolute top-4 left-4 bg-emerald-500 text-emerald-950 font-bold font-mono text-[11px] uppercase tracking-wider px-3 py-1 rounded-full shadow-lg">
-                  {currentProgram.category}
-                </span>
-                <div className="absolute bottom-4 left-4 flex items-center gap-1.5 text-emerald-300 font-medium text-xs sm:text-sm">
-                  <MapPin className="h-4 w-4" />
-                  <span>{currentProgram.location}</span>
-                </div>
-              </div>
-
-              {/* Grid of Key Metrics */}
-              <div className="grid grid-cols-2 gap-4">
-                {currentProgram.metrics.map((met, i) => (
-                  <div key={i} className="bg-emerald-900/40 p-4 rounded-xl border border-white/5">
-                    <span className="text-2xl sm:text-3xl font-display font-extrabold text-emerald-400 block tracking-tight">
-                      {met.value}
-                    </span>
-                    <span className="text-xs text-emerald-100/60 font-semibold uppercase tracking-wider block mt-1">
-                      {met.label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Content Column */}
-            <div className="lg:col-span-7 flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-xs font-mono uppercase tracking-widest text-emerald-400 font-semibold">
-                    Status: {currentProgram.status}
-                  </span>
-                </div>
-                <h3 className="font-display font-bold text-2xl sm:text-3xl lg:text-4xl tracking-tight text-white">
-                  {currentProgram.title}
-                </h3>
-                <p className="mt-3 font-display text-emerald-300 text-lg sm:text-xl italic font-medium">
-                  "{currentProgram.tagline}"
-                </p>
-                <p className="mt-4 text-emerald-100/80 leading-relaxed text-sm sm:text-base">
-                  {currentProgram.summary}
-                </p>
-
-                {/* Objectives Checklist Split */}
-                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="flex items-center gap-1.5 font-bold text-emerald-300 text-sm sm:text-base uppercase tracking-wider border-b border-emerald-800/60 pb-2 mb-4">
-                      <Target className="h-4.5 w-4.5 text-emerald-400" />
-                      Key Objectives
-                    </h4>
-                    <ul className="space-y-3.5">
-                      {currentProgram.objectives.map((obj, idx) => (
-                        <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-emerald-100/80 leading-snug">
-                          <span className="flex-shrink-0 h-4 w-4 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center font-bold text-[10px] mt-0.5">
-                            {idx + 1}
-                          </span>
-                          <span>{obj}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div>
-                    <h4 className="flex items-center gap-1.5 font-bold text-emerald-300 text-sm sm:text-base uppercase tracking-wider border-b border-emerald-800/60 pb-2 mb-4">
-                      <Compass className="h-4.5 w-4.5 text-emerald-400" />
-                      Features & Plan
-                    </h4>
-                    <ul className="space-y-3.5">
-                      {currentProgram.keyInclusion.map((inc, idx) => (
-                        <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-emerald-100/80 leading-snug">
-                          <span className="flex-shrink-0 text-emerald-400 mt-1">
-                            <Shield className="h-3.5 w-3.5 fill-emerald-400/20" />
-                          </span>
-                          <span>{inc}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              {/* Call to Action Row */}
-              <div className="mt-10 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-emerald-800/40 rounded-xl">
-                    <BookOpen className="h-5 w-5 text-emerald-300" />
-                  </div>
-                  <div>
-                    <span className="text-xs text-emerald-100/40 block font-semibold uppercase tracking-wider">
-                      Flagship Hub Coordinator
-                    </span>
-                    <span className="text-sm font-bold text-white block">
-                      Desire Bikorimana & Team
-                    </span>
-                  </div>
-                </div>
-
-                <a 
-                  href="#contact"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-bold rounded-xl transition-all duration-300 shadow-md hover:translate-x-0.5"
-                >
-                  <span>Inquire / Partner on {activeTab === 'leonard' ? 'Center' : 'Programs'}</span>
-                  <ArrowRight className="h-4 w-4" />
-                </a>
-              </div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+        {/* Bottom CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-16 text-center"
+        >
+          <p className="text-emerald-100/60 text-sm">
+            Want to partner, volunteer, or learn more about a specific program?{' '}
+            <a href="/contact" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 font-medium transition-colors">
+              Get in touch with us
+            </a>
+          </p>
+        </motion.div>
       </div>
     </section>
   );

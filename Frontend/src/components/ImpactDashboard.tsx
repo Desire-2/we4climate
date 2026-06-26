@@ -1,5 +1,5 @@
-import { useState, useMemo, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useState, useMemo, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useInView } from 'motion/react';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer 
 } from 'recharts';
@@ -7,6 +7,43 @@ import {
   BarChart, Map, ChevronRight, Filter, Milestone, TreePine, Users, GraduationCap, Quote 
 } from 'lucide-react';
 import { fetchImpactSummary, fetchDistrictMetrics, fetchImpactStories, fetchYearlyTargets, type ApiDistrictMetric, type ApiImpactStory, type ApiYearlyTarget } from '../api/client';
+
+// ── Animated counter that counts up when scrolled into view ──
+function AnimatedCounter({ from = 0, to, suffix = '', duration = 2 }: { from?: number; to: number; suffix?: string; duration?: number }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-50px' });
+  const [displayValue, setDisplayValue] = useState(from);
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    if (isInView && !hasAnimated.current) {
+      hasAnimated.current = true;
+      const startTime = performance.now();
+      let rafId: number;
+      
+      const tick = (currentTime: number) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / (duration * 1000), 1);
+        // easeOut cubic: 1 - (1-t)^3
+        const eased = 1 - Math.pow(1 - progress, 3);
+        setDisplayValue(Math.round(from + (to - from) * eased));
+        
+        if (progress < 1) {
+          rafId = requestAnimationFrame(tick);
+        }
+      };
+      
+      rafId = requestAnimationFrame(tick);
+      return () => cancelAnimationFrame(rafId);
+    }
+  }, [isInView, from, to, duration]);
+
+  return (
+    <span ref={ref} className="font-display font-black text-2xl text-emerald-700 block tabular-nums">
+      {displayValue}{suffix}
+    </span>
+  );
+}
 
 interface FilterState {
   year: 'all' | '2024' | '2025' | '2026';
@@ -312,8 +349,363 @@ export default function ImpactDashboard() {
           </div>
         </div>
 
-        {/* Dynamic Stats Overview Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12">
+        {/* ──────────── OUR IMPACT — ANIMATED STATS WITH COUNTERS ──────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.5 }}
+          className="mb-12"
+        >
+          <div className="flex items-center gap-3 mb-8">
+            <motion.div
+              initial={{ scale: 0 }}
+              whileInView={{ scale: 1 }}
+              viewport={{ once: true }}
+              className="p-2.5 bg-emerald-100 rounded-xl"
+            >
+              <BarChart className="h-5 w-5 text-emerald-700" />
+            </motion.div>
+            <div>
+              <h3 className="font-display font-bold text-xl sm:text-2xl text-gray-900">
+                Our Impact at a Glance
+              </h3>
+              <p className="text-sm text-gray-500">Real results from our work across Rwanda</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+            {/* Stat 1 — Farm Center */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-30px' }}
+              transition={{ duration: 0.4, delay: 0.05 }}
+              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="relative h-24 sm:h-28 overflow-hidden">
+                <img src="/Images/Regeneration.jpg" alt="Regeneration Farm Center" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute bottom-2 left-3">
+                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
+                    Farm Center
+                  </span>
+                </div>
+              </div>
+              <div className="p-3 text-center">
+                <AnimatedCounter from={0} to={1} duration={1.5} />
+                <span className="text-[11px] text-gray-500 font-medium leading-tight block mt-1">Regeneration farm center established</span>
+                {/* Progress bar */}
+                <div className="mt-2 h-1 bg-emerald-100 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: '100%' }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, delay: 0.5, ease: 'easeOut' }}
+                    className="h-full bg-emerald-500 rounded-full"
+                  />
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Stat 2 — Farmers */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-30px' }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="relative h-24 sm:h-28 overflow-hidden">
+                <img src="/Images/empowered.jpg" alt="Farmers Empowerment" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute bottom-2 left-3">
+                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
+                    Farmers
+                  </span>
+                </div>
+              </div>
+              <div className="p-3 text-center">
+                <AnimatedCounter from={0} to={200} suffix="+" duration={2} />
+                <span className="text-[11px] text-gray-500 font-medium leading-tight block mt-1">Farmers empowered with training</span>
+                <div className="mt-2 h-1 bg-emerald-100 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: '100%' }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, delay: 0.5, ease: 'easeOut' }}
+                    className="h-full bg-emerald-500 rounded-full"
+                  />
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Stat 3 — Conferences */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-30px' }}
+              transition={{ duration: 0.4, delay: 0.15 }}
+              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="relative h-24 sm:h-28 overflow-hidden">
+                <img src="/Images/International.jpg" alt="International Conferences" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute bottom-2 left-3">
+                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
+                    Events
+                  </span>
+                </div>
+              </div>
+              <div className="p-3 text-center">
+                <AnimatedCounter from={0} to={5} suffix="+" duration={1.5} />
+                <span className="text-[11px] text-gray-500 font-medium leading-tight block mt-1">International conference participation</span>
+                <div className="mt-2 h-1 bg-emerald-100 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: '100%' }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, delay: 0.5, ease: 'easeOut' }}
+                    className="h-full bg-emerald-500 rounded-full"
+                  />
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Stat 4 — Children */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-30px' }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="relative h-24 sm:h-28 overflow-hidden">
+                <img src="/Images/engaged.jpg" alt="Children Engaged" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute bottom-2 left-3">
+                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
+                    Children
+                  </span>
+                </div>
+              </div>
+              <div className="p-3 text-center">
+                <AnimatedCounter from={0} to={50} suffix="+" duration={1.8} />
+                <span className="text-[11px] text-gray-500 font-medium leading-tight block mt-1">Children engaged in our projects</span>
+                <div className="mt-2 h-1 bg-emerald-100 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: '100%' }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, delay: 0.5, ease: 'easeOut' }}
+                    className="h-full bg-emerald-500 rounded-full"
+                  />
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Stat 5 — Seedlings */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-30px' }}
+              transition={{ duration: 0.4, delay: 0.25 }}
+              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="relative h-24 sm:h-28 overflow-hidden">
+                <img src="/Images/seedlings.jpg" alt="Agroforestry Seedlings" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute bottom-2 left-3">
+                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
+                    Seedlings
+                  </span>
+                </div>
+              </div>
+              <div className="p-3 text-center">
+                <AnimatedCounter from={0} to={600} suffix="+" duration={2.5} />
+                <span className="text-[11px] text-gray-500 font-medium leading-tight block mt-1">Agroforestry seedlings donated</span>
+                <div className="mt-2 h-1 bg-emerald-100 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: '100%' }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, delay: 0.5, ease: 'easeOut' }}
+                    className="h-full bg-emerald-500 rounded-full"
+                  />
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Stat 6 — Jobs */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-30px' }}
+              transition={{ duration: 0.4, delay: 0.3 }}
+              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="relative h-24 sm:h-28 overflow-hidden">
+                <img src="/Images/created.jpg" alt="Jobs Created" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute bottom-2 left-3">
+                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
+                    Jobs
+                  </span>
+                </div>
+              </div>
+              <div className="p-3 text-center">
+                <AnimatedCounter from={0} to={60} suffix="+" duration={2} />
+                <span className="text-[11px] text-gray-500 font-medium leading-tight block mt-1">Jobs created for local communities</span>
+                <div className="mt-2 h-1 bg-emerald-100 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: '100%' }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, delay: 0.5, ease: 'easeOut' }}
+                    className="h-full bg-emerald-500 rounded-full"
+                  />
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Stat 7 — Kids Restoration */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-30px' }}
+              transition={{ duration: 0.4, delay: 0.35 }}
+              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="relative h-24 sm:h-28 overflow-hidden">
+                <img src="/Images/activities.jpg" alt="Kids Restoration" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute bottom-2 left-3">
+                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
+                    Kids
+                  </span>
+                </div>
+              </div>
+              <div className="p-3 text-center">
+                <AnimatedCounter from={0} to={800} suffix="+" duration={2.5} />
+                <span className="text-[11px] text-gray-500 font-medium leading-tight block mt-1">Kids engaged in restoration activities</span>
+                <div className="mt-2 h-1 bg-emerald-100 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: '100%' }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, delay: 0.5, ease: 'easeOut' }}
+                    className="h-full bg-emerald-500 rounded-full"
+                  />
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Stat 8 — Schools */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-30px' }}
+              transition={{ duration: 0.4, delay: 0.4 }}
+              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="relative h-24 sm:h-28 overflow-hidden">
+                <img src="/Images/Primary.jpg" alt="Schools Empowered" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute bottom-2 left-3">
+                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
+                    Schools
+                  </span>
+                </div>
+              </div>
+              <div className="p-3 text-center">
+                <AnimatedCounter from={0} to={2} suffix="+" duration={1.5} />
+                <span className="text-[11px] text-gray-500 font-medium leading-tight block mt-1">Primary schools empowered</span>
+                <div className="mt-2 h-1 bg-emerald-100 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: '100%' }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, delay: 0.5, ease: 'easeOut' }}
+                    className="h-full bg-emerald-500 rounded-full"
+                  />
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Stat 9 — Kitchen Gardens */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-30px' }}
+              transition={{ duration: 0.4, delay: 0.45 }}
+              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="relative h-24 sm:h-28 overflow-hidden">
+                <img src="/Images/Kitchen.jpg" alt="Kitchen Gardens" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute bottom-2 left-3">
+                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
+                    Gardens
+                  </span>
+                </div>
+              </div>
+              <div className="p-3 text-center">
+                <AnimatedCounter from={0} to={2} suffix="+" duration={1.5} />
+                <span className="text-[11px] text-gray-500 font-medium leading-tight block mt-1">Operational kitchen gardens</span>
+                <div className="mt-2 h-1 bg-emerald-100 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: '100%' }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, delay: 0.5, ease: 'easeOut' }}
+                    className="h-full bg-emerald-500 rounded-full"
+                  />
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Stat 10 — Visitors */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-30px' }}
+              transition={{ duration: 0.4, delay: 0.5 }}
+              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="relative h-24 sm:h-28 overflow-hidden">
+                <img src="/Images/IMG_0910.jpg" alt="International Visitors" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute bottom-2 left-3">
+                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
+                    Visitors
+                  </span>
+                </div>
+              </div>
+              <div className="p-3 text-center">
+                <AnimatedCounter from={0} to={10} suffix="+" duration={1.8} />
+                <span className="text-[11px] text-gray-500 font-medium leading-tight block mt-1">International visitors hosted</span>
+                <div className="mt-2 h-1 bg-emerald-100 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: '100%' }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, delay: 0.5, ease: 'easeOut' }}
+                    className="h-full bg-emerald-500 rounded-full"
+                  />
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* ──────────── DYNAMIC STATS OVERVIEW GRID ──────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.5 }}
+          className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12"
+        >
           {/* Trees Card */}
           <div className="bg-white rounded-3xl p-5 sm:p-7 border border-gray-100 shadow-sm relative overflow-hidden group">
             <div className="absolute right-0 bottom-0 translate-x-3 translate-y-3 opacity-[0.06] group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
@@ -385,7 +777,7 @@ export default function ImpactDashboard() {
               </span>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Core Dashboard Visual Section: Interactive Map + Progression Chart */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
