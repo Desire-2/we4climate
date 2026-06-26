@@ -1,0 +1,41 @@
+# ── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+*.db
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm
+.env
+venv/
+.venv/
+*.pyc
+*.egg
+.Python
+
+# ── Version control ─────────────────────────────────────────────────────────
+.git/
+.gitignore
+.gitattributes
+
+# ── Docker ──────────────────────────────────────────────────────────────────
+.dockerignore
+docker-compose*.yml
+Dockerfile
+
+# ── IDE / OS ────────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── Logs / temp ─────────────────────────────────────────────────────────────
+*.log
+*.pid
+*.seed

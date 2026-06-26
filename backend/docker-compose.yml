@@ -1,0 +1,55 @@
+# =============================================================================
+# We4Climate API – Local Development with PostgreSQL
+# =============================================================================
+# Usage:
+#   docker compose up --build      # Build & start both services
+#   docker compose down            # Stop and remove containers
+#   docker compose down -v         # Also delete the PostgreSQL volume
+#
+# Once running, the API is available at http://localhost:5000
+# Health check: http://localhost:5000/api/health
+# =============================================================================
+
+services:
+
+  # ── PostgreSQL ────────────────────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: we4climate-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"    # Exposed on host – may conflict if you run PostgreSQL locally
+    environment:
+      POSTGRES_USER: we4climate
+      POSTGRES_PASSWORD: we4climate
+      POSTGRES_DB: we4climate
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U we4climate -d we4climate"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  # ── Flask API ─────────────────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: we4climate-api
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      DATABASE_URL: postgresql://we4climate:we4climate@db:5432/we4climate
+      SECRET_KEY: dev-secret-change-in-production
+      PORT: "5000"
+      GUNICORN_WORKERS: "2"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+    driver: local
