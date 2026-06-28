@@ -138,10 +138,7 @@ export default function ProgramsSection() {
           transition={{ duration: 0.6 }}
           className="text-center max-w-3xl mx-auto mb-16"
         >
-          <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-widest uppercase bg-emerald-900/50 text-emerald-400 px-4 py-2 rounded-full border border-emerald-500/20">
-            <Sparkles className="h-3.5 w-3.5" />
-            Our Initiatives
-          </span>
+
           <h2 className="mt-6 font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white">
             Transforming Communities Through Action
           </h2>

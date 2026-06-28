@@ -69,7 +69,6 @@ export default function ImpactPage() {
               className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-emerald-300 bg-emerald-900/50 px-4 py-2 rounded-full border border-emerald-500/20 mb-6"
             >
               <Sparkles className="h-3.5 w-3.5" />
-              Our Track Record
             </motion.span>
             
             <motion.h1

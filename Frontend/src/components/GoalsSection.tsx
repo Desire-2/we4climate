@@ -44,7 +44,7 @@ const THEORIES: TheoryOfChange[] = [
     title: 'Share Stories, Inspire Action',
     statement: 'When local restoration efforts and community innovations are documented and shared through storytelling, media, and education, then more people become aware, inspired, and motivated to replicate successful environmental solutions within their own communities.',
     icon: <Camera className="h-6 w-6" />,
-    image: '/Images/Homepage_pictures/IMG_9623.jpg',
+    image: '/Images/IMG_9085.jpg',
     color: 'from-amber-500 to-amber-700',
   },
   {
@@ -60,7 +60,7 @@ const THEORIES: TheoryOfChange[] = [
     title: 'Innovation Drives Regeneration',
     statement: 'When scientific research, indigenous knowledge, digital technologies, and community experience are integrated into environmental action, then more effective, evidence-based, and locally appropriate solutions emerge to address climate change, land degradation, and biodiversity loss.',
     icon: <Lightbulb className="h-6 w-6" />,
-    image: '/Images/Homepage_pictures/IMG_8361.jpg',
+    image: '/Images/IMG_2583.jpg',
     color: 'from-rose-500 to-rose-700',
   },
 ];
@@ -78,9 +78,6 @@ export default function GoalsSection() {
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-emerald-700 font-mono text-sm font-semibold tracking-wider uppercase bg-emerald-100 px-4 py-1.5 rounded-full inline-block mb-3">
-            Our Framework
-          </span>
           <h2 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-gray-900 tracking-tight">
             Our Theories of Change
           </h2>
