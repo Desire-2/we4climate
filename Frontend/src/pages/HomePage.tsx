@@ -14,6 +14,13 @@ const HERO_IMAGES = [
   '/Images/Homepage_pictures/4.jpg',
   '/Images/Homepage_pictures/5.jpg',
   '/Images/Homepage_pictures/6.jpg',
+  '/Images/Homepage_pictures/7.jpg',
+  '/Images/Homepage_pictures/8.jpg',
+  '/Images/Homepage_pictures/9.jpg',
+  '/Images/Homepage_pictures/10.jpg',
+  '/Images/Homepage_pictures/11.jpg',
+  '/Images/Homepage_pictures/12.jpg',
+  '/Images/Homepage_pictures/13.jpg',
   '/Images/Homepage_pictures/Education.jpg',
   '/Images/Homepage_pictures/Research.jpg',
 ];
@@ -66,7 +73,7 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
       {/* ────────────── HERO SECTION ────────────── */}
       <section
         id="hero"
-        className="relative h-screen min-h-[600px] max-h-[900px] flex items-center justify-center overflow-hidden"
+        className="relative min-h-[400px] md:min-h-[70vh] lg:min-h-screen max-h-[1000px] flex items-center justify-center overflow-hidden"
       >
         {/* Slideshow background */}
         {HERO_IMAGES.map((img, index) => (
@@ -90,15 +97,15 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
 
         {/* Slide indicators */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+        <div className="absolute bottom-5 sm:bottom-8 left-1/2 -translate-x-1/2 z-20 max-w-[90vw] overflow-x-auto flex gap-1.5 sm:gap-2 px-2">
           {HERO_IMAGES.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+              className={`flex-shrink-0 rounded-full transition-all duration-300 ${
                 index === currentSlide
-                  ? 'bg-emerald-400 w-8'
-                  : 'bg-white/40 hover:bg-white/70'
+                  ? 'bg-emerald-400 w-5 sm:w-8 h-1.5 sm:h-2.5'
+                  : 'bg-white/40 hover:bg-white/70 w-1.5 sm:w-2.5 h-1.5 sm:h-2.5'
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />
@@ -106,8 +113,8 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
         </div>
 
         {/* Hero content — transparent card, no buttons */}
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="font-display text-base sm:text-lg md:text-xl lg:text-2xl font-semibold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] leading-relaxed max-w-4xl mx-auto">
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-8 md:py-12 lg:py-16">
+          <h1            className="font-display text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl font-semibold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] leading-relaxed max-w-5xl mx-auto">
             We are a{' '}
             <span className="text-emerald-300 font-bold drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
               community benefit organization

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Eye, Target, Sparkles, Globe, Leaf } from 'lucide-react';
+import { Eye, Target, Globe, Leaf } from 'lucide-react';
 
 export default function AboutSection() {
   const [activeTab, setActiveTab] = useState<'vision' | 'mission'>('vision');
@@ -117,13 +117,6 @@ export default function AboutSection() {
           </div>
         </div>
 
-        {/* Bottom tagline */}
-        <div className="mt-16 text-center">
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-50 border border-emerald-200 rounded-full text-sm text-emerald-700">
-            <Sparkles className="h-4 w-4" />
-            <span>Restoring nature and empowering communities are inseparable</span>
-          </div>
-        </div>
 
       </div>
     </section>
