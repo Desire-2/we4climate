@@ -673,7 +673,7 @@ export default function ImpactDashboard() {
               className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
             >
               <div className="relative h-24 sm:h-28 overflow-hidden">
-                <img src="/Images/IMG_0910.jpg" alt="International Visitors" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <img src="/Images/Homepage_pictures/IMG_7097.jpg" alt="International Visitors" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 <div className="absolute bottom-2 left-3">
                   <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">

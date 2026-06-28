@@ -18,7 +18,7 @@ export default function Hero({ onScrollToSection, treesPledgedTotal }: HeroProps
       {/* Background Image with Dark Emerald Overlay */}
       <div className="absolute inset-0 z-0">
         <img 
-          src="/Images/IMG_0007.jpg" 
+          src="/Images/Homepage_pictures/IMG_7097.jpg" 
           alt="Lush Forest of Rwanda" 
           className="w-full h-full object-cover object-center opacity-30 transform scale-105 animate-pulse-slow"
           referrerPolicy="no-referrer"

@@ -23,7 +23,7 @@ const programs: ProgramItem[] = [
     icon: Landmark,
     description:
       'Our flagship community regeneration hub in Muhanga District serves as a living laboratory for regenerative agriculture, food forests, agroforestry, biodiversity conservation, sustainable livelihoods, environmental education, and climate innovation. The center welcomes farmers, youth, schools, researchers, and visitors to learn, practice, and replicate regenerative solutions.',
-    image: '/Images/IMG_1422.jpg',
+    image: '/Images/Leonard/IMG_0874.jpg',
     link: { text: 'View on Google Maps', url: 'https://maps.app.goo.gl/d3KMrb2sfRR2wk156' },
     color: 'emerald',
     gradientFrom: 'from-emerald-900/80',
@@ -96,7 +96,7 @@ const LEONARD_IMAGES = [
   '/Images/Leonard/IMG_1132.jpg',
   '/Images/Leonard/IMG_1259.jpg',
   '/Images/Leonard/IMG_1295.jpg',
-  '/Images/Leonard/Copy of IMG_2403.jpg',
+  '/Images/Leonard/IMG_8681.jpg',
   '/Images/Leonard/IMG_2556.jpg',
   '/Images/Leonard/IMG_2576.jpg',
   '/Images/Leonard/IMG_2578.jpg',

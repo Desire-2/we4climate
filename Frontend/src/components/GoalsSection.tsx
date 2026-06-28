@@ -20,7 +20,7 @@ const THEORIES: TheoryOfChange[] = [
     title: 'Regenerate Ecosystems, Restore Life',
     statement: 'When communities adopt regenerative agriculture, agroforestry, and ecosystem restoration practices, then degraded landscapes recover, biodiversity increases, soil health improves, and communities become more resilient to climate change.',
     icon: <Sprout className="h-6 w-6" />,
-    image: '/Images/IMG_1132.jpg',
+    image: '/Images/Leonard/IMG_1132.jpg',
     color: 'from-emerald-500 to-emerald-700',
   },
   {
@@ -28,7 +28,7 @@ const THEORIES: TheoryOfChange[] = [
     title: 'Empower People, Transform Communities',
     statement: 'When farmers, youth, women, and schools gain practical knowledge, skills, and leadership opportunities, then they become agents of change who restore their environments, strengthen livelihoods, and inspire others to take action.',
     icon: <Users className="h-6 w-6" />,
-    image: '/Images/IMG_1259.jpg',
+    image: '/Images/Leonard/IMG_1259.jpg',
     color: 'from-blue-500 to-blue-700',
   },
   {
@@ -36,7 +36,7 @@ const THEORIES: TheoryOfChange[] = [
     title: 'Build Climate Resilience Through Nature',
     statement: 'When communities invest in nature-based solutions such as food forests, rainwater harvesting, biodiversity conservation, and sustainable land management, then they become better prepared to withstand droughts, floods, and other climate-related challenges while securing food and water for future generations.',
     icon: <Shield className="h-6 w-6" />,
-    image: '/Images/IMG_1295.jpg',
+    image: '/Images/Leonard/IMG_1295.jpg',
     color: 'from-cyan-500 to-cyan-700',
   },
   {
@@ -44,7 +44,7 @@ const THEORIES: TheoryOfChange[] = [
     title: 'Share Stories, Inspire Action',
     statement: 'When local restoration efforts and community innovations are documented and shared through storytelling, media, and education, then more people become aware, inspired, and motivated to replicate successful environmental solutions within their own communities.',
     icon: <Camera className="h-6 w-6" />,
-    image: '/Images/IMG_1406.jpg',
+    image: '/Images/Homepage_pictures/IMG_9623.jpg',
     color: 'from-amber-500 to-amber-700',
   },
   {
@@ -52,7 +52,7 @@ const THEORIES: TheoryOfChange[] = [
     title: 'Collaborate to Scale Impact',
     statement: 'When communities, researchers, governments, businesses, and development partners collaborate and exchange knowledge, then innovative solutions can be scaled more effectively, accelerating ecosystem restoration and sustainable development across Rwanda and Africa.',
     icon: <Handshake className="h-6 w-6" />,
-    image: '/Images/IMG_1408.jpg',
+    image: '/Images/Homepage_pictures/IMG_9789.jpg',
     color: 'from-purple-500 to-purple-700',
   },
   {
@@ -60,7 +60,7 @@ const THEORIES: TheoryOfChange[] = [
     title: 'Innovation Drives Regeneration',
     statement: 'When scientific research, indigenous knowledge, digital technologies, and community experience are integrated into environmental action, then more effective, evidence-based, and locally appropriate solutions emerge to address climate change, land degradation, and biodiversity loss.',
     icon: <Lightbulb className="h-6 w-6" />,
-    image: '/Images/IMG_1410.jpg',
+    image: '/Images/Homepage_pictures/IMG_8361.jpg',
     color: 'from-rose-500 to-rose-700',
   },
 ];

@@ -1,30 +1,58 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Trees, Users, BookOpen, Heart, Camera, ChevronDown, Sprout, Globe } from 'lucide-react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { Trees, Users, BookOpen, Heart, Camera, Sprout, Globe } from 'lucide-react';
 
 interface HomePageProps {
   treesPledgedTotal: number;
   handleScrollToSection: (id: string) => void;
 }
 
-// Real images from public/home directory – replace with your own photos
+// Images from public/Images/Homepage_pictures for hero slideshow
 const HERO_IMAGES = [
-  '/home/1.jpg',
-  '/home/2.jpg',
-  '/home/3.jpg',
-  '/home/4.jpg',
-  '/home/5.jpg',
+  '/Images/Homepage_pictures/1.jpg',
+  '/Images/Homepage_pictures/2.jpg',
+  '/Images/Homepage_pictures/3.jpg',
+  '/Images/Homepage_pictures/4.jpg',
+  '/Images/Homepage_pictures/5.jpg',
+  '/Images/Homepage_pictures/6.jpg',
+  '/Images/Homepage_pictures/Education.jpg',
+  '/Images/Homepage_pictures/Research.jpg',
 ];
+
+/** Preload all hero images so they are ready when the slideshow transitions. */
+function preloadImages(urls: string[]): Promise<void[]> {
+  return Promise.all(
+    urls.map(
+      (url) =>
+        new Promise<void>((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve();
+          img.onerror = () => resolve(); // resolve anyway so slideshow isn't blocked
+          img.src = url;
+        }),
+    ),
+  );
+}
 
 export default function HomePage({ treesPledgedTotal }: HomePageProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [imagesReady, setImagesReady] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Auto-slide every 3 seconds
+  // Preload all images on mount
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % HERO_IMAGES.length);
-    }, 3000);
-    return () => clearInterval(timer);
+    preloadImages(HERO_IMAGES).then(() => setImagesReady(true));
   }, []);
+
+  // Auto-slide every 4 seconds — start only after images are preloaded
+  useEffect(() => {
+    if (!imagesReady) return;
+    intervalRef.current = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % HERO_IMAGES.length);
+    }, 4000);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [imagesReady]);
 
   const scrollToSection = useCallback((id: string) => {
     const el = document.getElementById(id);
@@ -52,6 +80,8 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
               src={img}
               alt={`Slide ${index + 1}`}
               className="w-full h-full object-cover"
+              fetchPriority={index === currentSlide ? 'high' : 'low'}
+              loading="eager"
             />
           </div>
         ))}
@@ -75,39 +105,18 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
           ))}
         </div>
 
-        {/* Hero content */}
-        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-block bg-black/30 backdrop-blur-md px-6 py-4 sm:px-8 sm:py-5 rounded-2xl border border-white/10 max-w-3xl mx-auto">
-            <h1 className="font-display text-base sm:text-lg md:text-xl lg:text-2xl font-semibold text-white/90 leading-relaxed max-w-2xl mx-auto">
-              We are a{' '}
-              <span className="text-emerald-300 font-bold">
-                community benefit organization
-              </span>{' '}
-              advancing regenerative agriculture, ecosystem restoration, environmental
-              education, and climate resilience across Rwanda and Africa.
-            </h1>
-          </div>
-
-          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button
-              onClick={() => scrollToSection('what-we-do')}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 rounded-xl font-bold text-xs shadow-xl shadow-emerald-950/40 hover:scale-[1.02] active:scale-95 transition-all duration-300 focus:outline-none"
-            >
-              <span>Explore What We Do</span>
-              <ChevronDown className="h-3.5 w-3.5" />
-            </button>
-            <button
-              onClick={() => scrollToSection('how-we-do-it')}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-xl font-bold text-xs border border-white/10 hover:border-white/20 hover:scale-[1.02] active:scale-95 transition-all duration-300 focus:outline-none"
-            >
-              <span>How We Do It</span>
-              <ChevronDown className="h-3.5 w-3.5" />
-            </button>
-          </div>
+        {/* Hero content — transparent card, no buttons */}
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="font-display text-base sm:text-lg md:text-xl lg:text-2xl font-semibold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] leading-relaxed max-w-4xl mx-auto">
+            We are a{' '}
+            <span className="text-emerald-300 font-bold drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+              community benefit organization
+            </span>{' '}
+            advancing regenerative agriculture, ecosystem restoration, environmental
+            education, and climate resilience across Rwanda and Africa.
+          </h1>
         </div>
 
-        {/* Bottom fade */}
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-brand-50 to-transparent z-10" />
       </section>
 
       {/* ────────────── WHAT WE DO SECTION ────────────── */}
@@ -119,9 +128,6 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section header */}
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs font-bold uppercase tracking-widest text-emerald-700 bg-emerald-100 px-4 py-1.5 rounded-full border border-emerald-200 inline-block mb-4">
-              Our Mission
-            </span>
             <h2 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-gray-900 tracking-tight">
               What We Do!
             </h2>
@@ -234,9 +240,6 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Section header */}
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs font-bold uppercase tracking-widest text-emerald-400 bg-emerald-900/50 px-4 py-1.5 rounded-full border border-emerald-500/30 inline-block mb-4">
-              Our Approach
-            </span>
             <h2 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-white tracking-tight">
               How We Do It
             </h2>

@@ -97,7 +97,7 @@ export default function StoriesAndResources() {
       date: 'March 15, 2026',
       readTime: '6 min read',
       teaser: 'An overview of our newly constructed permaculture training fields, composting stations, and the collaborative amphitheater space in Kamonyi.',
-      storyImage: '/Images/IMG_2283.jpg'
+      storyImage: '/Images/Homepage_pictures/IMG_9573.jpg'
     }
   ];
 

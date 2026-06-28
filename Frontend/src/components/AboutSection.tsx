@@ -66,7 +66,7 @@ export default function AboutSection() {
                   {/* Vision Image */}
                   <div className="relative rounded-2xl overflow-hidden aspect-[4/3] group">
                     <img
-                      src="/Images/IMG_0910.jpg"
+                      src="/Images/Homepage_pictures/IMG_9244.jpg"
                       alt="Vision - Harmony with Nature"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
@@ -83,7 +83,7 @@ export default function AboutSection() {
                   {/* Mission Image (reversed order on desktop) */}
                   <div className="relative rounded-2xl overflow-hidden aspect-[4/3] group order-1 lg:order-2">
                     <img
-                      src="/Images/IMG_0916.jpg"
+                      src="/Images/Homepage_pictures/IMG_9250.jpg"
                       alt="Mission - Community Empowerment"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
