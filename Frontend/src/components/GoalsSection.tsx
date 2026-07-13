@@ -2,7 +2,7 @@ import { useState, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Sprout, Users, Shield, Camera, Handshake, Lightbulb,
-  ArrowRight, X, Sparkles, Leaf, Heart
+  ArrowRight, X, Sparkles, Heart
 } from 'lucide-react';
 
 interface TheoryOfChange {
@@ -101,32 +101,13 @@ export default function GoalsSection() {
               onClick={() => setSelectedTheory(theory)}
               className="group cursor-pointer bg-white rounded-3xl overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
             >
-              {/* Image section with overlay */}
+              {/* Image */}
               <div className="relative h-48 overflow-hidden">
                 <img
                   src={theory.image}
                   alt={theory.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                
-                {/* Icon badge */}
-                <div className={`absolute top-4 left-4 p-2.5 bg-gradient-to-br ${theory.color} rounded-xl shadow-lg text-white group-hover:scale-110 transition-transform duration-300`}>
-                  {theory.icon}
-                </div>
-
-                {/* Number badge */}
-                <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full border border-white/20">
-                  {String(theory.id).padStart(2, '0')}
-                </div>
-
-                {/* Bottom gradient label */}
-                <div className="absolute bottom-4 left-4 right-4">
-                  <div className="flex items-center gap-1.5">
-                    <Leaf className="h-3.5 w-3.5 text-emerald-400" />
-                    <span className="text-white text-xs font-medium">Theory of Change</span>
-                  </div>
-                </div>
               </div>
 
               {/* Content */}
@@ -176,10 +157,6 @@ export default function GoalsSection() {
                   alt={selectedTheory.title}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className={`absolute bottom-4 left-4 p-3 bg-gradient-to-br ${selectedTheory.color} rounded-xl shadow-lg text-white`}>
-                  {selectedTheory.icon}
-                </div>
                 <button
                   onClick={() => setSelectedTheory(null)}
                   className="absolute top-4 right-4 p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-all"

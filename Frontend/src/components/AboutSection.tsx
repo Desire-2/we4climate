@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Eye, Target, Globe, Leaf } from 'lucide-react';
+import { Eye, Target } from 'lucide-react';
 
 export default function AboutSection() {
   const [activeTab, setActiveTab] = useState<'vision' | 'mission'>('vision');
@@ -70,12 +70,6 @@ export default function AboutSection() {
                       alt="Vision - Harmony with Nature"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/50 to-transparent" />
-                    <div className="absolute bottom-4 left-4">
-                      <div className="p-2 bg-emerald-500/80 backdrop-blur-sm rounded-xl">
-                        <Globe className="h-5 w-5 text-white" />
-                      </div>
-                    </div>
                   </div>
                 </div>
               ) : (
@@ -87,12 +81,6 @@ export default function AboutSection() {
                       alt="Mission - Community Empowerment"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/50 to-transparent" />
-                    <div className="absolute bottom-4 left-4">
-                      <div className="p-2 bg-emerald-500/80 backdrop-blur-sm rounded-xl">
-                        <Leaf className="h-5 w-5 text-white" />
-                      </div>
-                    </div>
                   </div>
 
                   {/* Mission Text */}

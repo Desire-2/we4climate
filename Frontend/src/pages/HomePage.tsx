@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Trees, Users, BookOpen, Heart, Camera, Sprout, Globe } from 'lucide-react';
+import { Heart } from 'lucide-react';
 
 interface HomePageProps {
   treesPledgedTotal: number;
@@ -13,16 +13,8 @@ const HERO_IMAGES = [
   '/Images/Homepage_pictures/3.jpg',
   '/Images/Homepage_pictures/4.jpg',
   '/Images/Homepage_pictures/5.jpg',
-  '/Images/Homepage_pictures/6.jpg',
   '/Images/Homepage_pictures/7.jpg',
   '/Images/Homepage_pictures/8.jpg',
-  '/Images/Homepage_pictures/9.jpg',
-  '/Images/Homepage_pictures/10.jpg',
-  '/Images/Homepage_pictures/11.jpg',
-  '/Images/Homepage_pictures/12.jpg',
-  '/Images/Homepage_pictures/13.jpg',
-  '/Images/Homepage_pictures/Education.jpg',
-  '/Images/Homepage_pictures/Research.jpg',
 ];
 
 /** Preload all hero images so they are ready when the slideshow transitions. */
@@ -73,7 +65,7 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
       {/* ────────────── HERO SECTION ────────────── */}
       <section
         id="hero"
-        className="relative min-h-[400px] md:min-h-[70vh] lg:min-h-screen max-h-[1000px] flex items-center justify-center overflow-hidden"
+        className="relative h-screen min-h-[600px] max-h-[900px] flex items-center justify-center overflow-hidden"
       >
         {/* Slideshow background */}
         {HERO_IMAGES.map((img, index) => (
@@ -93,19 +85,16 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
           </div>
         ))}
 
-        {/* Overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
-
         {/* Slide indicators */}
-        <div className="absolute bottom-5 sm:bottom-8 left-1/2 -translate-x-1/2 z-20 max-w-[90vw] overflow-x-auto flex gap-1.5 sm:gap-2 px-2">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
           {HERO_IMAGES.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`flex-shrink-0 rounded-full transition-all duration-300 ${
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                 index === currentSlide
-                  ? 'bg-emerald-400 w-5 sm:w-8 h-1.5 sm:h-2.5'
-                  : 'bg-white/40 hover:bg-white/70 w-1.5 sm:w-2.5 h-1.5 sm:h-2.5'
+                  ? 'bg-emerald-400 w-8'
+                  : 'bg-white/40 hover:bg-white/70'
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />
@@ -113,8 +102,8 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
         </div>
 
         {/* Hero content — transparent card, no buttons */}
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-8 md:py-12 lg:py-16">
-          <h1            className="font-display text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl font-semibold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] leading-relaxed max-w-5xl mx-auto">
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="font-display text-base sm:text-lg md:text-xl lg:text-2xl font-semibold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] leading-relaxed max-w-4xl mx-auto">
             We are a{' '}
             <span className="text-emerald-300 font-bold drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
               community benefit organization
@@ -152,17 +141,10 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
             <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-emerald-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
               <div className="relative h-52 overflow-hidden">
                 <img
-                  src="/Images/Homepage_pictures/1.jpg"
+                  src="/Images/What_We_Do/regenerative-agriculture.jpg"
                   alt="Regenerative Agriculture"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 flex items-center gap-2">
-                  <div className="p-2 bg-emerald-500/90 backdrop-blur-sm rounded-xl">
-                    <Sprout className="h-5 w-5 text-white" />
-                  </div>
-                  <span className="text-white font-semibold text-sm">Regenerative Agriculture</span>
-                </div>
               </div>
               <div className="p-6">
                 <h3 className="font-display font-bold text-xl text-gray-900 mb-3">
@@ -181,17 +163,10 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
             <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-emerald-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
               <div className="relative h-52 overflow-hidden">
                 <img
-                  src="/Images/Homepage_pictures/Education.jpg"
+                  src="/Images/What_We_Do/climate-education.jpg"
                   alt="Climate Education"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 flex items-center gap-2">
-                  <div className="p-2 bg-emerald-500/90 backdrop-blur-sm rounded-xl">
-                    <BookOpen className="h-5 w-5 text-white" />
-                  </div>
-                  <span className="text-white font-semibold text-sm">Climate Education</span>
-                </div>
               </div>
               <div className="p-6">
                 <h3 className="font-display font-bold text-xl text-gray-900 mb-3">
@@ -210,17 +185,10 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
             <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-emerald-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
               <div className="relative h-52 overflow-hidden">
                 <img
-                  src="/Images/Homepage_pictures/Research.jpg"
+                  src="/Images/What_We_Do/research-innovation.jpg"
                   alt="Research & Innovation"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 flex items-center gap-2">
-                  <div className="p-2 bg-emerald-500/90 backdrop-blur-sm rounded-xl">
-                    <Globe className="h-5 w-5 text-white" />
-                  </div>
-                  <span className="text-white font-semibold text-sm">Research & Innovation</span>
-                </div>
               </div>
               <div className="p-6">
                 <h3 className="font-display font-bold text-xl text-gray-900 mb-3">
@@ -262,17 +230,10 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
             <div className="bg-emerald-900/30 border border-emerald-800/40 rounded-3xl overflow-hidden hover:border-emerald-500/30 hover:-translate-y-1 transition-all duration-300 group backdrop-blur-sm">
               <div className="relative h-52 overflow-hidden">
                 <img
-                  src="/Images/Homepage_pictures/4.jpg"
+                  src="/Images/How_We_Do_It/demonstrate-solutions.jpg"
                   alt="Demonstrate Solutions"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/80 via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 flex items-center gap-2">
-                  <div className="p-2 bg-emerald-500/90 backdrop-blur-sm rounded-xl">
-                    <Trees className="h-5 w-5 text-white" />
-                  </div>
-                  <span className="text-white font-semibold text-sm">Demonstrate Solutions</span>
-                </div>
               </div>
               <div className="p-6">
                 <div className="flex items-center gap-2 mb-4">
@@ -297,17 +258,10 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
             <div className="bg-emerald-900/30 border border-emerald-800/40 rounded-3xl overflow-hidden hover:border-emerald-500/30 hover:-translate-y-1 transition-all duration-300 group backdrop-blur-sm">
               <div className="relative h-52 overflow-hidden">
                 <img
-                  src="/Images/Homepage_pictures/5.jpg"
+                  src="/Images/How_We_Do_It/empower-communities.jpg"
                   alt="Empower Communities"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/80 via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 flex items-center gap-2">
-                  <div className="p-2 bg-emerald-500/90 backdrop-blur-sm rounded-xl">
-                    <Users className="h-5 w-5 text-white" />
-                  </div>
-                  <span className="text-white font-semibold text-sm">Empower Communities</span>
-                </div>
               </div>
               <div className="p-6">
                 <div className="flex items-center gap-2 mb-4">
@@ -332,17 +286,10 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
             <div className="bg-emerald-900/30 border border-emerald-800/40 rounded-3xl overflow-hidden hover:border-emerald-500/30 hover:-translate-y-1 transition-all duration-300 group backdrop-blur-sm">
               <div className="relative h-52 overflow-hidden">
                 <img
-                  src="/Images/Homepage_pictures/6.jpg"
+                  src="/Images/How_We_Do_It/inspire-storytelling.jpg"
                   alt="Inspire Through Storytelling"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/80 via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 flex items-center gap-2">
-                  <div className="p-2 bg-emerald-500/90 backdrop-blur-sm rounded-xl">
-                    <Camera className="h-5 w-5 text-white" />
-                  </div>
-                  <span className="text-white font-semibold text-sm">Inspire Through Storytelling</span>
-                </div>
               </div>
               <div className="p-6">
                 <div className="flex items-center gap-2 mb-4">

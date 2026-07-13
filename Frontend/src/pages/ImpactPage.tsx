@@ -1,6 +1,6 @@
 import ImpactDashboard from '../components/ImpactDashboard';
 import { motion } from 'motion/react';
-import { FileText, ExternalLink, Download, Sparkles, ArrowRight, Leaf, Globe } from 'lucide-react';
+import { FileText, ExternalLink, Download, Sparkles, ArrowRight, Leaf, Globe, Users, Quote } from 'lucide-react';
 
 export default function ImpactPage() {
   return (
@@ -126,8 +126,125 @@ export default function ImpactPage() {
         <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-brand-50 to-transparent" />
       </div>
 
-      {/* ──────────── IMPACT DASHBOARD (with Interactive Map) ──────────── */}
+      {/* ──────────── IMPACT DASHBOARD ──────────── */}
       <ImpactDashboard />
+
+      {/* ──────────── OUR TEAM & IMPACT GALLERY ──────────── */}
+      <section className="py-20 relative overflow-hidden">
+        {/* Background decorations */}
+        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-emerald-100/20 rounded-full blur-3xl -z-10" />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-emerald-50/30 rounded-full blur-3xl -z-10" />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* ─── Team Section ─── */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center max-w-3xl mx-auto mb-14"
+          >
+
+            <h2 className="font-display font-bold text-3xl sm:text-4xl text-gray-900 tracking-tight mt-3">
+              The People Behind the Mission
+            </h2>
+            <p className="mt-3 text-gray-600 leading-relaxed">
+              A passionate team working every day to restore landscapes, empower communities, 
+              and build climate resilience across Rwanda and Africa.
+            </p>
+          </motion.div>
+
+          {/* ─── Team Member Cards ─── */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+            {[
+              {
+                name: 'Leonard IYAMUREMYE',
+                role: 'Managing Director',
+                photo: '/Images/Our_Team/leonard-iyamuremye.jpg',
+                bio: 'Leading strategic direction and overseeing all restoration programs across Rwanda.',
+                objectPosition: '50% 12%',
+              },
+              {
+                name: 'Dusengimana Florence',
+                role: 'Communication Director',
+                photo: '/Images/Our_Team/dusengimana-florence.jpg',
+                bio: 'Driving awareness, storytelling, and community engagement through strategic communications.',
+                objectPosition: '50% 20%',
+              },
+              {
+                name: 'Bienvenue Ishimwe',
+                role: 'Development Officer',
+                photo: '/Images/Our_Team/bienvenue-ishimwe.jpg',
+                bio: 'Building partnerships and securing resources to scale our impact across the region.',
+                objectPosition: '50% 20%',
+              },
+              {
+                name: 'TUYIZERE Sandrine',
+                role: 'Partnership Officer',
+                photo: '/Images/Our_Team/tuyizere-sandrine.jpg',
+                bio: 'Cultivating relationships with local and international partners to amplify our mission.',
+                objectPosition: '50% 20%',
+              },
+            ].map((member, index) => (
+              <motion.div
+                key={member.name}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 * index }}
+                className="group relative"
+              >
+                <div className="relative bg-white rounded-3xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-2 flex flex-col items-center pt-8 sm:pt-10 px-4 sm:px-6 pb-6">
+                  {/* Photo - circular headshot */}
+                  <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-full overflow-hidden border-4 border-emerald-100 shadow-md shrink-0">
+                    <img
+                      src={member.photo}
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                      style={{ objectPosition: member.objectPosition }}
+                      loading="lazy"
+                    />
+                  </div>
+
+                  {/* Name, Role, Bio under the image */}
+                  <div className="text-center mt-5">
+                    <h3 className="font-display font-bold text-lg sm:text-xl text-gray-900 leading-tight">
+                      {member.name}
+                    </h3>
+                    <p className="text-emerald-700 text-xs sm:text-sm font-semibold mt-0.5">
+                      {member.role}
+                    </p>
+                    <p className="text-gray-600 text-sm leading-relaxed mt-3 pt-3 border-t border-gray-100">
+                      {member.bio}
+                    </p>
+                  </div>
+
+                  {/* Hover decorative accent */}
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-300 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* ─── Bottom Quote ─── */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="mt-16 text-center"
+          >
+            <div className="inline-flex items-center gap-2 text-gray-400 text-sm">
+              <Quote className="h-4 w-4 opacity-50" />
+              <span className="italic">Together, we are restoring our planet — one landscape, one community at a time.</span>
+              <Quote className="h-4 w-4 opacity-50 rotate-180" />
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Bottom gradient transition */}
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent" />
+      </section>
 
       {/* ──────────── RESOURCES SECTION ──────────── */}
       <section className="py-20 relative overflow-hidden">
