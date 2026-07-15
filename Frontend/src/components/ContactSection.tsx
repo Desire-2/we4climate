@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, FocusEvent, ChangeEvent } from 'react';
 import { Mail, Phone, MapPin, Send, Facebook, Twitter, Instagram, Globe, CheckCircle2 } from 'lucide-react';
 import { submitContact } from '../api/client';
 
@@ -8,10 +8,33 @@ export default function ContactSection() {
   const [subject, setSubject] = useState('General Inquiry');
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
+  const [emailError, setEmailError] = useState('');
+
+  const validateEmail = (value: string): string => {
+    const trimmed = value.trim();
+    if (!trimmed) return 'Email is required';
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmed)) return 'Please enter a valid email address';
+    return '';
+  };
+
+  const handleEmailBlur = (e: FocusEvent<HTMLInputElement>) => {
+    setEmailError(validateEmail(e.target.value));
+  };
+
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    if (emailError) {
+      setEmailError(validateEmail(value));
+    }
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!name || !email || !message) return;
+    const err = validateEmail(email);
+    setEmailError(err);
+    if (err || !name || !message) return;
 
     // Try API first
     const result = await submitContact({
@@ -173,11 +196,24 @@ export default function ContactSection() {
                   <input 
                     type="email" 
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={handleEmailChange}
+                    onBlur={handleEmailBlur}
                     placeholder="e.g. desire@gmail.com"
-                    className="w-full bg-gray-50 border border-gray-200 focus:border-emerald-500 focus:bg-white rounded-xl px-4 py-2.5 text-xs text-gray-905 focus:outline-none transition-all"
+                    className={`w-full bg-gray-50 border rounded-xl px-4 py-2.5 text-xs text-gray-905 focus:outline-none transition-all ${
+                      emailError
+                        ? 'border-red-400 focus:border-red-500 bg-red-50'
+                        : 'border-gray-200 focus:border-emerald-500 focus:bg-white'
+                    }`}
                     required
                   />
+                  {emailError && (
+                    <p className="mt-1 text-xs text-red-500 flex items-center gap-1">
+                      <svg className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                      </svg>
+                      {emailError}
+                    </p>
+                  )}
                 </div>
               </div>
 

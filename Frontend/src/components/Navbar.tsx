@@ -218,7 +218,7 @@ export default function Navbar() {
               {/* "Take Action" Dropdown Menu container triggered on Hover */}
               <div 
                 id="take-action-dropdown-container"
-                className="relative group ml-2.5"
+                className="relative group ml-2.5 pb-2.5"
                 onMouseEnter={() => setIsDropdownHovered(true)}
                 onMouseLeave={() => setIsDropdownHovered(false)}
               >

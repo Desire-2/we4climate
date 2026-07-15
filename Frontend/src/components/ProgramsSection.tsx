@@ -153,7 +153,6 @@ export default function ProgramsSection() {
           {programs.map((program, index) => {
             const colors = colorMap[program.color];
             const isExpanded = expandedId === program.id;
-            const Icon = program.icon;
 
             return (
               <motion.div
@@ -203,16 +202,7 @@ export default function ProgramsSection() {
                       loading="lazy"
                     />
                   )}
-                  {/* Gradient overlay */}
-                  <div className={`absolute inset-0 bg-gradient-to-t ${program.gradientFrom} via-emerald-950/40 to-transparent`} />
-                  
-                  {/* Top badge */}
-                  <div className="absolute top-4 left-4 right-4 flex items-start justify-between">
-                    <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border ${colors.badge} backdrop-blur-sm`}>
-                      <Icon className="h-3.5 w-3.5" />
-                      {program.title.split(' ').slice(0, 1).join(' ')}
-                    </span>
-                  </div>
+
 
                 </div>
 
