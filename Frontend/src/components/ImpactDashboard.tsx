@@ -266,11 +266,6 @@ export default function ImpactDashboard() {
               <div className="relative h-24 sm:h-28 overflow-hidden">
                 <img src="/Images/Regeneration.jpg" alt="Regeneration Farm Center" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-2 left-3">
-                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
-                    Farm Center
-                  </span>
-                </div>
               </div>
               <div className="p-3 text-center">
                 <AnimatedCounter from={0} to={1} duration={1.5} />
@@ -299,11 +294,6 @@ export default function ImpactDashboard() {
               <div className="relative h-24 sm:h-28 overflow-hidden">
                 <img src="/Images/empowered.jpg" alt="Farmers Empowerment" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-2 left-3">
-                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
-                    Farmers
-                  </span>
-                </div>
               </div>
               <div className="p-3 text-center">
                 <AnimatedCounter from={0} to={200} suffix="+" duration={2} />
@@ -331,11 +321,6 @@ export default function ImpactDashboard() {
               <div className="relative h-24 sm:h-28 overflow-hidden">
                 <img src="/Images/International.jpg" alt="International Conferences" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-2 left-3">
-                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
-                    Events
-                  </span>
-                </div>
               </div>
               <div className="p-3 text-center">
                 <AnimatedCounter from={0} to={5} suffix="+" duration={1.5} />
@@ -363,11 +348,6 @@ export default function ImpactDashboard() {
               <div className="relative h-24 sm:h-28 overflow-hidden">
                 <img src="/Images/engaged.jpg" alt="Children Engaged" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-2 left-3">
-                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
-                    Children
-                  </span>
-                </div>
               </div>
               <div className="p-3 text-center">
                 <AnimatedCounter from={0} to={50} suffix="+" duration={1.8} />
@@ -395,11 +375,6 @@ export default function ImpactDashboard() {
               <div className="relative h-24 sm:h-28 overflow-hidden">
                 <img src="/Images/seedlings.jpg" alt="Agroforestry Seedlings" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-2 left-3">
-                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
-                    Seedlings
-                  </span>
-                </div>
               </div>
               <div className="p-3 text-center">
                 <AnimatedCounter from={0} to={600} suffix="+" duration={2.5} />
@@ -427,11 +402,6 @@ export default function ImpactDashboard() {
               <div className="relative h-24 sm:h-28 overflow-hidden">
                 <img src="/Images/created.jpg" alt="Jobs Created" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-2 left-3">
-                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
-                    Jobs
-                  </span>
-                </div>
               </div>
               <div className="p-3 text-center">
                 <AnimatedCounter from={0} to={60} suffix="+" duration={2} />
@@ -459,11 +429,6 @@ export default function ImpactDashboard() {
               <div className="relative h-24 sm:h-28 overflow-hidden">
                 <img src="/Images/activities.jpg" alt="Kids Restoration" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-2 left-3">
-                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
-                    Kids
-                  </span>
-                </div>
               </div>
               <div className="p-3 text-center">
                 <AnimatedCounter from={0} to={800} suffix="+" duration={2.5} />
@@ -491,11 +456,6 @@ export default function ImpactDashboard() {
               <div className="relative h-24 sm:h-28 overflow-hidden">
                 <img src="/Images/Primary.jpg" alt="Schools Empowered" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-2 left-3">
-                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
-                    Schools
-                  </span>
-                </div>
               </div>
               <div className="p-3 text-center">
                 <AnimatedCounter from={0} to={2} suffix="+" duration={1.5} />
@@ -523,11 +483,6 @@ export default function ImpactDashboard() {
               <div className="relative h-24 sm:h-28 overflow-hidden">
                 <img src="/Images/Kitchen.jpg" alt="Kitchen Gardens" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-2 left-3">
-                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
-                    Gardens
-                  </span>
-                </div>
               </div>
               <div className="p-3 text-center">
                 <AnimatedCounter from={0} to={2} suffix="+" duration={1.5} />
@@ -555,11 +510,6 @@ export default function ImpactDashboard() {
               <div className="relative h-24 sm:h-28 overflow-hidden">
                 <img src="/Images/Homepage_pictures/IMG_7097.jpg" alt="International Visitors" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-2 left-3">
-                  <span className="text-white text-[10px] font-bold uppercase tracking-wider bg-emerald-500/80 px-2 py-0.5 rounded-md backdrop-blur-sm">
-                    Visitors
-                  </span>
-                </div>
               </div>
               <div className="p-3 text-center">
                 <AnimatedCounter from={0} to={10} suffix="+" duration={1.8} />

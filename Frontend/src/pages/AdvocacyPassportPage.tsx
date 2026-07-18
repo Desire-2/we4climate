@@ -58,6 +58,10 @@ export default function AdvocacyPassportPage() {
   const [certificateCode, setCertificateCode] = useState<string | null>(null);
   const [issuingCert, setIssuingCert] = useState(false);
   const [quizError, setQuizError] = useState('');
+  const [emailError, setEmailError] = useState('');
+
+  const isValidEmail = (email: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
   useEffect(() => {
     fetchActiveWeeklyChallenge().then((challenge) => {
@@ -92,8 +96,13 @@ export default function AdvocacyPassportPage() {
   };
 
   const handleStartQuiz = () => {
+    setEmailError('');
     if (!candidateName.trim()) {
       setQuizError('Please provide your name — it will appear on the digital certificate.');
+      return;
+    }
+    if (candidateEmail.trim() && !isValidEmail(candidateEmail)) {
+      setEmailError('Please enter a valid email address.');
       return;
     }
     setQuizError('');
@@ -109,6 +118,7 @@ export default function AdvocacyPassportPage() {
     setQuizStarted(false);
     setCandidateName('');
     setCandidateEmail('');
+    setEmailError('');
     setCertificateCode(null);
     setCurrentQuestion(0);
     setQuizScore(0);
@@ -166,38 +176,30 @@ export default function AdvocacyPassportPage() {
               <i className="bi bi-shield-check text-emerald-300 text-sm" />
             </motion.div>
 
-            <h1 className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-white tracking-tight leading-tight">
-              We4Climate{' '}
+            <h1 className="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-white tracking-tight leading-tight">
               <span className="bg-gradient-to-r from-emerald-300 to-amber-300 bg-clip-text text-transparent">
-                Advocacy Passport
+                WELCOME TO WE4CLIMATE KNOWLEDGE HUB
               </span>
             </h1>
-            <p className="mt-4 text-lg text-emerald-100/70 max-w-2xl mx-auto leading-relaxed">
-              Test what you know about climate and conservation, earn your official Community Climate Advocate Certificate,
-              and become part of a growing network of people making a difference across Rwanda.
-            </p>
+            <div className="mt-6 max-w-2xl mx-auto space-y-4">
+              <p className="text-lg text-emerald-100/70 leading-relaxed">
+                Test your climate and conservation literacy and  earn your official Climate Advocate Certificate, and become part of a growing network of people making a difference globally.
+              </p>
+              <p className="text-sm text-emerald-200/50 italic flex items-center justify-center gap-2">
+                <i className="bi bi-share text-emerald-400 text-xs" />
+                Share our platform with your teams!
+              </p>
+              <div className="bg-emerald-950/60 border border-emerald-800/40 rounded-2xl p-5 text-left">
+                <p className="text-sm text-emerald-100/80 leading-relaxed">
+                  Fill in your Name and email correctly and click begin the challenge, then start answering all questions.
+                  You need to pass all the questions to get a certificate.
+                  Upon completion, you can download your certificate automatically!
+                </p>
+              </div>
+            </div>
           </motion.div>
 
-          {/* Stats row */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto"
-          >
-            {[
-              { icon: "bi-mortarboard", label: "Climate Topics", value: "3 Modules" },
-              { icon: "bi-trophy", label: "Pass Score", value: "3/3 Required" },
-              { icon: "bi-lightning", label: "Instant Certificate", value: "Digital PDF" },
-              { icon: "bi-globe2", label: "Open To", value: "Rwanda-wide" },
-            ].map((stat, i) => (
-              <div key={i} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 text-center">
-                <i className={`${stat.icon} text-emerald-400 text-xl mx-auto block mb-1.5`} />
-                <div className="text-xs font-bold text-white">{stat.value}</div>
-                <div className="text-[9px] uppercase tracking-wider text-emerald-300/60 mt-0.5">{stat.label}</div>
-              </div>
-            ))}
-          </motion.div>
+
         </div>
       </section>
 
@@ -272,10 +274,34 @@ export default function AdvocacyPassportPage() {
                       <input
                         type="email"
                         value={candidateEmail}
-                        onChange={(e) => setCandidateEmail(e.target.value)}
+                        onChange={(e) => {
+                          setCandidateEmail(e.target.value);
+                          if (emailError) setEmailError('');
+                        }}
+                        onBlur={() => {
+                          if (candidateEmail.trim() && !isValidEmail(candidateEmail)) {
+                            setEmailError('Please enter a valid email address.');
+                          } else {
+                            setEmailError('');
+                          }
+                        }}
                         placeholder="you@example.com"
-                        className="w-full bg-emerald-950/60 border border-emerald-800 focus:border-emerald-400 rounded-xl px-4 py-3 text-sm text-white placeholder-emerald-100/35 focus:outline-none transition-all"
+                        className={`w-full bg-emerald-950/60 border rounded-xl px-4 py-3 text-sm text-white placeholder-emerald-100/35 focus:outline-none transition-all ${
+                          emailError
+                            ? 'border-rose-500 focus:border-rose-400'
+                            : 'border-emerald-800 focus:border-emerald-400'
+                        }`}
                       />
+                      {emailError && (
+                        <motion.p
+                          initial={{ opacity: 0, y: -4 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="text-[11px] text-rose-400 flex items-center gap-1.5 mt-1"
+                        >
+                          <i className="bi bi-exclamation-circle text-xs" />
+                          {emailError}
+                        </motion.p>
+                      )}
                     </div>
                   </div>
 

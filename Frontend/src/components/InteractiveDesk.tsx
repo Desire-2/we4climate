@@ -151,10 +151,6 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <span className="text-emerald-300 font-mono text-sm font-semibold tracking-wider uppercase bg-emerald-950 px-4 py-1.5 rounded-full inline-block mb-3 border border-emerald-500/20">
-              <i className="bi bi-lightning text-emerald-300 mr-1.5 text-xs" />
-              Action Hub
-            </span>
             <h2 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-white tracking-tight">
               Community Action Desk
             </h2>
