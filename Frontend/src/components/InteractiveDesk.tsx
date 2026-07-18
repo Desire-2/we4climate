@@ -19,11 +19,6 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
   const [pledgeAction, setPledgeAction] = useState('Organizing an environmental club event');
   const [pledgeSuccess, setPledgeSuccess] = useState(false);
 
-  // Compute stats
-  const totalPledgedTrees = pledgedList.reduce((sum, p) => sum + p.treesCount, 0);
-  const uniqueDistricts = [...new Set(pledgedList.map(p => p.district))].length;
-  const totalAdvocates = pledgedList.length;
-
   const rwandanDistricts = [
     'Kicukiro (Kigali)', 'Nyarugenge (Kigali)', 'Gasabo (Kigali)',
     'Musanze', 'Rubavu', 'Huye', 'Kayonza', 'Rwamagana', 'Gicumbi', 'Bugesera', 'Karongi'
@@ -143,67 +138,6 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         
-        {/* Header */}
-        <div className="text-center max-w-4xl mx-auto mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-white tracking-tight">
-              Community Action Desk
-            </h2>
-            <p className="mt-4 text-emerald-100/80 text-lg leading-relaxed max-w-2xl mx-auto">
-              Share your conservation commitment and see the growing community of people 
-              taking action for the environment across Rwanda.
-            </p>
-          </motion.div>
-
-          {/* Stats row */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto"
-          >
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-emerald-500/15 rounded-xl">
-                  <i className="bi bi-tree text-emerald-400 text-xl" />
-                </div>
-                <div className="text-left">
-                  <div className="text-2xl font-bold text-white">{totalPledgedTrees}</div>
-                  <div className="text-[10px] uppercase tracking-wider text-emerald-300/60">Trees Pledged</div>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-amber-500/15 rounded-xl">
-                  <i className="bi bi-people text-amber-400 text-xl" />
-                </div>
-                <div className="text-left">
-                  <div className="text-2xl font-bold text-white">{totalAdvocates}</div>
-                  <div className="text-[10px] uppercase tracking-wider text-emerald-300/60">Advocates</div>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-emerald-500/15 rounded-xl">
-                  <i className="bi bi-geo-alt text-emerald-400 text-xl" />
-                </div>
-                <div className="text-left">
-                  <div className="text-2xl font-bold text-white">{uniqueDistricts}</div>
-                  <div className="text-[10px] uppercase tracking-wider text-emerald-300/60">Districts</div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
