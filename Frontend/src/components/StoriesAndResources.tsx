@@ -142,9 +142,6 @@ export default function StoriesAndResources() {
         {/* Title & Hub Nav controls */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-16 gap-6">
           <div>
-            <span className="text-xs font-semibold tracking-widest text-emerald-700 uppercase bg-emerald-100 px-3.5 py-1.5 rounded-full border border-emerald-300/30">
-              Stories & Publications
-            </span>
             <h2 className="mt-4 font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-gray-900">
               Knowledge & Stories Hub
             </h2>

@@ -14,6 +14,7 @@ import ImpactPage from './pages/ImpactPage';
 import ResourcesPage from './pages/ResourcesPage';
 import DonatePage from './pages/DonatePage';
 import ActionPage from './pages/ActionPage';
+import AdvocacyPassportPage from './pages/AdvocacyPassportPage';
 import OpportunitiesPage from './pages/OpportunitiesPage';
 import ContactPage from './pages/ContactPage';
 
@@ -225,6 +226,10 @@ export default function App() {
                   <Route
                     path="/action"
                     element={<ActionPage handlePledgeAdded={handlePledgeAdded} />}
+                  />
+                  <Route
+                    path="/advocacy-passport"
+                    element={<AdvocacyPassportPage />}
                   />
                   <Route path="/opportunities" element={<OpportunitiesPage />} />
                   <Route path="/contact" element={<ContactPage />} />

@@ -4,7 +4,7 @@ import {
   Menu, X, Mail, Facebook, Twitter, Instagram, 
   Linkedin, Youtube, ChevronDown, ChevronRight, Home, Info, 
   Award, BarChart3, Heart, Briefcase, BookOpen, HelpCircle, Phone,
-  Zap
+  Zap, Shield
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -50,6 +50,7 @@ export default function Navbar() {
   const takeActionItems = [
     { path: '/resources', label: 'Resources Manuals', icon: BookOpen },
     { path: '/action', label: 'Action Desk', icon: HelpCircle },
+    { path: '/advocacy-passport', label: 'Earn Certificate', icon: Shield },
     { path: '/contact', label: 'Get in Touch', icon: Phone }
   ];
 

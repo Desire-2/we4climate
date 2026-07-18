@@ -107,9 +107,6 @@ export default function DonationPortal() {
         
         {/* Title */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-bold tracking-widest text-emerald-200 uppercase bg-emerald-950 px-3.5 py-1.5 rounded-full border border-emerald-500/40 inline-flex items-center gap-1.5">
-            <Heart className="h-4.5 w-4.5 text-rose-400 fill-rose-400" /> Secure Online Giving
-          </span>
           <h2 className="mt-4 font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white mb-2">
             Support Our Work
           </h2>
