@@ -1,11 +1,5 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import {
-  Award, Sparkles, ChevronRight, BookOpen, HelpCircle, AlertCircle,
-  XCircle, CheckCircle2, RefreshCw, Printer, Star, UserCheck,
-  Globe, Calendar, Leaf, BadgeCheck, Mail, Loader2, Shield,
-  GraduationCap, Target, Trophy, Zap, ArrowLeft, ArrowRight
-} from 'lucide-react';
 import { fetchActiveWeeklyChallenge, issueCertificate, recordChallengeCompletion } from '../api/client';
 import type { ApiWeeklyChallengeQuestion } from '../api/client';
 
@@ -37,7 +31,7 @@ const fallbackQuestions: ApiWeeklyChallengeQuestion[] = [
     options: [
       "Excluding elder experts from climate project designs",
       "Replacing traditional knowledge entirely with AI scripts",
-      "Linking the energy and passion of local communities with the advice/experience of elders and experts",
+      "Linking the energy and passion of local communities with the advice and experience of elders and experts",
       "Restricting green jobs solely to senior agency directors"
     ],
     correct: 2,
@@ -52,7 +46,6 @@ export default function AdvocacyPassportPage() {
   const [challengeLoading, setChallengeLoading] = useState(true);
 
   const activeQuestions = questions ?? fallbackQuestions;
-  const questionCount = activeQuestions.length;
 
   const [quizStarted, setQuizStarted] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -100,7 +93,7 @@ export default function AdvocacyPassportPage() {
 
   const handleStartQuiz = () => {
     if (!candidateName.trim()) {
-      setQuizError('Please supply your name to print on the digital certificate.');
+      setQuizError('Please provide your name — it will appear on the digital certificate.');
       return;
     }
     setQuizError('');
@@ -170,15 +163,18 @@ export default function AdvocacyPassportPage() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-emerald-300 bg-emerald-950/80 px-4 py-2 rounded-full border border-emerald-500/20 mb-6"
             >
-              <Shield className="h-3.5 w-3.5" />
+              <i className="bi bi-shield-check text-emerald-300 text-sm" />
             </motion.div>
 
             <h1 className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl text-white tracking-tight leading-tight">
               We4Climate{' '}
+              <span className="bg-gradient-to-r from-emerald-300 to-amber-300 bg-clip-text text-transparent">
+                Advocacy Passport
+              </span>
             </h1>
             <p className="mt-4 text-lg text-emerald-100/70 max-w-2xl mx-auto leading-relaxed">
-              Test your climate literacy, earn your official Community Climate Advocate Certificate,
-              and join a growing network of environmental champions across Rwanda.
+              Test what you know about climate and conservation, earn your official Community Climate Advocate Certificate,
+              and become part of a growing network of people making a difference across Rwanda.
             </p>
           </motion.div>
 
@@ -190,13 +186,13 @@ export default function AdvocacyPassportPage() {
             className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto"
           >
             {[
-              { icon: GraduationCap, label: "Climate Literacy", value: "3 Modules" },
-              { icon: Trophy, label: "Perfect Score", value: "3/3 Required" },
-              { icon: Zap, label: "Instant Certificate", value: "Digital PDF" },
-              { icon: Globe, label: "Network Access", value: "Rwanda-wide" },
+              { icon: "bi-mortarboard", label: "Climate Topics", value: "3 Modules" },
+              { icon: "bi-trophy", label: "Pass Score", value: "3/3 Required" },
+              { icon: "bi-lightning", label: "Instant Certificate", value: "Digital PDF" },
+              { icon: "bi-globe2", label: "Open To", value: "Rwanda-wide" },
             ].map((stat, i) => (
               <div key={i} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-4 text-center">
-                <stat.icon className="h-5 w-5 text-emerald-400 mx-auto mb-1.5" />
+                <i className={`${stat.icon} text-emerald-400 text-xl mx-auto block mb-1.5`} />
                 <div className="text-xs font-bold text-white">{stat.value}</div>
                 <div className="text-[9px] uppercase tracking-wider text-emerald-300/60 mt-0.5">{stat.label}</div>
               </div>
@@ -227,8 +223,8 @@ export default function AdvocacyPassportPage() {
                 >
                   <div className="flex items-center gap-4">
                     <div className="p-4 bg-gradient-to-br from-amber-500/20 to-emerald-500/10 rounded-2xl border border-amber-400/20 relative">
-                      <Award className="h-8 w-8 text-amber-400" />
-                      <Sparkles className="h-4 w-4 absolute -top-1 -right-1 text-amber-300" />
+                      <i className="bi bi-award text-amber-400 text-2xl" />
+                      <i className="bi bi-stars text-amber-300 text-sm absolute -top-1 -right-1" />
                     </div>
                     <div>
                       <h2 className="font-display font-bold text-2xl text-white">Advocacy Passport Challenge</h2>
@@ -239,16 +235,16 @@ export default function AdvocacyPassportPage() {
                   <div className="bg-gradient-to-r from-emerald-950/60 to-emerald-900/40 border border-emerald-800/40 rounded-2xl p-6">
                     <p className="text-emerald-100/80 leading-relaxed">
                       {challengeLoading ? (
-                        <span className="flex items-center gap-2"><Loader2 className="h-4 w-4 animate-spin" /> Loading this week's challenge…</span>
+                        <span className="flex items-center gap-2"><i className="bi bi-arrow-repeat animate-spin text-emerald-400" /> Loading this week's challenge...</span>
                       ) : challengeTitle ? (
-                        <>Earn your certificate by conquering <strong className="text-emerald-300">this week's challenge:</strong> &ldquo;<span className="text-amber-300 font-bold">{challengeTitle}</span>&rdquo;</>
+                        <>Earn your certificate by taking on <strong className="text-emerald-300">this week's challenge:</strong> &ldquo;<span className="text-amber-300 font-bold">{challengeTitle}</span>&rdquo;</>
                       ) : (
                         <>Complete the climate literacy assessment with a <strong className="text-amber-300">perfect {activeQuestions.length}/{activeQuestions.length}</strong> score to unlock your official We4Climate Community Climate Advocate Certificate.</>
                       )}
                     </p>
                     {challengeWeek && (
                       <div className="mt-3 flex items-center gap-1.5 text-[10px] font-mono text-emerald-300/60 bg-emerald-950/50 rounded-full px-3 py-1 w-fit">
-                        <Calendar className="h-3 w-3" />
+                        <i className="bi bi-calendar3 text-emerald-300/60 text-xs" />
                         {challengeWeek}
                       </div>
                     )}
@@ -257,27 +253,27 @@ export default function AdvocacyPassportPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80 flex items-center gap-1.5">
-                        <BadgeCheck className="h-3.5 w-3.5 text-emerald-400" />
-                        Advocate Name for Certificate
+                        <i className="bi bi-patch-check text-emerald-400 text-sm" />
+                        Your Name for the Certificate
                       </label>
                       <input
                         type="text"
                         value={candidateName}
                         onChange={(e) => setCandidateName(e.target.value)}
-                        placeholder="Enter full name for signing"
+                        placeholder="Enter your full name"
                         className="w-full bg-emerald-950/60 border border-emerald-800 focus:border-emerald-400 rounded-xl px-4 py-3 text-sm text-white placeholder-emerald-100/35 focus:outline-none transition-all"
                       />
                     </div>
                     <div className="space-y-2">
                       <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80 flex items-center gap-1.5">
-                        <Mail className="h-3.5 w-3.5 text-emerald-400" />
-                        Email (for certificate record)
+                        <i className="bi bi-envelope text-emerald-400 text-sm" />
+                        Email (optional, for records)
                       </label>
                       <input
                         type="email"
                         value={candidateEmail}
                         onChange={(e) => setCandidateEmail(e.target.value)}
-                        placeholder="alice@example.org (optional)"
+                        placeholder="you@example.com"
                         className="w-full bg-emerald-950/60 border border-emerald-800 focus:border-emerald-400 rounded-xl px-4 py-3 text-sm text-white placeholder-emerald-100/35 focus:outline-none transition-all"
                       />
                     </div>
@@ -289,7 +285,7 @@ export default function AdvocacyPassportPage() {
                       animate={{ opacity: 1, y: 0 }}
                       className="text-xs text-amber-400 bg-amber-400/10 border border-amber-400/20 rounded-xl px-4 py-2.5 flex items-center gap-2"
                     >
-                      <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                      <i className="bi bi-exclamation-circle text-amber-400 text-sm" />
                       {quizError}
                     </motion.p>
                   )}
@@ -300,9 +296,9 @@ export default function AdvocacyPassportPage() {
                     whileTap={{ scale: 0.98 }}
                     className="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-emerald-950 rounded-xl font-bold text-sm shadow-lg shadow-amber-500/20 transition-all duration-300 flex items-center justify-center gap-3"
                   >
-                    <BookOpen className="h-5 w-5" />
+                    <i className="bi bi-book text-lg" />
                     <span>Begin Challenge</span>
-                    <ArrowRight className="h-4 w-4" />
+                    <i className="bi bi-arrow-right text-base" />
                   </motion.button>
                 </motion.div>
               )}
@@ -317,7 +313,7 @@ export default function AdvocacyPassportPage() {
                   <div className="flex items-center justify-between flex-wrap gap-4">
                     <div className="flex items-center gap-3">
                       <div className="p-2.5 bg-emerald-500/10 rounded-xl border border-emerald-400/20">
-                        <HelpCircle className="h-5 w-5 text-emerald-400" />
+                        <i className="bi bi-question-circle text-emerald-400 text-xl" />
                       </div>
                       <div>
                         <span className="text-sm font-mono text-emerald-400 font-semibold">
@@ -327,7 +323,7 @@ export default function AdvocacyPassportPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2 bg-emerald-950/60 border border-emerald-800/40 rounded-xl px-4 py-2">
-                      <Trophy className="h-4 w-4 text-amber-400" />
+                      <i className="bi bi-trophy text-amber-400 text-sm" />
                       <span className="text-sm font-bold text-emerald-300">{quizScore}/{activeQuestions.length}</span>
                     </div>
                   </div>
@@ -393,16 +389,16 @@ export default function AdvocacyPassportPage() {
                         {selectedAnswer === activeQuestions[currentQuestion].correct ? (
                           <>
                             <div className="p-1.5 bg-emerald-500/20 rounded-full">
-                              <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                              <i className="bi bi-check-circle-fill text-emerald-400 text-lg" />
                             </div>
-                            <span className="font-bold text-emerald-300">Correct! Well done!</span>
+                            <span className="font-bold text-emerald-300">That's right — well done!</span>
                           </>
                         ) : (
                           <>
                             <div className="p-1.5 bg-rose-500/20 rounded-full">
-                              <XCircle className="h-5 w-5 text-rose-400" />
+                              <i className="bi bi-x-circle text-rose-400 text-lg" />
                             </div>
-                            <span className="font-bold text-rose-300">Not quite — learning moment:</span>
+                            <span className="font-bold text-rose-300">Not quite — here's what you need to know:</span>
                           </>
                         )}
                       </div>
@@ -415,8 +411,8 @@ export default function AdvocacyPassportPage() {
                         whileTap={{ scale: 0.98 }}
                         className="w-full py-3 bg-gradient-to-r from-emerald-500 to-emerald-400 hover:from-emerald-400 hover:to-emerald-300 text-emerald-950 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all duration-200"
                       >
-                        <span>{currentQuestion + 1 < activeQuestions.length ? 'Next Question' : 'See Results'}</span>
-                        <ArrowRight className="h-4 w-4" />
+                        <span>{currentQuestion + 1 < activeQuestions.length ? 'Next Question' : 'See Your Results'}</span>
+                        <i className="bi bi-arrow-right text-sm" />
                       </motion.button>
                     </motion.div>
                   )}
@@ -440,12 +436,12 @@ export default function AdvocacyPassportPage() {
                           transition={{ type: "spring", stiffness: 200, damping: 15 }}
                           className="inline-flex p-4 bg-gradient-to-br from-amber-500/20 to-emerald-500/10 rounded-full border border-amber-400/20 mb-4"
                         >
-                          <Trophy className="h-10 w-10 text-amber-400" />
+                          <i className="bi bi-trophy text-amber-400 text-3xl" />
                         </motion.div>
                         <h2 className="font-display font-extrabold text-2xl text-emerald-300 flex items-center justify-center gap-3">
-                          <Star className="h-6 w-6 text-amber-400 fill-amber-400" />
+                          <i className="bi bi-star-fill text-amber-400 text-xl" />
                           Perfect Score! {quizScore}/{activeQuestions.length}
-                          <Star className="h-6 w-6 text-amber-400 fill-amber-400" />
+                          <i className="bi bi-star-fill text-amber-400 text-xl" />
                         </h2>
                         <p className="text-sm text-emerald-200/60 mt-2">
                           Your official We4Climate Community Advocate Certificate is ready
@@ -458,12 +454,12 @@ export default function AdvocacyPassportPage() {
                         <div className="absolute -top-12 -left-12 w-36 h-36 bg-emerald-500 opacity-10 rounded-full blur-md" />
                         <div className="absolute top-6 right-6 flex flex-col items-center opacity-30">
                           <div className="p-2 bg-emerald-800 rounded-full text-white">
-                            <UserCheck className="h-6 w-6" />
+                            <i className="bi bi-person-check text-lg" />
                           </div>
                           <span className="text-[7px] font-mono font-bold mt-0.5">VERIFIED</span>
                         </div>
                         <div className="absolute bottom-6 left-6 opacity-10">
-                          <Globe className="h-16 w-16 text-emerald-700" />
+                          <i className="bi bi-globe2 text-emerald-700 text-5xl" />
                         </div>
 
                         <div className="space-y-2">
@@ -504,7 +500,7 @@ export default function AdvocacyPassportPage() {
                         <div className="mt-auto pt-4 flex justify-between items-end border-t border-gray-100 text-[8px] font-mono uppercase tracking-widest">
                           <div className="text-left">
                             <div className="flex items-center gap-1 border-b border-gray-200 pb-0.5">
-                              <Calendar className="h-3 w-3 text-gray-400" />
+                              <i className="bi bi-calendar3 text-gray-400 text-xs" />
                               <span className="text-gray-400 text-[9px]">{new Date().toLocaleDateString()}</span>
                             </div>
                             <span className="text-emerald-800/80 block mt-1">Issue Date</span>
@@ -525,9 +521,9 @@ export default function AdvocacyPassportPage() {
                           className="flex-1 py-3.5 bg-gradient-to-r from-emerald-500 to-emerald-400 hover:from-emerald-400 hover:to-emerald-300 disabled:opacity-60 text-emerald-950 rounded-xl font-bold text-sm uppercase tracking-wider transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2"
                         >
                           {issuingCert ? (
-                            <><Loader2 className="h-5 w-5 animate-spin" /> Saving Certificate…</>
+                            <><i className="bi bi-arrow-repeat animate-spin text-lg" /> Saving Certificate...</>
                           ) : (
-                            <><Printer className="h-5 w-5" /> Print / Save PDF</>
+                            <><i className="bi bi-printer text-lg" /> Print / Save PDF</>
                           )}
                         </motion.button>
                         <motion.button
@@ -536,7 +532,7 @@ export default function AdvocacyPassportPage() {
                           whileTap={{ scale: 0.98 }}
                           className="flex-1 py-3.5 bg-emerald-950 border border-emerald-800 hover:bg-emerald-900 text-emerald-300 rounded-xl font-bold text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2"
                         >
-                          <RefreshCw className="h-5 w-5" />
+                          <i className="bi bi-arrow-repeat text-lg" />
                           Start Over
                         </motion.button>
                       </div>
@@ -551,15 +547,15 @@ export default function AdvocacyPassportPage() {
                           transition={{ type: "spring", stiffness: 200, damping: 15 }}
                           className="inline-flex p-4 bg-rose-500/10 rounded-full border border-rose-500/20 mb-4"
                         >
-                          <AlertCircle className="h-10 w-10 text-rose-400" />
+                          <i className="bi bi-exclamation-circle text-rose-400 text-3xl" />
                         </motion.div>
                         <h2 className="font-display font-extrabold text-2xl text-rose-300">
                           Score: {quizScore}/{activeQuestions.length}
                         </h2>
                         <p className="mt-3 text-emerald-100/70 max-w-md mx-auto leading-relaxed">
-                          Excellent attempt, {candidateName}! To qualify for the official credential,
+                          Good effort, {candidateName}! To receive the official credential,
                           We4Climate requires a perfect {activeQuestions.length}/{activeQuestions.length} score.
-                          Review the materials and try again!
+                          Take a moment to review the materials, then give it another try.
                         </p>
                         <motion.button
                           onClick={() => {
@@ -574,8 +570,8 @@ export default function AdvocacyPassportPage() {
                           whileTap={{ scale: 0.98 }}
                           className="mt-6 px-8 py-3.5 bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-emerald-950 rounded-xl font-bold text-sm shadow-lg shadow-amber-500/20 transition-all inline-flex items-center gap-2"
                         >
-                          <RefreshCw className="h-4 w-4" />
-                          Challenge Again
+                          <i className="bi bi-arrow-repeat text-base" />
+                          Try Again
                         </motion.button>
                       </div>
                     </>

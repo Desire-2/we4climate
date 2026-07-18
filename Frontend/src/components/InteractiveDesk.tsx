@@ -1,6 +1,5 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { motion } from 'motion/react';
-import { Trees, CheckCircle2, UserCheck, MapPin, Sprout, Target, Users, Globe, Leaf, ArrowRight, Zap, Shield, TrendingUp, Award } from 'lucide-react';
 import { Pledge } from '../types';
 import { fetchPledges, createPledge } from '../api/client';
 import { useNavigate } from 'react-router-dom';
@@ -153,13 +152,15 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
             transition={{ duration: 0.6 }}
           >
             <span className="text-emerald-300 font-mono text-sm font-semibold tracking-wider uppercase bg-emerald-950 px-4 py-1.5 rounded-full inline-block mb-3 border border-emerald-500/20">
+              <i className="bi bi-lightning text-emerald-300 mr-1.5 text-xs" />
               Action Hub
             </span>
             <h2 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-white tracking-tight">
               Community Action Desk
             </h2>
             <p className="mt-4 text-emerald-100/80 text-lg leading-relaxed max-w-2xl mx-auto">
-              Record your conservation pledge and track the growing community of environmental advocates across Rwanda.
+              Share your conservation commitment and see the growing community of people 
+              taking action for the environment across Rwanda.
             </p>
           </motion.div>
 
@@ -174,7 +175,7 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 bg-emerald-500/15 rounded-xl">
-                  <Trees className="h-5 w-5 text-emerald-400" />
+                  <i className="bi bi-tree text-emerald-400 text-xl" />
                 </div>
                 <div className="text-left">
                   <div className="text-2xl font-bold text-white">{totalPledgedTrees}</div>
@@ -185,7 +186,7 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 bg-amber-500/15 rounded-xl">
-                  <Users className="h-5 w-5 text-amber-400" />
+                  <i className="bi bi-people text-amber-400 text-xl" />
                 </div>
                 <div className="text-left">
                   <div className="text-2xl font-bold text-white">{totalAdvocates}</div>
@@ -196,7 +197,7 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 bg-emerald-500/15 rounded-xl">
-                  <MapPin className="h-5 w-5 text-emerald-400" />
+                  <i className="bi bi-geo-alt text-emerald-400 text-xl" />
                 </div>
                 <div className="text-left">
                   <div className="text-2xl font-bold text-white">{uniqueDistricts}</div>
@@ -221,8 +222,8 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
             >
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-3 bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 rounded-xl border border-emerald-400/20 text-emerald-300 relative">
-                  <Trees className="h-6 w-6" />
-                  <Globe className="h-3 w-3 absolute -bottom-0.5 -right-0.5 text-emerald-400/60" />
+                  <i className="bi bi-tree text-emerald-300 text-xl" />
+                  <i className="bi bi-globe2 text-emerald-400/60 text-xs absolute -bottom-0.5 -right-0.5" />
                 </div>
                 <div>
                   <h3 className="font-display font-bold text-xl text-white">Tree Pledge Registry</h3>
@@ -234,7 +235,7 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80 mb-1.5 flex items-center gap-1.5">
-                      <UserCheck className="h-3.5 w-3.5 text-emerald-400" />
+                      <i className="bi bi-person-check text-emerald-400 text-sm" />
                       Your Full Name
                     </label>
                     <input 
@@ -248,7 +249,7 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                   </div>
                   <div>
                     <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80 mb-1.5 flex items-center gap-1.5">
-                      <MapPin className="h-3.5 w-3.5 text-emerald-400" />
+                      <i className="bi bi-geo-alt text-emerald-400 text-sm" />
                       Rwanda District
                     </label>
                     <select 
@@ -266,7 +267,7 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80 mb-1.5 flex items-center gap-1.5">
-                      <Sprout className="h-3.5 w-3.5 text-emerald-400" />
+                      <i className="bi bi-flower1 text-emerald-400 text-sm" />
                       Trees to Plant
                     </label>
                     <div className="flex items-center space-x-3">
@@ -280,14 +281,14 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                         required
                       />
                       <span className="text-xs text-emerald-200/70 flex items-center gap-1">
-                        <Leaf className="h-3 w-3 text-emerald-400/60" />
+                        <i className="bi bi-leaf text-emerald-400/60 text-xs" />
                         indigenous species
                       </span>
                     </div>
                   </div>
                   <div>
                     <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80 mb-1.5 flex items-center gap-1.5">
-                      <Target className="h-3.5 w-3.5 text-emerald-400" />
+                      <i className="bi bi-bullseye text-emerald-400 text-sm" />
                       Activity Type
                     </label>
                     <select 
@@ -307,8 +308,8 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                   id="submit-pledge-btn"
                   className="w-full mt-2 py-3.5 bg-gradient-to-r from-emerald-500 to-emerald-400 hover:from-emerald-400 hover:to-emerald-300 text-emerald-950 rounded-xl font-bold text-sm shadow-lg shadow-emerald-500/20 transition-all duration-300 hover:scale-[1.01] active:scale-95 focus:outline-none flex items-center justify-center gap-2"
                 >
-                  <Zap className="h-4 w-4" />
-                  Log Pledge & Sync Tracker
+                  <i className="bi bi-lightning text-base" />
+                  Log Pledge & Update Tracker
                 </button>
               </form>
 
@@ -320,8 +321,8 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                   id="pledge-success-toast"
                   className="mt-4 p-4 bg-emerald-900/90 border border-emerald-400/40 text-emerald-300 rounded-xl flex items-center gap-3 text-sm"
                 >
-                  <CheckCircle2 className="h-5 w-5 text-emerald-400 flex-shrink-0" />
-                  <span>Pledge recorded! Thanks for contributing to our community ledger.</span>
+                  <i className="bi bi-check-circle-fill text-emerald-400 text-lg flex-shrink-0" />
+                  <span>Pledge recorded! Thank you for contributing to our community tracker.</span>
                 </motion.div>
               )}
 
@@ -329,11 +330,11 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
               <div className="mt-8 border-t border-white/10 pt-6">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="text-xs uppercase tracking-wider font-mono text-emerald-300/80 flex items-center gap-1.5">
-                    <Users className="h-3.5 w-3.5 text-emerald-400" />
+                    <i className="bi bi-people text-emerald-400 text-sm" />
                     Recent Commitments
                   </h4>
                   <span className="bg-emerald-950 text-emerald-400 px-2.5 py-0.5 rounded-full text-[10px] flex items-center gap-1">
-                    <TrendingUp className="h-2.5 w-2.5" />
+                    <i className="bi bi-graph-up-arrow text-[10px]" />
                     Live Feed
                   </span>
                 </div>
@@ -348,18 +349,18 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                     >
                       <div className="truncate flex items-center gap-3 min-w-0">
                         <div className="hidden sm:flex w-9 h-9 rounded-full bg-gradient-to-br from-emerald-800/50 to-emerald-700/30 border border-emerald-700/30 items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:shadow-lg transition-all duration-200">
-                          <UserCheck className="h-4.5 w-4.5 text-emerald-400" />
+                          <i className="bi bi-person-check text-emerald-400 text-sm" />
                         </div>
                         <div className="min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="font-semibold text-sm text-white truncate max-w-[140px]">{pledge.name}</span>
                             <span className="text-[10px] bg-emerald-800/50 text-emerald-300 px-2 py-0.5 rounded-md uppercase font-mono flex items-center gap-0.5 border border-emerald-700/20">
-                              <MapPin className="h-2.5 w-2.5" />
+                              <i className="bi bi-geo-alt text-[10px]" />
                               {pledge.district.split(' ')[0]}
                             </span>
                           </div>
                           <p className="text-xs text-gray-300 mt-1 truncate flex items-center gap-1">
-                            <Sprout className="h-3 w-3 text-emerald-500/60 flex-shrink-0" />
+                            <i className="bi bi-flower1 text-emerald-500/60 text-xs flex-shrink-0" />
                             {pledge.action}
                           </p>
                         </div>
@@ -386,8 +387,8 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
             >
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-3 bg-gradient-to-br from-amber-500/20 to-amber-600/10 rounded-xl border border-amber-400/20 relative">
-                  <Shield className="h-6 w-6 text-amber-400" />
-                  <Award className="h-3 w-3 absolute -top-0.5 -right-0.5 text-amber-300" />
+                  <i className="bi bi-shield-check text-amber-400 text-xl" />
+                  <i className="bi bi-award text-amber-300 text-xs absolute -top-0.5 -right-0.5" />
                 </div>
                 <div>
                   <h3 className="font-display font-bold text-lg text-white">Advocacy Passport</h3>
@@ -396,22 +397,22 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
               </div>
 
               <p className="text-sm text-emerald-100/70 leading-relaxed mb-6">
-                Prove your climate expertise. Take the challenge, earn your official 
+                Show what you know about climate action. Complete the challenge and earn your
                 <strong className="text-amber-300"> Community Climate Advocate Certificate</strong>.
               </p>
 
               <div className="space-y-3 mb-6">
                 <div className="flex items-center gap-2.5 text-xs text-emerald-200/70">
-                  <CheckCircle2 className="h-4 w-4 text-amber-400 flex-shrink-0" />
+                  <i className="bi bi-check-circle-fill text-amber-400 text-sm flex-shrink-0" />
                   <span>3-question climate literacy quiz</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-xs text-emerald-200/70">
-                  <CheckCircle2 className="h-4 w-4 text-amber-400 flex-shrink-0" />
-                  <span>Perfect score unlocks certificate</span>
+                  <i className="bi bi-check-circle-fill text-amber-400 text-sm flex-shrink-0" />
+                  <span>Perfect score unlocks your certificate</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-xs text-emerald-200/70">
-                  <CheckCircle2 className="h-4 w-4 text-amber-400 flex-shrink-0" />
-                  <span>Printable PDF with unique code</span>
+                  <i className="bi bi-check-circle-fill text-amber-400 text-sm flex-shrink-0" />
+                  <span>Printable PDF with unique certification code</span>
                 </div>
               </div>
 
@@ -420,7 +421,7 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
                 className="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-emerald-950 rounded-xl font-bold text-sm shadow-lg shadow-amber-500/20 transition-all duration-300 hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2"
               >
                 <span>Take the Challenge</span>
-                <ArrowRight className="h-4 w-4" />
+                <i className="bi bi-arrow-right text-sm" />
               </button>
             </motion.div>
 
@@ -433,17 +434,17 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
               className="bg-gradient-to-br from-emerald-950/60 to-emerald-950/40 rounded-3xl p-6 sm:p-7 border border-white/10 backdrop-blur-sm"
             >
               <h4 className="text-xs uppercase tracking-wider font-mono text-emerald-300/80 mb-3 flex items-center gap-1.5">
-                <Globe className="h-3.5 w-3.5 text-emerald-400" />
-                Why It Matters
+                <i className="bi bi-globe2 text-emerald-400 text-sm" />
+                Why This Matters
               </h4>
               <div className="space-y-3">
                 <p className="text-xs text-emerald-100/70 leading-relaxed">
-                  Every tree pledge contributes to Rwanda's ambitious goal of restoring 
+                  Every tree pledge contributes to Rwanda's goal of restoring 
                   <strong className="text-emerald-300"> 2 million hectares</strong> of degraded land by 2030.
                 </p>
                 <div className="flex items-center gap-2 text-xs text-emerald-300/80 bg-emerald-950/50 rounded-xl px-3 py-2.5 border border-emerald-800/30">
-                  <Leaf className="h-4 w-4 text-emerald-400 flex-shrink-0" />
-                  <span>Indigenous species like Markhamia lutea and Newtonia buchananii preserve biodiversity</span>
+                  <i className="bi bi-leaf text-emerald-400 text-sm flex-shrink-0" />
+                  <span>Indigenous species like Markhamia lutea and Newtonia buchananii help preserve Rwanda's unique biodiversity</span>
                 </div>
               </div>
             </motion.div>
