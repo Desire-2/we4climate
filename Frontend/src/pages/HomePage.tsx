@@ -101,15 +101,10 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
           ))}
         </div>
 
-        {/* Hero content — transparent card, no buttons */}
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="font-display text-base sm:text-lg md:text-xl lg:text-2xl font-semibold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] leading-relaxed max-w-4xl mx-auto">
-            We are a{' '}
-            <span className="text-emerald-300 font-bold drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
-              community benefit organization
-            </span>{' '}
-            advancing regenerative agriculture, ecosystem restoration, environmental
-            education, and climate resilience across Rwanda and Africa.
+        {/* Hero message — anchored at the bottom of the slideshow */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-16 z-10 px-4 text-center sm:bottom-20">
+          <h1 className="mx-auto max-w-6xl font-display text-xl font-bold leading-tight tracking-wide text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)] sm:text-2xl md:text-3xl lg:text-4xl">
+            WE PROMOTE REGENERATIVE AGRICULTURE,ECOSYSTEM RESTORATION,CLIMATE RESILIENCE AND EDUCATION
           </h1>
         </div>
 

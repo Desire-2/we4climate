@@ -151,6 +151,7 @@ export default function AdvocacyPassportPage() {
   const progressPercent = quizStarted && !quizFinished
     ? ((currentQuestion + 1) / activeQuestions.length) * 100
     : 0;
+  const isIntroScreen = !quizStarted && !quizFinished;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-950 via-emerald-900 to-emerald-950">
@@ -205,127 +206,154 @@ export default function AdvocacyPassportPage() {
 
       {/* ─── QUIZ / CERTIFICATE SECTION ─── */}
       <section className="pb-28 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="bg-gradient-to-br from-emerald-900/80 to-emerald-950/80 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl overflow-hidden"
           >
-            {/* Decorative header bar */}
-            <div className="h-1.5 bg-gradient-to-r from-emerald-400 via-amber-400 to-emerald-500" />
+            {/* Keep the reference-style section header visible throughout the challenge flow. */}
+            <div className="flex border-b border-emerald-800/80">
+              <div className="flex flex-1 items-center justify-center gap-3 border-b-2 border-emerald-400 bg-emerald-900/70 px-4 py-5 text-center text-base font-bold text-emerald-300 sm:text-lg">
+                <i className="bi bi-award text-emerald-400 text-xl" />
+                Advocacy Passport Challenge
+              </div>
+              <div className="flex flex-1 items-center justify-center gap-3 px-4 py-5 text-center text-base font-bold text-emerald-200/45 sm:text-lg">
+                <i className="bi bi-patch-check text-emerald-200/35 text-xl" />
+                Earn Your Certificate
+              </div>
+            </div>
 
-            <div className="p-6 sm:p-10 lg:p-12">
+            <div className={isIntroScreen ? '' : 'p-6 sm:p-10 lg:p-12'}>
               {/* ─── INTRO SCREEN ─── */}
               {!quizStarted && !quizFinished && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="space-y-8"
+                  className="overflow-hidden"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="p-4 bg-gradient-to-br from-amber-500/20 to-emerald-500/10 rounded-2xl border border-amber-400/20 relative">
-                      <i className="bi bi-award text-amber-400 text-2xl" />
-                      <i className="bi bi-stars text-amber-300 text-sm absolute -top-1 -right-1" />
-                    </div>
-                    <div>
-                      <h2 className="font-display font-bold text-2xl text-white">Advocacy Passport Challenge</h2>
-                      <p className="text-sm text-emerald-200/60">Earn your digital certificate</p>
-                    </div>
-                  </div>
-
-                  <div className="bg-gradient-to-r from-emerald-950/60 to-emerald-900/40 border border-emerald-800/40 rounded-2xl p-6">
-                    <p className="text-emerald-100/80 leading-relaxed">
-                      {challengeLoading ? (
-                        <span className="flex items-center gap-2"><i className="bi bi-arrow-repeat animate-spin text-emerald-400" /> Loading this week's challenge...</span>
-                      ) : challengeTitle ? (
-                        <>Earn your certificate by taking on <strong className="text-emerald-300">this week's challenge:</strong> &ldquo;<span className="text-amber-300 font-bold">{challengeTitle}</span>&rdquo;</>
-                      ) : (
-                        <>Complete the climate literacy assessment with a <strong className="text-amber-300">perfect {activeQuestions.length}/{activeQuestions.length}</strong> score to unlock your official We4Climate Community Climate Advocate Certificate.</>
-                      )}
-                    </p>
-                    {challengeWeek && (
-                      <div className="mt-3 flex items-center gap-1.5 text-[10px] font-mono text-emerald-300/60 bg-emerald-950/50 rounded-full px-3 py-1 w-fit">
-                        <i className="bi bi-calendar3 text-emerald-300/60 text-xs" />
-                        {challengeWeek}
+                  <div className="grid grid-cols-1 items-center gap-10 p-6 sm:p-10 lg:grid-cols-2 lg:gap-14 lg:p-14">
+                    <div className="min-w-0">
+                      <div className="mb-7 flex items-center gap-4">
+                        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-emerald-800 text-emerald-400 shadow-inner shadow-emerald-950/30">
+                          <i className="bi bi-award text-4xl" />
+                        </div>
+                        <span className="font-mono text-sm font-semibold uppercase tracking-[0.2em] text-emerald-400">
+                          Advocacy Passport
+                        </span>
                       </div>
-                    )}
-                  </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80 flex items-center gap-1.5">
-                        <i className="bi bi-patch-check text-emerald-400 text-sm" />
-                        Your Name for the Certificate
-                      </label>
-                      <input
-                        type="text"
-                        value={candidateName}
-                        onChange={(e) => setCandidateName(e.target.value)}
-                        placeholder="Enter your full name"
-                        className="w-full bg-emerald-950/60 border border-emerald-800 focus:border-emerald-400 rounded-xl px-4 py-3 text-sm text-white placeholder-emerald-100/35 focus:outline-none transition-all"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="block text-xs uppercase tracking-wider font-mono text-emerald-300/80 flex items-center gap-1.5">
-                        <i className="bi bi-envelope text-emerald-400 text-sm" />
-                        Email (optional, for records)
-                      </label>
-                      <input
-                        type="email"
-                        value={candidateEmail}
-                        onChange={(e) => {
-                          setCandidateEmail(e.target.value);
-                          if (emailError) setEmailError('');
-                        }}
-                        onBlur={() => {
-                          if (candidateEmail.trim() && !isValidEmail(candidateEmail)) {
-                            setEmailError('Please enter a valid email address.');
-                          } else {
-                            setEmailError('');
-                          }
-                        }}
-                        placeholder="you@example.com"
-                        className={`w-full bg-emerald-950/60 border rounded-xl px-4 py-3 text-sm text-white placeholder-emerald-100/35 focus:outline-none transition-all ${
-                          emailError
-                            ? 'border-rose-500 focus:border-rose-400'
-                            : 'border-emerald-800 focus:border-emerald-400'
-                        }`}
-                      />
-                      {emailError && (
+                      <h2 className="font-display text-2xl font-bold leading-tight text-white sm:text-3xl">
+                        Turn your climate knowledge into action.
+                      </h2>
+                      <p className="mt-5 text-lg leading-relaxed text-emerald-100/85 sm:text-xl lg:text-[22px]">
+                        Test your climate and conservation literacy, earn your official Climate Advocate Certificate, and join a growing network of people making a difference.
+                      </p>
+
+                      <div className="mt-7 rounded-2xl border border-emerald-800/50 bg-emerald-950/45 p-5">
+                        <p className="text-sm leading-relaxed text-emerald-100/80">
+                          {challengeLoading ? (
+                            <span className="flex items-center gap-2"><i className="bi bi-arrow-repeat animate-spin text-emerald-400" /> Loading this week's challenge...</span>
+                          ) : challengeTitle ? (
+                            <>Take on <strong className="text-emerald-300">this week's challenge:</strong> &ldquo;<span className="font-bold text-amber-300">{challengeTitle}</span>&rdquo;</>
+                          ) : (
+                            <>Complete the assessment with a <strong className="text-amber-300">perfect {activeQuestions.length}/{activeQuestions.length}</strong> score to unlock your official certificate.</>
+                          )}
+                        </p>
+                        {challengeWeek && (
+                          <div className="mt-3 flex w-fit items-center gap-1.5 rounded-full bg-emerald-950/60 px-3 py-1 text-[10px] font-mono text-emerald-300/60">
+                            <i className="bi bi-calendar3 text-xs text-emerald-300/60" />
+                            {challengeWeek}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-emerald-300/80">
+                            <i className="bi bi-patch-check text-sm text-emerald-400" />
+                            Your Name
+                          </label>
+                          <input
+                            type="text"
+                            value={candidateName}
+                            onChange={(e) => setCandidateName(e.target.value)}
+                            placeholder="Enter your full name"
+                            className="w-full rounded-xl border border-emerald-800 bg-emerald-950/60 px-4 py-3 text-sm text-white placeholder-emerald-100/35 transition-all focus:border-emerald-400 focus:outline-none"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-emerald-300/80">
+                            <i className="bi bi-envelope text-sm text-emerald-400" />
+                            Email (optional)
+                          </label>
+                          <input
+                            type="email"
+                            value={candidateEmail}
+                            onChange={(e) => {
+                              setCandidateEmail(e.target.value);
+                              if (emailError) setEmailError('');
+                            }}
+                            onBlur={() => {
+                              if (candidateEmail.trim() && !isValidEmail(candidateEmail)) {
+                                setEmailError('Please enter a valid email address.');
+                              } else {
+                                setEmailError('');
+                              }
+                            }}
+                            placeholder="you@example.com"
+                            className={`w-full rounded-xl border bg-emerald-950/60 px-4 py-3 text-sm text-white placeholder-emerald-100/35 transition-all focus:outline-none ${
+                              emailError
+                                ? 'border-rose-500 focus:border-rose-400'
+                                : 'border-emerald-800 focus:border-emerald-400'
+                            }`}
+                          />
+                          {emailError && (
+                            <motion.p
+                              initial={{ opacity: 0, y: -4 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              className="mt-1 flex items-center gap-1.5 text-[11px] text-rose-400"
+                            >
+                              <i className="bi bi-exclamation-circle text-xs" />
+                              {emailError}
+                            </motion.p>
+                          )}
+                        </div>
+                      </div>
+
+                      {quizError && (
                         <motion.p
-                          initial={{ opacity: 0, y: -4 }}
+                          initial={{ opacity: 0, y: -10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="text-[11px] text-rose-400 flex items-center gap-1.5 mt-1"
+                          className="mt-4 flex items-center gap-2 rounded-xl border border-amber-400/20 bg-amber-400/10 px-4 py-2.5 text-xs text-amber-400"
                         >
-                          <i className="bi bi-exclamation-circle text-xs" />
-                          {emailError}
+                          <i className="bi bi-exclamation-circle text-sm text-amber-400" />
+                          {quizError}
                         </motion.p>
                       )}
+
+                      <motion.button
+                        onClick={handleStartQuiz}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="mt-6 flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 py-4 text-sm font-bold text-emerald-950 shadow-lg shadow-amber-500/20 transition-all duration-300 hover:from-amber-400 hover:to-amber-300"
+                      >
+                        <i className="bi bi-book text-lg" />
+                        <span>Begin Challenge</span>
+                        <i className="bi bi-arrow-right text-base" />
+                      </motion.button>
+                    </div>
+
+                    <div className="group relative order-first aspect-[4/3] overflow-hidden rounded-3xl border border-emerald-700/40 shadow-2xl lg:order-last">
+                      <img
+                        src="/Images/pexels-kampus-5940708.jpg"
+                        alt="Learner preparing for the Advocacy Passport challenge"
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/45 via-transparent to-transparent" />
                     </div>
                   </div>
-
-                  {quizError && (
-                    <motion.p
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="text-xs text-amber-400 bg-amber-400/10 border border-amber-400/20 rounded-xl px-4 py-2.5 flex items-center gap-2"
-                    >
-                      <i className="bi bi-exclamation-circle text-amber-400 text-sm" />
-                      {quizError}
-                    </motion.p>
-                  )}
-
-                  <motion.button
-                    onClick={handleStartQuiz}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-emerald-950 rounded-xl font-bold text-sm shadow-lg shadow-amber-500/20 transition-all duration-300 flex items-center justify-center gap-3"
-                  >
-                    <i className="bi bi-book text-lg" />
-                    <span>Begin Challenge</span>
-                    <i className="bi bi-arrow-right text-base" />
-                  </motion.button>
                 </motion.div>
               )}
 
@@ -334,9 +362,10 @@ export default function AdvocacyPassportPage() {
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className="space-y-8"
+                  className="grid grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-12"
                 >
-                  <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div className="min-w-0 space-y-8">
+                    <div className="flex items-center justify-between flex-wrap gap-4">
                     <div className="flex items-center gap-3">
                       <div className="p-2.5 bg-emerald-500/10 rounded-xl border border-emerald-400/20">
                         <i className="bi bi-question-circle text-emerald-400 text-xl" />
@@ -350,9 +379,9 @@ export default function AdvocacyPassportPage() {
                     </div>
                     <div className="flex items-center gap-2 bg-emerald-950/60 border border-emerald-800/40 rounded-xl px-4 py-2">
                       <i className="bi bi-trophy text-amber-400 text-sm" />
-                      <span className="text-sm font-bold text-emerald-300">{quizScore}/{activeQuestions.length}</span>
+                        <span className="text-sm font-bold text-emerald-300">{quizScore}/{activeQuestions.length}</span>
+                      </div>
                     </div>
-                  </div>
 
                   {/* Progress bar */}
                   <div className="w-full bg-emerald-950 h-2 rounded-full overflow-hidden">
@@ -405,7 +434,7 @@ export default function AdvocacyPassportPage() {
                     })}
                   </div>
 
-                  {isAnswered && (
+                    {isAnswered && (
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -441,7 +470,17 @@ export default function AdvocacyPassportPage() {
                         <i className="bi bi-arrow-right text-sm" />
                       </motion.button>
                     </motion.div>
-                  )}
+                    )}
+                  </div>
+
+                  <div className="group relative order-last aspect-[4/3] overflow-hidden rounded-3xl border border-emerald-700/40 shadow-2xl">
+                    <img
+                      src="/Images/pexels-kampus-5940708.jpg"
+                      alt="Learner preparing for the Advocacy Passport challenge"
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/45 via-transparent to-transparent" />
+                  </div>
                 </motion.div>
               )}
 
