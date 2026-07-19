@@ -58,14 +58,11 @@ export default function ImpactDashboard() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div>
-            <span className="text-xs font-semibold tracking-widest text-emerald-700 uppercase bg-emerald-100 px-3.5 py-1.5 rounded-full border border-emerald-300/30">
-              Impact Dashboard
-            </span>
-            <h2 className="mt-4 font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-gray-900">
+            <h2 className="font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-gray-900">
               Action Metrics & Impact
             </h2>
             <p className="mt-3 text-base sm:text-lg text-gray-600 max-w-2xl">
-              Track our collective agroforestry, tree planting, smallholder training, and community mobilization growth across Rwandan districts.
+              From regenerating degraded landscapes to empowering communities — every number represents a real story of restoration, resilience, and hope across Rwanda.
             </p>
           </div>
 
