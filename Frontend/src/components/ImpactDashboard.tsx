@@ -1,9 +1,7 @@
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, useInView } from 'motion/react';
-import { 
-  BarChart, Filter, Milestone, TreePine, Users, GraduationCap, Quote 
-} from 'lucide-react';
-import { fetchImpactSummary, fetchDistrictMetrics, fetchImpactStories, fetchYearlyTargets, type ApiDistrictMetric, type ApiImpactStory, type ApiYearlyTarget } from '../api/client';
+import { BarChart, Quote } from 'lucide-react';
+import { fetchImpactStories, type ApiImpactStory } from '../api/client';
 
 // ── Animated counter that counts up when scrolled into view ──
 function AnimatedCounter({ from = 0, to, suffix = '', duration = 2 }: { from?: number; to: number; suffix?: string; duration?: number }) {
@@ -36,147 +34,26 @@ function AnimatedCounter({ from = 0, to, suffix = '', duration = 2 }: { from?: n
   }, [isInView, from, to, duration]);
 
   return (
-    <span ref={ref} className="font-display font-black text-2xl text-emerald-700 block tabular-nums">
+    <span ref={ref} className="block font-display text-4xl font-black tabular-nums text-emerald-700 sm:text-5xl">
       {displayValue}{suffix}
     </span>
   );
 }
 
-interface FilterState {
-  year: 'all' | '2024' | '2025' | '2026';
-  district: string;
-}
-
-interface DistrictInfo {
-  id: string;
-  name: string;
-  province: string;
-  provinceKey: 'west' | 'north' | 'east' | 'south' | 'kigali';
-  trees: number;
-  farmers: number;
-  youth: number;
-  sites: number;
-  species: string[];
-  description: string;
-  mapCoords: { x: number; y: number };
-}
-
-// Fallback districts when API is unavailable
-const FALLBACK_DISTRICTS: DistrictInfo[] = [
-  { id: 'bugesera', name: 'Bugesera', province: 'Eastern Province', provinceKey: 'east', trees: 35000, farmers: 320, youth: 1100, sites: 3, species: ['Grevillea robusta', 'Senna spectabilis', 'Avocado', 'Mango'], description: 'Combating persistent aridity through multi-layered agroforestry buffer strips.', mapCoords: { x: 62, y: 66 } },
-  { id: 'gicumbi', name: 'Gicumbi', province: 'Northern Province', provinceKey: 'north', trees: 42000, farmers: 410, youth: 950, sites: 4, species: ['Calliandra calothyrsus', 'Alnus nepalensis', 'Indigenous Podocarpus'], description: 'Stabilizing steep mountainous hillsides prone to erosive landslides.', mapCoords: { x: 52, y: 22 } },
-  { id: 'kayonza', name: 'Kayonza', province: 'Eastern Province', provinceKey: 'east', trees: 28000, farmers: 240, youth: 850, sites: 2, species: ['Acacia polyacantha', 'Markhamia lutea', 'Papaya'], description: 'Conserving savannah soils and pioneering organic biochar applications.', mapCoords: { x: 75, y: 40 } },
-  { id: 'rubavu', name: 'Rubavu', province: 'Western Province', provinceKey: 'west', trees: 22000, farmers: 180, youth: 900, sites: 2, species: ['Erythrina abyssinica', 'Maesopsis eminii', 'Bamboo buffers'], description: 'Restoring volcanic soil health and preventing riverbank degradation.', mapCoords: { x: 18, y: 21 } },
-  { id: 'kamonyi', name: 'Kamonyi', province: 'Southern Province', provinceKey: 'south', trees: 15000, farmers: 150, youth: 1000, sites: 2, species: ['Grevillea', 'Moringa oleifera', 'Markhamia'], description: 'Flagship learning initiatives around the Leonard Regeneration Center.', mapCoords: { x: 42, y: 52 } },
-  { id: 'huye', name: 'Huye', province: 'Southern Province', provinceKey: 'south', trees: 18000, farmers: 190, youth: 800, sites: 2, species: ['Calliandra', 'Ficus thonningii', 'Citrus variety tree'], description: 'Collaborating with local schools on green camp designs and permaculture.', mapCoords: { x: 36, y: 80 } },
-];
-
 export default function ImpactDashboard() {
-  const [filters, setFilters] = useState<FilterState>({
-    year: 'all',
-    district: 'all'
-  });
-
-  const [selectedDistrictId, setSelectedDistrictId] = useState<string | null>(null);
-
-  // API-driven state
-  const [apiTrees, setApiTrees] = useState<number>(0);
-  const [apiMembers, setApiMembers] = useState<number>(0);
-  const [apiFarmers, setApiFarmers] = useState<number>(0);
-  const [apiSites, setApiSites] = useState<number>(0);
-  const [apiDistricts, setApiDistricts] = useState<ApiDistrictMetric[]>([]);
   const [apiStories, setApiStories] = useState<ApiImpactStory[]>([]);
-  const [apiTargets, setApiTargets] = useState<ApiYearlyTarget[]>([]);
 
-  // Build dynamic district list from API data, fallback to hardcoded
-  const districts: DistrictInfo[] = useMemo(() => {
-    if (apiDistricts.length > 0) {
-      return apiDistricts.map((d) => ({
-        id: d.district_name.toLowerCase().replace(/\s+/g, '-'),
-        name: d.district_name,
-        province: d.province,
-        provinceKey: d.province_key as DistrictInfo['provinceKey'],
-        trees: d.trees_planted,
-        farmers: d.farmers_trained,
-        youth: d.community_members,
-        sites: d.active_sites,
-        species: d.species,
-        description: d.description,
-        mapCoords: { x: d.map_coords_x, y: d.map_coords_y },
-      }));
-    }
-    return FALLBACK_DISTRICTS;
-  }, [apiDistricts]);
-
-  // Fetch all data from backend on mount
   useEffect(() => {
-    const load = async () => {
-      const [summary, dMetrics, stories, targets] = await Promise.all([
-        fetchImpactSummary(),
-        fetchDistrictMetrics(),
-        fetchImpactStories(),
-        fetchYearlyTargets(),
-      ]);
-      if (summary) {
-        setApiTrees(summary.total_trees_planted);
-        setApiMembers(summary.total_community_members);
-        setApiFarmers(summary.total_farmers_trained);
-        setApiSites(summary.total_active_sites);
-      }
-      if (dMetrics.length > 0) setApiDistricts(dMetrics);
+    fetchImpactStories().then((stories) => {
       if (stories.length > 0) setApiStories(stories);
-      if (targets.length > 0) setApiTargets(targets);
-    };
-    load();
+    });
   }, []);
+  return (
+    <section id="dashboard" className="relative overflow-hidden bg-gradient-to-b from-brand-50 via-white to-brand-50 py-20 scroll-mt-24">
+      <div className="absolute -left-40 top-32 h-96 w-96 rounded-full bg-emerald-100/40 blur-3xl" />
+      <div className="absolute -right-40 bottom-24 h-96 w-96 rounded-full bg-emerald-100/30 blur-3xl" />
 
-  // Dynamic calculations based on filters
-  const computedStats = useMemo(() => {
-    // Use live API data as the base when available, otherwise fallback to hardcoded defaults
-    let baseTrees = apiTrees > 0 ? apiTrees : 160000;
-    let baseYouth = apiMembers > 0 ? apiMembers : 5600;
-    let baseFarmers = apiFarmers > 0 ? apiFarmers : 1490;
-    let baseSites = apiSites > 0 ? apiSites : 15;
-
-    // Filter by district
-    if (filters.district !== 'all') {
-      const activeDist = districts.find(d => d.id === filters.district);
-      if (activeDist) {
-        baseTrees = activeDist.trees;
-        baseYouth = activeDist.youth;
-        baseFarmers = activeDist.farmers;
-        baseSites = activeDist.sites;
-      }
-    }
-
-    // Filter by year multiplier offsets to represent progression of time
-    if (filters.year === '2024') {
-      baseTrees = Math.round(baseTrees * 0.40);
-      baseYouth = Math.round(baseYouth * 0.45);
-      baseFarmers = Math.round(baseFarmers * 0.50);
-      baseSites = Math.max(1, Math.round(baseSites * 0.40));
-    } else if (filters.year === '2025') {
-      baseTrees = Math.round(baseTrees * 0.75);
-      baseYouth = Math.round(baseYouth * 0.78);
-      baseFarmers = Math.round(baseFarmers * 0.80);
-      baseSites = Math.max(2, Math.round(baseSites * 0.75));
-    } else if (filters.year === '2026') {
-      // current year target values
-      baseTrees = Math.round(baseTrees * 1.05);
-      baseYouth = Math.round(baseYouth * 1.10);
-      baseFarmers = Math.round(baseFarmers * 1.05);
-      baseSites = Math.round(baseSites * 1.20);
-    }
-
-    return {
-      trees: baseTrees,
-      youth: baseYouth,
-      farmers: baseFarmers,
-      sites: baseSites
-    };
-  }, [filters, districts]);  return (
-    <section id="dashboard" className="py-20 bg-brand-50 scroll-mt-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
@@ -192,41 +69,6 @@ export default function ImpactDashboard() {
             </p>
           </div>
 
-          {/* Quick Filters Row */}
-          <div className="flex flex-wrap items-center gap-2 bg-white p-2.5 rounded-2xl border border-gray-100 shadow-sm">
-            <div className="flex items-center gap-1 bg-gray-50 px-3 py-2 rounded-xl text-gray-500 text-xs font-semibold uppercase tracking-wider">
-              <Filter className="h-4 w-4 text-emerald-600" />
-              <span>Filters</span>
-            </div>
-
-            {/* Year filter selector */}
-            <select
-              value={filters.year}
-              onChange={(e) => setFilters(prev => ({ ...prev, year: e.target.value as any }))}
-              className="bg-white border border-gray-100 rounded-xl px-3 py-2 text-sm font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
-            >
-              <option value="all">All-Time Cumulative</option>
-              <option value="2024">Year 2024 Only</option>
-              <option value="2025">Year 2025 Only</option>
-              <option value="2026">Year 2026 Targets</option>
-            </select>
-
-            {/* District filter selector – dynamically built from API */}
-            <select
-              value={filters.district}
-              onChange={(e) => {
-                const val = e.target.value;
-                setFilters(prev => ({ ...prev, district: val }));
-                setSelectedDistrictId(val === 'all' ? null : val);
-              }}
-              className="bg-white border border-gray-100 rounded-xl px-3 py-2 text-sm font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
-            >
-              <option value="all">All Project Districts</option>
-              {districts.map((d) => (
-                <option key={d.id} value={d.id}>{d.name} ({d.province})</option>
-              ))}
-            </select>
-          </div>
         </div>
 
         {/* ──────────── OUR IMPACT — ANIMATED STATS WITH COUNTERS ──────────── */}
@@ -237,12 +79,12 @@ export default function ImpactDashboard() {
           transition={{ duration: 0.5 }}
           className="mb-12"
         >
-          <div className="flex items-center gap-3 mb-8">
+          <div className="mb-8 flex items-center gap-4 border-b border-emerald-100 pb-5">
             <motion.div
               initial={{ scale: 0 }}
               whileInView={{ scale: 1 }}
               viewport={{ once: true }}
-              className="p-2.5 bg-emerald-100 rounded-xl"
+              className="rounded-2xl bg-emerald-100 p-3 shadow-sm"
             >
               <BarChart className="h-5 w-5 text-emerald-700" />
             </motion.div>
@@ -254,20 +96,20 @@ export default function ImpactDashboard() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:gap-8">
             {/* Stat 1 — Farm Center */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-30px' }}
               transition={{ duration: 0.4, delay: 0.05 }}
-              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              className="group relative flex min-h-[360px] flex-col overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="relative h-24 sm:h-28 overflow-hidden">
+              <div className="relative h-56 overflow-hidden sm:h-72">
                 <img src="/Images/Regeneration.jpg" alt="Regeneration Farm Center" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
-              <div className="p-3 text-center">
+              <div className="flex flex-1 flex-col p-5 text-center sm:p-6">
                 <AnimatedCounter from={0} to={1} duration={1.5} />
                 <span className="text-sm text-gray-500 font-medium leading-snug block mt-1">Regeneration farm center established</span>
                 {/* Progress bar */}
@@ -289,13 +131,13 @@ export default function ImpactDashboard() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-30px' }}
               transition={{ duration: 0.4, delay: 0.1 }}
-              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              className="group relative flex min-h-[360px] flex-col overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="relative h-24 sm:h-28 overflow-hidden">
+              <div className="relative h-56 overflow-hidden sm:h-72">
                 <img src="/Images/empowered.jpg" alt="Farmers Empowerment" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
-              <div className="p-3 text-center">
+              <div className="flex flex-1 flex-col p-5 text-center sm:p-6">
                 <AnimatedCounter from={0} to={200} suffix="+" duration={2} />
                 <span className="text-sm text-gray-500 font-medium leading-snug block mt-1">Farmers empowered with training</span>
                 <div className="mt-2 h-1 bg-emerald-100 rounded-full overflow-hidden">
@@ -316,13 +158,13 @@ export default function ImpactDashboard() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-30px' }}
               transition={{ duration: 0.4, delay: 0.15 }}
-              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              className="group relative flex min-h-[360px] flex-col overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="relative h-24 sm:h-28 overflow-hidden">
+              <div className="relative h-56 overflow-hidden sm:h-72">
                 <img src="/Images/International.jpg" alt="International Conferences" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
-              <div className="p-3 text-center">
+              <div className="flex flex-1 flex-col p-5 text-center sm:p-6">
                 <AnimatedCounter from={0} to={5} suffix="+" duration={1.5} />
                 <span className="text-sm text-gray-500 font-medium leading-snug block mt-1">International conference participation</span>
                 <div className="mt-2 h-1 bg-emerald-100 rounded-full overflow-hidden">
@@ -343,13 +185,13 @@ export default function ImpactDashboard() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-30px' }}
               transition={{ duration: 0.4, delay: 0.2 }}
-              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              className="group relative flex min-h-[360px] flex-col overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="relative h-24 sm:h-28 overflow-hidden">
+              <div className="relative h-56 overflow-hidden sm:h-72">
                 <img src="/Images/engaged.jpg" alt="Children Engaged" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
-              <div className="p-3 text-center">
+              <div className="flex flex-1 flex-col p-5 text-center sm:p-6">
                 <AnimatedCounter from={0} to={50} suffix="+" duration={1.8} />
                 <span className="text-sm text-gray-500 font-medium leading-snug block mt-1">Children engaged in our projects</span>
                 <div className="mt-2 h-1 bg-emerald-100 rounded-full overflow-hidden">
@@ -370,13 +212,13 @@ export default function ImpactDashboard() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-30px' }}
               transition={{ duration: 0.4, delay: 0.25 }}
-              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              className="group relative flex min-h-[360px] flex-col overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="relative h-24 sm:h-28 overflow-hidden">
+              <div className="relative h-56 overflow-hidden sm:h-72">
                 <img src="/Images/seedlings.jpg" alt="Agroforestry Seedlings" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
-              <div className="p-3 text-center">
+              <div className="flex flex-1 flex-col p-5 text-center sm:p-6">
                 <AnimatedCounter from={0} to={600} suffix="+" duration={2.5} />
                 <span className="text-sm text-gray-500 font-medium leading-snug block mt-1">Agroforestry seedlings donated</span>
                 <div className="mt-2 h-1 bg-emerald-100 rounded-full overflow-hidden">
@@ -397,13 +239,13 @@ export default function ImpactDashboard() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-30px' }}
               transition={{ duration: 0.4, delay: 0.3 }}
-              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              className="group relative flex min-h-[360px] flex-col overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="relative h-24 sm:h-28 overflow-hidden">
+              <div className="relative h-56 overflow-hidden sm:h-72">
                 <img src="/Images/created.jpg" alt="Jobs Created" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
-              <div className="p-3 text-center">
+              <div className="flex flex-1 flex-col p-5 text-center sm:p-6">
                 <AnimatedCounter from={0} to={60} suffix="+" duration={2} />
                 <span className="text-sm text-gray-500 font-medium leading-snug block mt-1">Jobs created for local communities</span>
                 <div className="mt-2 h-1 bg-emerald-100 rounded-full overflow-hidden">
@@ -424,13 +266,13 @@ export default function ImpactDashboard() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-30px' }}
               transition={{ duration: 0.4, delay: 0.35 }}
-              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              className="group relative flex min-h-[360px] flex-col overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="relative h-24 sm:h-28 overflow-hidden">
+              <div className="relative h-56 overflow-hidden sm:h-72">
                 <img src="/Images/activities.jpg" alt="Kids Restoration" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
-              <div className="p-3 text-center">
+              <div className="flex flex-1 flex-col p-5 text-center sm:p-6">
                 <AnimatedCounter from={0} to={800} suffix="+" duration={2.5} />
                 <span className="text-sm text-gray-500 font-medium leading-snug block mt-1">Kids engaged in restoration activities</span>
                 <div className="mt-2 h-1 bg-emerald-100 rounded-full overflow-hidden">
@@ -451,13 +293,13 @@ export default function ImpactDashboard() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-30px' }}
               transition={{ duration: 0.4, delay: 0.4 }}
-              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              className="group relative flex min-h-[360px] flex-col overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="relative h-24 sm:h-28 overflow-hidden">
+              <div className="relative h-56 overflow-hidden sm:h-72">
                 <img src="/Images/Primary.jpg" alt="Schools Empowered" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
-              <div className="p-3 text-center">
+              <div className="flex flex-1 flex-col p-5 text-center sm:p-6">
                 <AnimatedCounter from={0} to={2} suffix="+" duration={1.5} />
                 <span className="text-sm text-gray-500 font-medium leading-snug block mt-1">Primary schools empowered</span>
                 <div className="mt-2 h-1 bg-emerald-100 rounded-full overflow-hidden">
@@ -478,13 +320,13 @@ export default function ImpactDashboard() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-30px' }}
               transition={{ duration: 0.4, delay: 0.45 }}
-              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              className="group relative flex min-h-[360px] flex-col overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="relative h-24 sm:h-28 overflow-hidden">
+              <div className="relative h-56 overflow-hidden sm:h-72">
                 <img src="/Images/Kitchen.jpg" alt="Kitchen Gardens" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
-              <div className="p-3 text-center">
+              <div className="flex flex-1 flex-col p-5 text-center sm:p-6">
                 <AnimatedCounter from={0} to={2} suffix="+" duration={1.5} />
                 <span className="text-sm text-gray-500 font-medium leading-snug block mt-1">Operational kitchen gardens</span>
                 <div className="mt-2 h-1 bg-emerald-100 rounded-full overflow-hidden">
@@ -505,13 +347,13 @@ export default function ImpactDashboard() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-30px' }}
               transition={{ duration: 0.4, delay: 0.5 }}
-              className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              className="group relative flex min-h-[360px] flex-col overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="relative h-24 sm:h-28 overflow-hidden">
+              <div className="relative h-56 overflow-hidden sm:h-72">
                 <img src="/Images/Homepage_pictures/IMG_7097.jpg" alt="International Visitors" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
-              <div className="p-3 text-center">
+              <div className="flex flex-1 flex-col p-5 text-center sm:p-6">
                 <AnimatedCounter from={0} to={10} suffix="+" duration={1.8} />
                 <span className="text-sm text-gray-500 font-medium leading-snug block mt-1">International visitors hosted</span>
                 <div className="mt-2 h-1 bg-emerald-100 rounded-full overflow-hidden">
@@ -525,87 +367,6 @@ export default function ImpactDashboard() {
                 </div>
               </div>
             </motion.div>
-          </div>
-        </motion.div>
-
-        {/* ──────────── DYNAMIC STATS OVERVIEW GRID ──────────── */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.5 }}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12"
-        >
-          {/* Trees Card */}
-          <div className="bg-white rounded-3xl p-5 sm:p-7 border border-gray-100 shadow-sm relative overflow-hidden group">
-            <div className="absolute right-0 bottom-0 translate-x-3 translate-y-3 opacity-[0.06] group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-              <TreePine className="h-32 w-32 text-emerald-950" />
-            </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
-              <TreePine className="h-6 w-6" />
-            </div>
-            <div className="mt-5">
-              <span className="text-3xl sm:text-4xl font-display font-black text-gray-950 tracking-tight block">
-                {computedStats.trees.toLocaleString()}
-              </span>
-              <span className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-widest block mt-1.5">
-                Trees Seeded & Planted
-              </span>
-            </div>
-          </div>
-
-          {/* Youth reached card */}
-          <div className="bg-white rounded-3xl p-5 sm:p-7 border border-gray-100 shadow-sm relative overflow-hidden group">
-            <div className="absolute right-0 bottom-0 translate-x-3 translate-y-3 opacity-[0.06] group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-              <Users className="h-32 w-32 text-emerald-950" />
-            </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-blue-700">
-              <Users className="h-6 w-6" />
-            </div>
-            <div className="mt-5">
-              <span className="text-3xl sm:text-4xl font-display font-black text-gray-950 tracking-tight block">
-                {computedStats.youth.toLocaleString()}
-              </span>
-              <span className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-widest block mt-1.5">
-                Community Leaders Mobilized
-              </span>
-            </div>
-          </div>
-
-          {/* Farmers Card */}
-          <div className="bg-white rounded-3xl p-5 sm:p-7 border border-gray-100 shadow-sm relative overflow-hidden group">
-            <div className="absolute right-0 bottom-0 translate-x-3 translate-y-3 opacity-[0.06] group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-              <GraduationCap className="h-32 w-32 text-emerald-950" />
-            </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 text-amber-700">
-              <GraduationCap className="h-6 w-6" />
-            </div>
-            <div className="mt-5">
-              <span className="text-3xl sm:text-4xl font-display font-black text-gray-950 tracking-tight block">
-                {computedStats.farmers.toLocaleString()}
-              </span>
-              <span className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-widest block mt-1.5">
-                Farmers Certified
-              </span>
-            </div>
-          </div>
-
-          {/* Sites Card */}
-          <div className="bg-white rounded-3xl p-5 sm:p-7 border border-gray-100 shadow-sm relative overflow-hidden group">
-            <div className="absolute right-0 bottom-0 translate-x-3 translate-y-3 opacity-[0.06] group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-              <Milestone className="h-32 w-32 text-emerald-950" />
-            </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-100 text-purple-700">
-              <Milestone className="h-6 w-6" />
-            </div>
-            <div className="mt-5">
-              <span className="text-3xl sm:text-4xl font-display font-black text-gray-950 tracking-tight block">
-                {computedStats.sites.toLocaleString()}
-              </span>
-              <span className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-widest block mt-1.5">
-                Nursery & Restoration Sites
-              </span>
-            </div>
           </div>
         </motion.div>
 

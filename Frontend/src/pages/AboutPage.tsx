@@ -1,5 +1,6 @@
 import AboutSection from '../components/AboutSection';
 import GoalsSection from '../components/GoalsSection';
+import TeamSection from '../components/TeamSection';
 import { motion } from 'motion/react';
 
 export default function AboutPage() {
@@ -32,6 +33,8 @@ export default function AboutPage() {
       <div className="border-t border-emerald-100/60 my-6" />
       
       <GoalsSection />
+
+      <TeamSection />
     </motion.div>
   );
 }
