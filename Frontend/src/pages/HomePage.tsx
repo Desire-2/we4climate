@@ -103,8 +103,11 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
 
         {/* Hero message — anchored at the bottom of the slideshow */}
         <div className="pointer-events-none absolute inset-x-0 bottom-16 z-10 px-4 text-center sm:bottom-20">
-          <h1 className="mx-auto max-w-6xl font-display text-xl font-bold leading-tight tracking-wide text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)] sm:text-2xl md:text-3xl lg:text-4xl">
-            WE PROMOTE REGENERATIVE AGRICULTURE,ECOSYSTEM RESTORATION,CLIMATE RESILIENCE AND EDUCATION
+          <h1
+            className="mx-auto max-w-6xl font-display text-xl font-bold leading-tight tracking-wider text-amber-300 sm:text-2xl md:text-3xl lg:text-4xl"
+            style={{ textShadow: '0 1px 0 #92400e, 0 2px 0 #78350f, 0 3px 0 #451a03, 0 4px 0 #000000, 0 5px 0 rgba(0,0,0,0.9), 0 6px 3px rgba(0,0,0,0.6), 0 0 3px rgba(0,0,0,0.5)' }}
+          >
+            We Promote Regenerative Agriculture, Ecosystem Restoration, Climate Resilience And Education
           </h1>
         </div>
 
@@ -314,6 +317,73 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
               <Heart className="h-5 w-5" />
               <span>Join Us in Restoring Our Planet</span>
             </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ────────────── OUR PARTNERS SECTION ────────────── */}
+      <section className="py-20 bg-white relative overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-emerald-50/50 rounded-full blur-3xl -z-10" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            <h2 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-gray-900 tracking-tight">
+              Our Partners
+            </h2>
+            <p className="mt-4 text-lg text-gray-600 leading-relaxed">
+              We collaborate with organizations and networks that share our vision for restoring landscapes,
+              empowering communities, and building climate resilience across Rwanda and beyond.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 items-center">
+            {/* CFC */}
+            <a
+              href="https://collaborativeforchange.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex flex-col items-center justify-center p-8 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg hover:border-emerald-200 transition-all duration-300"
+            >
+              <div className="w-full h-28 flex items-center justify-center">
+                <img
+                  src="/Images/Partners_logos/CFC.png"
+                  alt="Collaborative for Change"
+                  className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-110"
+                />
+              </div>
+            </a>
+
+            {/* REFARMERS */}
+            <a
+              href="https://www.refarmers.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex flex-col items-center justify-center p-8 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg hover:border-emerald-200 transition-all duration-300"
+            >
+              <div className="w-full h-28 flex items-center justify-center">
+                <img
+                  src="/Images/Partners_logos/REFARMERS.jpg"
+                  alt="REFARMERS"
+                  className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-110"
+                />
+              </div>
+            </a>
+
+            {/* WFF Rwanda */}
+            <a
+              href="https://worldfoodforumrwanda.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex flex-col items-center justify-center p-8 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg hover:border-emerald-200 transition-all duration-300"
+            >
+              <div className="w-full h-28 flex items-center justify-center">
+                <img
+                  src="/Images/Partners_logos/WFF-RWANDA.png"
+                  alt="WFF Rwanda"
+                  className="max-h-full max-w-full object-contain transition-transform duration-300 group-hover:scale-110"
+                />
+              </div>
+            </a>
           </div>
         </div>
       </section>

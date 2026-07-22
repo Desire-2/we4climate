@@ -2,14 +2,12 @@ import { useState, useEffect, FormEvent } from 'react';
 import { motion } from 'motion/react';
 import { Pledge } from '../types';
 import { fetchPledges, createPledge } from '../api/client';
-import { useNavigate } from 'react-router-dom';
 
 interface InteractiveDeskProps {
   onPledgeAdded: (treesCount: number) => void;
 }
 
 export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps) {
-  const navigate = useNavigate();
 
   // Pledges State
   const [pledgedList, setPledgedList] = useState<Pledge[]>([]);
@@ -139,10 +137,10 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         
         {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="space-y-8">
           
-          {/* Pledge Terminal (Main - Col 8) */}
-          <div className="lg:col-span-8">
+          {/* Pledge Terminal (Full Width) */}
+          <div>
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -306,79 +304,33 @@ export default function InteractiveDesk({ onPledgeAdded }: InteractiveDeskProps)
             </motion.div>
           </div>
 
-          {/* Sidebar - Advocacy Passport CTA (Col 4) */}
-          <div className="lg:col-span-4 space-y-6">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-gradient-to-br from-amber-500/10 via-emerald-950/70 to-emerald-950/60 rounded-3xl p-6 sm:p-7 border border-amber-500/20 shadow-xl backdrop-blur-sm"
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-3 bg-gradient-to-br from-amber-500/20 to-amber-600/10 rounded-xl border border-amber-400/20 relative">
-                  <i className="bi bi-shield-check text-amber-400 text-xl" />
-                  <i className="bi bi-award text-amber-300 text-xs absolute -top-0.5 -right-0.5" />
-                </div>
-                <div>
-                  <h3 className="font-display font-bold text-lg text-white">Advocacy Passport</h3>
-                  <p className="text-[10px] text-amber-200/60 mt-0.5">Climate Literacy Certification</p>
-                </div>
+          {/* Why This Matters — Full-width banner */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="bg-gradient-to-br from-emerald-950/60 to-emerald-950/40 rounded-3xl p-6 sm:p-8 border border-white/10 backdrop-blur-sm"
+          >
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+              <div className="p-4 bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 rounded-2xl border border-emerald-400/20 flex-shrink-0">
+                <i className="bi bi-globe2 text-emerald-400 text-2xl" />
               </div>
-
-              <p className="text-sm text-emerald-100/70 leading-relaxed mb-6">
-                Show what you know about climate action. Complete the challenge and earn your
-                <strong className="text-amber-300"> Community Climate Advocate Certificate</strong>.
-              </p>
-
-              <div className="space-y-3 mb-6">
-                <div className="flex items-center gap-2.5 text-xs text-emerald-200/70">
-                  <i className="bi bi-check-circle-fill text-amber-400 text-sm flex-shrink-0" />
-                  <span>3-question climate literacy quiz</span>
-                </div>
-                <div className="flex items-center gap-2.5 text-xs text-emerald-200/70">
-                  <i className="bi bi-check-circle-fill text-amber-400 text-sm flex-shrink-0" />
-                  <span>Perfect score unlocks your certificate</span>
-                </div>
-                <div className="flex items-center gap-2.5 text-xs text-emerald-200/70">
-                  <i className="bi bi-check-circle-fill text-amber-400 text-sm flex-shrink-0" />
-                  <span>Printable PDF with unique certification code</span>
-                </div>
-              </div>
-
-              <button
-                onClick={() => navigate('/advocacy-passport')}
-                className="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-emerald-950 rounded-xl font-bold text-sm shadow-lg shadow-amber-500/20 transition-all duration-300 hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2"
-              >
-                <span>Take the Challenge</span>
-                <i className="bi bi-arrow-right text-sm" />
-              </button>
-            </motion.div>
-
-            {/* Quick info card */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="bg-gradient-to-br from-emerald-950/60 to-emerald-950/40 rounded-3xl p-6 sm:p-7 border border-white/10 backdrop-blur-sm"
-            >
-              <h4 className="text-xs uppercase tracking-wider font-mono text-emerald-300/80 mb-3 flex items-center gap-1.5">
-                <i className="bi bi-globe2 text-emerald-400 text-sm" />
-                Why This Matters
-              </h4>
-              <div className="space-y-3">
-                <p className="text-xs text-emerald-100/70 leading-relaxed">
+              <div className="flex-1">
+                <h4 className="text-sm uppercase tracking-wider font-mono text-emerald-300/80 mb-2">
+                  Why This Matters
+                </h4>
+                <p className="text-sm text-emerald-100/70 leading-relaxed">
                   Every tree pledge contributes to Rwanda's goal of restoring 
                   <strong className="text-emerald-300"> 2 million hectares</strong> of degraded land by 2030.
                 </p>
-                <div className="flex items-center gap-2 text-xs text-emerald-300/80 bg-emerald-950/50 rounded-xl px-3 py-2.5 border border-emerald-800/30">
-                  <i className="bi bi-leaf text-emerald-400 text-sm flex-shrink-0" />
-                  <span>Indigenous species like Markhamia lutea and Newtonia buchananii help preserve Rwanda's unique biodiversity</span>
-                </div>
               </div>
-            </motion.div>
-          </div>
+              <div className="flex items-center gap-2.5 text-xs text-emerald-300/80 bg-emerald-950/50 rounded-xl px-4 py-3 border border-emerald-800/30 max-w-sm">
+                <i className="bi bi-leaf text-emerald-400 text-base flex-shrink-0" />
+                <span>Indigenous species like Markhamia lutea and Newtonia buchananii help preserve Rwanda's unique biodiversity</span>
+              </div>
+            </div>
+          </motion.div>
 
         </div>
 

@@ -101,7 +101,11 @@ export default function AdvocacyPassportPage() {
       setQuizError('Please provide your name — it will appear on the digital certificate.');
       return;
     }
-    if (candidateEmail.trim() && !isValidEmail(candidateEmail)) {
+    if (!candidateEmail.trim()) {
+      setEmailError('Please enter your email address — it is required to receive your certificate.');
+      return;
+    }
+    if (!isValidEmail(candidateEmail)) {
       setEmailError('Please enter a valid email address.');
       return;
     }
@@ -233,25 +237,9 @@ export default function AdvocacyPassportPage() {
                   animate={{ opacity: 1 }}
                   className="overflow-hidden"
                 >
-                  <div className="grid grid-cols-1 items-center gap-10 p-6 sm:p-10 lg:grid-cols-2 lg:gap-14 lg:p-14">
-                    <div className="min-w-0">
-                      <div className="mb-7 flex items-center gap-4">
-                        <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-emerald-800 text-emerald-400 shadow-inner shadow-emerald-950/30">
-                          <i className="bi bi-award text-4xl" />
-                        </div>
-                        <span className="font-mono text-sm font-semibold uppercase tracking-[0.2em] text-emerald-400">
-                          Advocacy Passport
-                        </span>
-                      </div>
-
-                      <h2 className="font-display text-2xl font-bold leading-tight text-white sm:text-3xl">
-                        Turn your climate knowledge into action.
-                      </h2>
-                      <p className="mt-5 text-lg leading-relaxed text-emerald-100/85 sm:text-xl lg:text-[22px]">
-                        Test your climate and conservation literacy, earn your official Climate Advocate Certificate, and join a growing network of people making a difference.
-                      </p>
-
-                      <div className="mt-7 rounded-2xl border border-emerald-800/50 bg-emerald-950/45 p-5">
+                  <div className="grid grid-cols-1 items-start gap-10 p-6 sm:p-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-12 lg:p-14">
+                    <div className="min-w-0 space-y-6">
+                      <div className="rounded-2xl border border-emerald-800/50 bg-emerald-950/45 p-5">
                         <p className="text-sm leading-relaxed text-emerald-100/80">
                           {challengeLoading ? (
                             <span className="flex items-center gap-2"><i className="bi bi-arrow-repeat animate-spin text-emerald-400" /> Loading this week's challenge...</span>
@@ -269,7 +257,7 @@ export default function AdvocacyPassportPage() {
                         )}
                       </div>
 
-                      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div className="space-y-2">
                           <label className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-emerald-300/80">
                             <i className="bi bi-patch-check text-sm text-emerald-400" />
@@ -286,7 +274,7 @@ export default function AdvocacyPassportPage() {
                         <div className="space-y-2">
                           <label className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-emerald-300/80">
                             <i className="bi bi-envelope text-sm text-emerald-400" />
-                            Email (optional)
+                            Email <span className="text-rose-400">*</span>
                           </label>
                           <input
                             type="email"
@@ -296,7 +284,9 @@ export default function AdvocacyPassportPage() {
                               if (emailError) setEmailError('');
                             }}
                             onBlur={() => {
-                              if (candidateEmail.trim() && !isValidEmail(candidateEmail)) {
+                              if (!candidateEmail.trim()) {
+                                setEmailError('Email is required to receive your certificate.');
+                              } else if (!isValidEmail(candidateEmail)) {
                                 setEmailError('Please enter a valid email address.');
                               } else {
                                 setEmailError('');
@@ -345,11 +335,11 @@ export default function AdvocacyPassportPage() {
                       </motion.button>
                     </div>
 
-                    <div className="group relative order-first aspect-[4/3] overflow-hidden rounded-3xl border border-emerald-700/40 shadow-2xl lg:order-last">
+                    <div className="group relative order-last overflow-hidden rounded-3xl border border-emerald-700/40 shadow-2xl min-h-[280px] lg:min-h-full">
                       <img
                         src="/Images/pexels-kampus-5940708.jpg"
                         alt="Learner preparing for the Advocacy Passport challenge"
-                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/45 via-transparent to-transparent" />
                     </div>
@@ -473,11 +463,11 @@ export default function AdvocacyPassportPage() {
                     )}
                   </div>
 
-                  <div className="group relative order-last aspect-[4/3] overflow-hidden rounded-3xl border border-emerald-700/40 shadow-2xl">
+                  <div className="group relative order-last overflow-hidden rounded-3xl border border-emerald-700/40 shadow-2xl min-h-[280px] lg:min-h-full">
                     <img
                       src="/Images/pexels-kampus-5940708.jpg"
                       alt="Learner preparing for the Advocacy Passport challenge"
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/45 via-transparent to-transparent" />
                   </div>

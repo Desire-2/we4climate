@@ -81,36 +81,36 @@ export default function Footer() {
             <h4 className="text-xs uppercase tracking-wider font-mono text-emerald-400 font-bold">Community Hubs</h4>
             <div className="flex gap-2.5">
               <a 
-                href="https://www.facebook.com/We4Climate-103304555680933/" 
+                href="https://www.facebook.com/profile.php?id=100064125695533" 
                 target="_blank" 
-                rel="noreferrer" 
+                rel="noopener noreferrer" 
                 className="p-2.5 bg-emerald-900 hover:bg-emerald-800 text-emerald-300 hover:text-emerald-100 border border-emerald-800 rounded-xl transition-all"
                 aria-label="Facebook URL link"
               >
                 <Facebook className="h-4 w-4" />
               </a>
               <a 
-                href="https://twitter.com/Pryic2?t=Uoh07DaCZSyxjCqtQilHCQ&s=09" 
+                href="https://x.com/we4climate" 
                 target="_blank" 
-                rel="noreferrer" 
+                rel="noopener noreferrer" 
                 className="p-2.5 bg-emerald-900 hover:bg-emerald-800 text-emerald-300 hover:text-emerald-100 border border-emerald-800 rounded-xl transition-all"
                 aria-label="Twitter handle link"
               >
                 <Twitter className="h-4 w-4" />
               </a>
               <a 
-                href="https://www.instagram.com/invites/contact/?i=18yke06prxy9g&utm_content=ivjx628" 
+                href="https://www.instagram.com/we4climate_/" 
                 target="_blank" 
-                rel="noreferrer" 
+                rel="noopener noreferrer" 
                 className="p-2.5 bg-emerald-900 hover:bg-emerald-800 text-emerald-300 hover:text-emerald-100 border border-emerald-800 rounded-xl transition-all"
                 aria-label="Instagram contact link"
               >
                 <Instagram className="h-4 w-4" />
               </a>
               <a 
-                href="https://www.linkedin.com/company/we4climate/" 
+                href="https://www.linkedin.com/company/108184046/admin/dashboard/" 
                 target="_blank" 
-                rel="noreferrer" 
+                rel="noopener noreferrer" 
                 className="p-2.5 bg-emerald-900 hover:bg-emerald-800 text-emerald-300 hover:text-emerald-100 border border-emerald-800 rounded-xl transition-all"
                 aria-label="LinkedIn profile link"
               >

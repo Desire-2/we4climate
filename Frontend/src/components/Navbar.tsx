@@ -80,88 +80,6 @@ export default function Navbar() {
             : 'bg-emerald-950/25 backdrop-blur-[2px]'
         }`}
       >
-{/* Top green bar matching Arcos Network layout — temporarily disabled via false && */}
-        {false && (
-          <div 
-            id="top-info-bar"
-            className={`bg-[#5cb85c] text-white text-xs transition-all duration-300 overflow-hidden ${
-              isScrolled ? 'max-h-0 py-0 opacity-0 pointer-events-none' : 'max-h-12 py-3 opacity-100'
-            }`}
-          >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Mail className="h-4 w-4 text-white/95" />
-                <a 
-                  href="mailto:info@we4climate.org" 
-                  className="font-semibold hover:underline text-white transition-all tracking-wide text-xs sm:text-sm"
-                >
-                  info@we4climate.org
-                </a>
-                <span className="text-white/40 hidden sm:inline">|</span>
-                <span className="text-white/90 font-mono text-[11px] sm:text-xs tracking-wider hidden sm:inline">
-                </span>
-              </div>
-
-              <div className="flex items-center space-x-3.5 sm:space-x-4">
-                <a 
-                  href="https://facebook.com/We4Climate-103304555680933/" 
-                  target="_blank" 
-                  rel="noreferrer" 
-                  className="text-white hover:text-emerald-100 transition-all transform hover:scale-110"
-                  aria-label="Facebook URL link"
-                >
-                  <Facebook className="h-4 w-4" />
-                </a>
-                <a 
-                  href="https://twitter.com/Pryic2?t=Uoh07DaCZSyxjCqtQilHCQ&s=09" 
-                  target="_blank" 
-                  rel="noreferrer" 
-                  className="text-white hover:text-emerald-100 transition-all transform hover:scale-110"
-                  aria-label="Twitter handle link"
-                >
-                  <Twitter className="h-4 w-4" />
-                </a>
-                <a 
-                  href="https://www.instagram.com/invites/contact/?i=18yke06prxy9g&utm_content=ivjx628" 
-                  target="_blank" 
-                  rel="noreferrer" 
-                  className="text-white hover:text-emerald-110 transition-all transform hover:scale-110"
-                  aria-label="Instagram contact link"
-                >
-                  <Instagram className="h-4 w-4" />
-                </a>
-                <a 
-                  href="https://www.linkedin.com/company/we4climate/" 
-                  target="_blank" 
-                  rel="noreferrer" 
-                  className="text-white hover:text-emerald-110 transition-all transform hover:scale-110"
-                  aria-label="LinkedIn profile link"
-                >
-                  <Linkedin className="h-4 w-4" />
-                </a>
-                <a 
-                  href="https://youtube.com" 
-                  target="_blank" 
-                  rel="noreferrer" 
-                  className="text-white hover:text-emerald-110 transition-all transform hover:scale-110"
-                  aria-label="YouTube channel link"
-                >
-                  <Youtube className="h-4 w-4" />
-                </a>
-                
-                <button
-                  onClick={(e) => { e.preventDefault(); handleNavClick('/admin/login'); }}
-                  className="flex items-center gap-1 hover:opacity-90 transition-all transform hover:scale-110 py-0.5 group/flickr cursor-pointer"
-                  title="Admin Portal"
-                  aria-label="Open admin portal"
-                >
-                  <span className="w-2.5 h-2.5 bg-[#0063db] rounded-full inline-block animate-pulse group-hover/flickr:animate-none" style={{ animationDelay: '0ms', animationDuration: '2s' }} />
-                  <span className="w-2.5 h-2.5 bg-[#ff0084] rounded-full inline-block animate-pulse group-hover/flickr:animate-none" style={{ animationDelay: '300ms', animationDuration: '2.4s' }} />
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Main navigation row */}
         <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300 ${
@@ -422,16 +340,16 @@ export default function Navbar() {
 
             {/* Compact Social Badges inside slideout */}
             <div className="flex items-center justify-center space-x-4 pt-2">
-              <a href="https://facebook.com/We4Climate-103304555680933/" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors border border-transparent p-1 rounded">
+              <a href="https://www.facebook.com/profile.php?id=100064125695533" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors border border-transparent p-1 rounded">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="https://twitter.com/Pryic2?t=Uoh07DaCZSyxjCqtQilHCQ&s=09" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors border border-transparent p-1 rounded">
+              <a href="https://x.com/we4climate" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors border border-transparent p-1 rounded">
                 <Twitter className="h-5 w-5" />
               </a>
-              <a href="https://www.instagram.com/invites/contact/?i=18yke06prxy9g&utm_content=ivjx628" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors border border-transparent p-1 rounded">
+              <a href="https://www.instagram.com/we4climate_/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors border border-transparent p-1 rounded">
                 <Instagram className="h-5 w-5" />
               </a>
-              <a href="https://www.linkedin.com/company/we4climate/" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors border border-transparent p-1 rounded">
+              <a href="https://www.linkedin.com/company/108184046/admin/dashboard/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors border border-transparent p-1 rounded">
                 <Linkedin className="h-5 w-5" />
               </a>
               <button

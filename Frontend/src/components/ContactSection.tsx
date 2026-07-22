@@ -143,7 +143,7 @@ export default function ContactSection() {
               <h4 className="text-xs uppercase tracking-wider font-mono text-gray-400">Join our social dialogues</h4>
               <div className="flex gap-2">
                 <a 
-                  href="https://www.facebook.com/We4Climate-103304555680933/" 
+                  href="https://www.facebook.com/profile.php?id=100064125695533" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="p-3 bg-white border border-gray-200 hover:border-emerald-500 hover:bg-emerald-50 text-gray-600 hover:text-emerald-700 rounded-xl transition-all shadow-sm flex items-center justify-center"
@@ -152,7 +152,7 @@ export default function ContactSection() {
                   <Facebook className="h-5 w-5" />
                 </a>
                 <a 
-                  href="https://twitter.com/Pryic2?t=Uoh07DaCZSyxjCqtQilHCQ&s=09" 
+                  href="https://x.com/we4climate" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="p-3 bg-white border border-gray-200 hover:border-emerald-500 hover:bg-emerald-50 text-gray-600 hover:text-emerald-700 rounded-xl transition-all shadow-sm flex items-center justify-center"
@@ -161,7 +161,7 @@ export default function ContactSection() {
                   <Twitter className="h-5 w-5" />
                 </a>
                 <a 
-                  href="https://www.instagram.com/invites/contact/?i=18yke06prxy9g&utm_content=ivjx628" 
+                  href="https://www.instagram.com/we4climate_/" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="p-3 bg-white border border-gray-200 hover:border-emerald-500 hover:bg-emerald-50 text-gray-600 hover:text-emerald-700 rounded-xl transition-all shadow-sm flex items-center justify-center"
@@ -192,7 +192,7 @@ export default function ContactSection() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">Your Email</label>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Your Email <span className="text-red-500">*</span></label>
                   <input 
                     type="email" 
                     value={email}

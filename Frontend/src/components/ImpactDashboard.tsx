@@ -103,7 +103,7 @@ export default function ImpactDashboard() {
               className="group relative flex min-h-[360px] flex-col overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
               <div className="relative h-56 overflow-hidden sm:h-72">
-                <img src="/Images/Regeneration.jpg" alt="Regeneration Farm Center" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <img src="/Images/Our_Impact/regenerative-center.jpg" alt="Regeneration Farm Center" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
               <div className="flex flex-1 flex-col p-5 text-center sm:p-6">
@@ -158,7 +158,7 @@ export default function ImpactDashboard() {
               className="group relative flex min-h-[360px] flex-col overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
               <div className="relative h-56 overflow-hidden sm:h-72">
-                <img src="/Images/International.jpg" alt="International Conferences" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <img src="/Images/Our_Impact/events.jpg" alt="International Conferences" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
               <div className="flex flex-1 flex-col p-5 text-center sm:p-6">
@@ -347,7 +347,7 @@ export default function ImpactDashboard() {
               className="group relative flex min-h-[360px] flex-col overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
               <div className="relative h-56 overflow-hidden sm:h-72">
-                <img src="/Images/Homepage_pictures/IMG_7097.jpg" alt="International Visitors" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <img src="/Images/Our_Impact/visitors.jpg" alt="International Visitors" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
               <div className="flex flex-1 flex-col p-5 text-center sm:p-6">
