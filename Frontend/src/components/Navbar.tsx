@@ -69,10 +69,10 @@ export default function Navbar() {
     <>
       <nav 
         id="main-nav"
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-emerald-950/95 backdrop-blur-md ${
           isScrolled 
-            ? 'bg-emerald-950/95 backdrop-blur-md shadow-lg border-b border-white/10' 
-            : 'bg-emerald-950/25 backdrop-blur-[2px]'
+            ? 'shadow-lg border-b border-white/10' 
+            : ''
         }`}
       >
 

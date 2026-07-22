@@ -65,7 +65,7 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
       {/* ────────────── HERO SECTION ────────────── */}
       <section
         id="hero"
-        className="relative h-screen min-h-[600px] max-h-[900px] flex items-center justify-center overflow-hidden"
+        className="relative h-screen min-h-[600px] max-h-[900px] flex items-center justify-center overflow-hidden pt-[100px]"
       >
         {/* Slideshow background */}
         {HERO_IMAGES.map((img, index) => (
