@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Map, TreePine, Users, GraduationCap, Milestone, Quote, Plus, Save,
-  Trash2, Pencil, X, Eye, EyeOff, Sparkles, Globe,
-  ChevronDown, ChevronUp, Target, Lightbulb,
-} from "lucide-react";
+
 import {
   adminFetchDistricts, adminCreateDistrict, adminUpdateDistrict, adminDeleteDistrict,
   adminFetchStories, adminCreateStory, adminUpdateStory, adminDeleteStory,
@@ -43,7 +39,7 @@ function Toast({ message, type, onClose }: { message: string; type: "success" | 
       type === "success" ? "bg-emerald-600 text-white" : "bg-rose-600 text-white"
     }`}>
       <span>{message}</span>
-      <button onClick={onClose} className="opacity-70 hover:opacity-100"><X className="h-4 w-4" /></button>
+      <button onClick={onClose} className="opacity-70 hover:opacity-100"></button>
     </div>
   );
 }
@@ -415,7 +411,7 @@ export default function AdminImpact() {
             tab === "districts" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
           }`}
         >
-          <Map className="h-4 w-4" /> Districts
+Districts
         </button>
         <button
           onClick={() => setTab("stories")}
@@ -423,7 +419,7 @@ export default function AdminImpact() {
             tab === "stories" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
           }`}
         >
-          <Quote className="h-4 w-4" /> Stories
+Stories
         </button>
         <button
           onClick={() => setTab("targets")}
@@ -431,7 +427,7 @@ export default function AdminImpact() {
             tab === "targets" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
           }`}
         >
-          <Target className="h-4 w-4" /> Targets
+Targets
         </button>
         <button
           onClick={() => setTab("goals")}
@@ -439,7 +435,7 @@ export default function AdminImpact() {
             tab === "goals" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
           }`}
         >
-          <Lightbulb className="h-4 w-4" /> Goals
+Goals
         </button>
       </div>
 
@@ -458,7 +454,7 @@ export default function AdminImpact() {
                 onClick={openNewDistrict}
                 className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-500 transition-colors"
               >
-                <Plus className="h-3.5 w-3.5" /> New District
+      New District
               </button>
             </div>
 
@@ -482,16 +478,16 @@ export default function AdminImpact() {
                         </span>
                       </div>
                       <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => openEditDistrict(d)} className="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg"><Pencil className="h-3.5 w-3.5" /></button>
-                        <button onClick={() => deleteDistrict(d.id, d.district_name)} className="p-1.5 text-rose-400 hover:bg-rose-50 rounded-lg"><Trash2 className="h-3.5 w-3.5" /></button>
+<button onClick={() => openEditDistrict(d)} className="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg">Edit</button>
+<button onClick={() => deleteDistrict(d.id, d.district_name)} className="p-1.5 text-rose-400 hover:bg-rose-50 rounded-lg">Delete</button>
                       </div>
                     </div>
                     {/* Mini metrics */}
                     <div className="grid grid-cols-2 gap-2 mb-3">
-                      <div className="flex items-center gap-1.5 text-xs text-gray-500"><TreePine className="h-3.5 w-3.5 text-emerald-500" /><span className="font-semibold text-gray-700">{d.trees_planted.toLocaleString()}</span> trees</div>
-                      <div className="flex items-center gap-1.5 text-xs text-gray-500"><Users className="h-3.5 w-3.5 text-blue-500" /><span className="font-semibold text-gray-700">{d.community_members.toLocaleString()}</span> members</div>
-                      <div className="flex items-center gap-1.5 text-xs text-gray-500"><GraduationCap className="h-3.5 w-3.5 text-amber-500" /><span className="font-semibold text-gray-700">{d.farmers_trained.toLocaleString()}</span> farmers</div>
-                      <div className="flex items-center gap-1.5 text-xs text-gray-500"><Milestone className="h-3.5 w-3.5 text-purple-500" /><span className="font-semibold text-gray-700">{d.active_sites}</span> sites</div>
+                      <div className="text-xs text-gray-500"><span className="font-semibold text-gray-700">{d.trees_planted.toLocaleString()}</span> trees</div>
+                      <div className="text-xs text-gray-500"><span className="font-semibold text-gray-700">{d.community_members.toLocaleString()}</span> members</div>
+                      <div className="text-xs text-gray-500"><span className="font-semibold text-gray-700">{d.farmers_trained.toLocaleString()}</span> farmers</div>
+                      <div className="text-xs text-gray-500"><span className="font-semibold text-gray-700">{d.active_sites}</span> sites</div>
                     </div>
                     {d.species && d.species.length > 0 && (
                       <div className="flex flex-wrap gap-1">
@@ -511,7 +507,7 @@ export default function AdminImpact() {
             {/* Map Preview */}
             <div className="bg-white rounded-2xl border border-gray-100 p-4">
               <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3 flex items-center gap-2">
-                <Globe className="h-3.5 w-3.5" /> Map Preview
+Map Preview
               </h3>
               <DistrictMapPreview districts={districts} activeId={editingDistrict?.id ?? null} />
             </div>
@@ -568,7 +564,7 @@ export default function AdminImpact() {
                       {districtForm.species.map((s, i) => (
                         <span key={i} className="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded-lg flex items-center gap-1">
                           {s}
-                          <button onClick={() => removeSpecies(i)} className="hover:text-red-500"><X className="h-3 w-3" /></button>
+<button onClick={() => removeSpecies(i)} className="hover:text-red-500">Remove</button>
                         </span>
                       ))}
                     </div>
@@ -584,22 +580,22 @@ export default function AdminImpact() {
                 {/* Key metrics */}
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-1"><TreePine className="h-3 w-3 inline mr-1" />Trees</label>
+<label className="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-1">Trees</label>
                     <input type="number" value={districtForm.trees_planted} onChange={(e) => setDistrictForm((p) => ({ ...p, trees_planted: Number(e.target.value) }))}
                       className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-400" />
                   </div>
                   <div>
-                    <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-1"><Users className="h-3 w-3 inline mr-1" />Members</label>
+<label className="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-1">Members</label>
                     <input type="number" value={districtForm.community_members} onChange={(e) => setDistrictForm((p) => ({ ...p, community_members: Number(e.target.value) }))}
                       className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-400" />
                   </div>
                   <div>
-                    <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-1"><GraduationCap className="h-3 w-3 inline mr-1" />Farmers</label>
+<label className="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-1">Farmers</label>
                     <input type="number" value={districtForm.farmers_trained} onChange={(e) => setDistrictForm((p) => ({ ...p, farmers_trained: Number(e.target.value) }))}
                       className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-400" />
                   </div>
                   <div>
-                    <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-1"><Milestone className="h-3 w-3 inline mr-1" />Sites</label>
+<label className="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-1">Sites</label>
                     <input type="number" value={districtForm.active_sites} onChange={(e) => setDistrictForm((p) => ({ ...p, active_sites: Number(e.target.value) }))}
                       className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-400" />
                   </div>
@@ -607,7 +603,7 @@ export default function AdminImpact() {
 
                 <div className="flex gap-2 pt-2">
                   <button onClick={saveDistrict} className="flex-1 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-bold hover:bg-emerald-500 transition-colors flex items-center justify-center gap-2">
-                    <Save className="h-4 w-4" /> {editingDistrict ? "Update District" : "Create District"}
+{editingDistrict ? "Update District" : "Create District"}
                   </button>
                   <button onClick={() => setShowDistrictForm(false)} className="px-4 py-2.5 bg-gray-100 text-gray-600 rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors">
                     Cancel
@@ -634,7 +630,7 @@ export default function AdminImpact() {
                 onClick={openNewTarget}
                 className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-500 transition-colors"
               >
-                <Plus className="h-3.5 w-3.5" /> New Target
+New Target
               </button>
             </div>
 
@@ -642,7 +638,7 @@ export default function AdminImpact() {
               <div className="text-center py-12 text-gray-400">Loading…</div>
             ) : targets.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200">
-                <Target className="h-10 w-10 text-gray-300 mx-auto mb-3" />
+
                 <p className="text-sm text-gray-400 font-medium">No yearly targets set</p>
                 <p className="text-xs text-gray-300 mt-1">Set targets for trees, members, farmers, and sites per year to power the impact chart.</p>
                 <button onClick={openNewTarget} className="mt-3 text-sm text-emerald-600 font-semibold hover:underline">Create your first target</button>
@@ -654,7 +650,7 @@ export default function AdminImpact() {
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-3">
                         <div className="p-2.5 bg-blue-100 rounded-xl">
-                          <Target className="h-5 w-5 text-blue-600" />
+
                         </div>
                         <div>
                           <h3 className="font-display font-bold text-lg text-gray-900">{t.year}</h3>
@@ -662,8 +658,8 @@ export default function AdminImpact() {
                         </div>
                       </div>
                       <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => openEditTarget(t)} className="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg"><Pencil className="h-3.5 w-3.5" /></button>
-                        <button onClick={() => deleteTarget(t.id, t.year)} className="p-1.5 text-rose-400 hover:bg-rose-50 rounded-lg"><Trash2 className="h-3.5 w-3.5" /></button>
+<button onClick={() => openEditTarget(t)} className="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg">Edit</button>
+<button onClick={() => deleteTarget(t.id, t.year)} className="p-1.5 text-rose-400 hover:bg-rose-50 rounded-lg">Delete</button>
                       </div>
                     </div>
 
@@ -671,19 +667,19 @@ export default function AdminImpact() {
                     <div className="grid grid-cols-4 gap-3">
                       <div className="bg-emerald-50 rounded-xl p-3 text-center">
                         <div className="text-2xl font-display font-black text-emerald-700">{t.trees_target.toLocaleString()}</div>
-                        <div className="text-[10px] text-emerald-500 font-bold uppercase tracking-wider mt-0.5"><TreePine className="h-3 w-3 inline mr-1" />Trees</div>
+<div className="text-[10px] text-emerald-500 font-bold uppercase tracking-wider mt-0.5">Trees</div>
                       </div>
                       <div className="bg-blue-50 rounded-xl p-3 text-center">
                         <div className="text-2xl font-display font-black text-blue-700">{t.members_target.toLocaleString()}</div>
-                        <div className="text-[10px] text-blue-500 font-bold uppercase tracking-wider mt-0.5"><Users className="h-3 w-3 inline mr-1" />Members</div>
+<div className="text-[10px] text-blue-500 font-bold uppercase tracking-wider mt-0.5">Members</div>
                       </div>
                       <div className="bg-amber-50 rounded-xl p-3 text-center">
                         <div className="text-2xl font-display font-black text-amber-700">{t.farmers_target.toLocaleString()}</div>
-                        <div className="text-[10px] text-amber-500 font-bold uppercase tracking-wider mt-0.5"><GraduationCap className="h-3 w-3 inline mr-1" />Farmers</div>
+<div className="text-[10px] text-amber-500 font-bold uppercase tracking-wider mt-0.5">Farmers</div>
                       </div>
                       <div className="bg-purple-50 rounded-xl p-3 text-center">
                         <div className="text-2xl font-display font-black text-purple-700">{t.sites_target.toLocaleString()}</div>
-                        <div className="text-[10px] text-purple-500 font-bold uppercase tracking-wider mt-0.5"><Milestone className="h-3 w-3 inline mr-1" />Sites</div>
+<div className="text-[10px] text-purple-500 font-bold uppercase tracking-wider mt-0.5">Sites</div>
                       </div>
                     </div>
                   </div>
@@ -709,25 +705,25 @@ export default function AdminImpact() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-1"><TreePine className="h-3 w-3 inline mr-1" />Trees Target</label>
+<label className="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-1">Trees Target</label>
                     <input type="number" value={targetForm.trees_target}
                       onChange={(e) => setTargetForm((p) => ({ ...p, trees_target: parseInt(e.target.value) || 0 }))}
                       className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-400" />
                   </div>
                   <div>
-                    <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-1"><Users className="h-3 w-3 inline mr-1" />Members Target</label>
+<label className="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-1">Members Target</label>
                     <input type="number" value={targetForm.members_target}
                       onChange={(e) => setTargetForm((p) => ({ ...p, members_target: parseInt(e.target.value) || 0 }))}
                       className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-400" />
                   </div>
                   <div>
-                    <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-1"><GraduationCap className="h-3 w-3 inline mr-1" />Farmers Target</label>
+<label className="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-1">Farmers Target</label>
                     <input type="number" value={targetForm.farmers_target}
                       onChange={(e) => setTargetForm((p) => ({ ...p, farmers_target: parseInt(e.target.value) || 0 }))}
                       className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-400" />
                   </div>
                   <div>
-                    <label className="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-1"><Milestone className="h-3 w-3 inline mr-1" />Sites Target</label>
+<label className="text-[10px] uppercase tracking-wider font-bold text-gray-400 block mb-1">Sites Target</label>
                     <input type="number" value={targetForm.sites_target}
                       onChange={(e) => setTargetForm((p) => ({ ...p, sites_target: parseInt(e.target.value) || 0 }))}
                       className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-400" />
@@ -736,7 +732,7 @@ export default function AdminImpact() {
 
                 <div className="flex gap-2 pt-2">
                   <button onClick={saveTarget} className="flex-1 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-bold hover:bg-emerald-500 transition-colors flex items-center justify-center gap-2">
-                    <Save className="h-4 w-4" /> {editingTarget ? "Update" : "Create"}
+{editingTarget ? "Update" : "Create"}
                   </button>
                   <button onClick={() => setShowTargetForm(false)} className="px-4 py-2.5 bg-gray-100 text-gray-600 rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors">
                     Cancel
@@ -760,7 +756,7 @@ export default function AdminImpact() {
                 {goals.filter((g) => g.is_active).length} Active · {goals.length} Total
               </span>
               <button onClick={openNewGoal} className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-500 transition-colors">
-                <Plus className="h-3.5 w-3.5" /> New Goal
+New Goal
               </button>
             </div>
 
@@ -768,7 +764,7 @@ export default function AdminImpact() {
               <div className="text-center py-12 text-gray-400">Loading…</div>
             ) : goals.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200">
-                <Lightbulb className="h-10 w-10 text-gray-300 mx-auto mb-3" />
+
                 <p className="text-sm text-gray-400 font-medium">No goals configured yet</p>
                 <p className="text-xs text-gray-300 mt-1">Create the 10 Pillars of Change that appear on the About page.</p>
                 <button onClick={openNewGoal} className="mt-3 text-sm text-emerald-600 font-semibold hover:underline">Create your first goal</button>
@@ -780,7 +776,7 @@ export default function AdminImpact() {
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-2">
                         <div className="p-2 bg-emerald-100 rounded-xl">
-                          <Lightbulb className="h-4 w-4 text-emerald-600" />
+
                         </div>
                         <div>
                           <h3 className="font-display font-bold text-gray-900 text-sm">{g.title}</h3>
@@ -790,14 +786,14 @@ export default function AdminImpact() {
                         </div>
                       </div>
                       <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => openEditGoal(g)} className="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg"><Pencil className="h-3.5 w-3.5" /></button>
-                        <button onClick={() => toggleGoalActive(g)} className="p-1.5 text-amber-500 hover:bg-amber-50 rounded-lg">{g.is_active ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}</button>
-                        <button onClick={() => deleteGoal(g.id, g.title)} className="p-1.5 text-rose-400 hover:bg-rose-50 rounded-lg"><Trash2 className="h-3.5 w-3.5" /></button>
+<button onClick={() => openEditGoal(g)} className="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg">Edit</button>
+<button onClick={() => toggleGoalActive(g)} className="p-1.5 text-amber-500 hover:bg-amber-50 rounded-lg">{g.is_active ? 'Deactivate' : 'Activate'}</button>
+<button onClick={() => deleteGoal(g.id, g.title)} className="p-1.5 text-rose-400 hover:bg-rose-50 rounded-lg">Delete</button>
                       </div>
                     </div>
                     <p className="text-xs text-gray-500 line-clamp-2 mb-2">{g.description}</p>
                     <div className="flex items-center gap-1.5 text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-2.5 py-1.5 rounded-lg">
-                      <Sparkles className="h-3 w-3" />
+
                       <span className="truncate">{g.milestone}</span>
                     </div>
                     {g.action_details && (
@@ -848,7 +844,7 @@ export default function AdminImpact() {
                 </div>
                 <div className="flex gap-2 pt-2">
                   <button onClick={saveGoal} className="flex-1 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-bold hover:bg-emerald-500 transition-colors flex items-center justify-center gap-2">
-                    <Save className="h-4 w-4" /> {editingGoal ? "Update" : "Create"}
+{editingGoal ? "Update" : "Create"}
                   </button>
                   <button onClick={() => setShowGoalForm(false)} className="px-4 py-2.5 bg-gray-100 text-gray-600 rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors">Cancel</button>
                 </div>
@@ -873,7 +869,7 @@ export default function AdminImpact() {
                 onClick={openNewStory}
                 className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-500 transition-colors"
               >
-                <Plus className="h-3.5 w-3.5" /> New Story
+New Story
               </button>
             </div>
 
@@ -881,7 +877,7 @@ export default function AdminImpact() {
               <div className="text-center py-12 text-gray-400">Loading…</div>
             ) : stories.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200">
-                <Quote className="h-10 w-10 text-gray-300 mx-auto mb-3" />
+
                 <p className="text-sm text-gray-400 font-medium">No impact stories yet</p>
                 <button onClick={openNewStory} className="mt-3 text-sm text-emerald-600 font-semibold hover:underline">Add your first story</button>
               </div>
@@ -894,8 +890,8 @@ export default function AdminImpact() {
                     <div className="flex items-start gap-4">
                       {/* Reorder buttons */}
                       <div className="flex flex-col gap-0.5 pt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => moveStory(s, -1)} disabled={idx === 0} className="p-0.5 text-gray-400 hover:text-gray-600 disabled:opacity-20"><ChevronUp className="h-3.5 w-3.5" /></button>
-                        <button onClick={() => moveStory(s, 1)} disabled={idx === stories.length - 1} className="p-0.5 text-gray-400 hover:text-gray-600 disabled:opacity-20"><ChevronDown className="h-3.5 w-3.5" /></button>
+<button onClick={() => moveStory(s, -1)} disabled={idx === 0} className="p-0.5 text-gray-400 hover:text-gray-600 disabled:opacity-20">Up</button>
+<button onClick={() => moveStory(s, 1)} disabled={idx === stories.length - 1} className="p-0.5 text-gray-400 hover:text-gray-600 disabled:opacity-20">Down</button>
                       </div>
 
                       {/* Avatar */}
@@ -921,10 +917,10 @@ export default function AdminImpact() {
                       {/* Actions */}
                       <div className="flex gap-1 shrink-0">
                         <button onClick={() => toggleStoryActive(s)} className="p-2 text-gray-400 hover:text-amber-500 hover:bg-gray-100 rounded-lg transition-colors" title={s.is_active ? "Deactivate" : "Activate"}>
-                          {s.is_active ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+{s.is_active ? 'Deactivate' : 'Activate'}
                         </button>
-                        <button onClick={() => openEditStory(s)} className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"><Pencil className="h-4 w-4" /></button>
-                        <button onClick={() => deleteStory(s.id, s.name)} className="p-2 text-rose-400 hover:bg-rose-50 rounded-lg transition-colors"><Trash2 className="h-4 w-4" /></button>
+<button onClick={() => openEditStory(s)} className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors">Edit</button>
+<button onClick={() => deleteStory(s.id, s.name)} className="p-2 text-rose-400 hover:bg-rose-50 rounded-lg transition-colors">Delete</button>
                       </div>
                     </div>
                   </div>
@@ -980,7 +976,7 @@ export default function AdminImpact() {
 
                 <div className="flex gap-2 pt-2">
                   <button onClick={saveStory} className="flex-1 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-bold hover:bg-emerald-500 transition-colors flex items-center justify-center gap-2">
-                    <Save className="h-4 w-4" /> {editingStory ? "Update Story" : "Create Story"}
+{editingStory ? "Update Story" : "Create Story"}
                   </button>
                   <button onClick={() => setShowStoryForm(false)} className="px-4 py-2.5 bg-gray-100 text-gray-600 rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors">
                     Cancel

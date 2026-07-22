@@ -1,4 +1,4 @@
-import { ArrowRight, Globe, Award, Heart, Scroll, Users } from 'lucide-react';
+
 
 interface HeroProps {
   onScrollToSection: (id: string) => void;
@@ -52,9 +52,8 @@ export default function Hero({ onScrollToSection, treesPledgedTotal }: HeroProps
             id="hero-cta-btn"
             onClick={scrollToInteractive}
             className="w-full sm:w-auto flex items-center justify-center space-x-2 px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 rounded-xl font-bold text-base shadow-xl shadow-emerald-950/40 hover:scale-[1.02] active:scale-95 transition-all duration-300 focus:outline-none"
-          >
-            <span>Take the Community Pledge</span>
-            <ArrowRight className="h-5 w-5" />
+          >            <span>Take the Community Pledge</span>
+
           </button>
           
           <button
@@ -72,7 +71,7 @@ export default function Hero({ onScrollToSection, treesPledgedTotal }: HeroProps
           {/* Stat 1 */}
           <div className="flex flex-col items-center justify-center border-r border-emerald-500/10 last:border-0 pr-2 md:pr-4">
             <div className="p-3 bg-emerald-500/10 rounded-xl mb-3">
-              <Globe className="h-6 w-6 text-emerald-400" />
+
             </div>
             <span className="text-white font-display text-2xl md:text-3xl font-extrabold tracking-tight">Kigali</span>
             <span className="mt-1 text-xs md:text-sm text-emerald-300/80 font-mono uppercase tracking-wider text-center">Headquarters, Rwanda</span>
@@ -81,7 +80,7 @@ export default function Hero({ onScrollToSection, treesPledgedTotal }: HeroProps
           {/* Stat 2 */}
           <div className="flex flex-col items-center justify-center border-r border-emerald-500/10 last:border-0 px-2 md:px-4">
             <div className="p-3 bg-emerald-500/10 rounded-xl mb-3">
-              <Award className="h-6 w-6 text-emerald-400" />
+
             </div>
             <span className="text-white font-display text-2xl md:text-3xl font-extrabold tracking-tight">30 Districts</span>
             <span className="mt-1 text-xs md:text-sm text-emerald-300/80 font-mono uppercase tracking-wider text-center">Community Outreach Units</span>
@@ -90,7 +89,7 @@ export default function Hero({ onScrollToSection, treesPledgedTotal }: HeroProps
           {/* Stat 3 */}
           <div className="flex flex-col items-center justify-center border-r border-emerald-500/10 last:border-0 px-2 md:px-4">
             <div className="p-3 bg-emerald-500/10 rounded-xl mb-3">
-              <Heart className="h-6 w-6 text-emerald-400 animate-pulse" />
+
             </div>
             <span className="text-white font-display text-2xl md:text-3xl font-extrabold tracking-tight">
               {(1820 + treesPledgedTotal).toLocaleString()}
@@ -101,7 +100,7 @@ export default function Hero({ onScrollToSection, treesPledgedTotal }: HeroProps
           {/* Stat 4 */}
           <div className="flex flex-col items-center justify-center last:border-0 pl-2 md:pl-4">
             <div className="p-3 bg-emerald-500/10 rounded-xl mb-3">
-              <Users className="h-6 w-6 text-emerald-400" />
+
             </div>
             <span className="text-white font-display text-2xl md:text-3xl font-extrabold tracking-tight">Community First</span>
             <span className="mt-1 text-xs md:text-sm text-emerald-300/80 font-mono uppercase tracking-wider text-center">Driven and Designed</span>

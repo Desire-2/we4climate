@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import { Shield, Eye, EyeOff, LogIn, Loader2 } from "lucide-react";
+
 
 export default function AdminLogin() {
   const { token, loading, login } = useAuth();
@@ -16,7 +16,7 @@ export default function AdminLogin() {
   if (loading) {
     return (
       <div className="min-h-screen bg-emerald-950 flex items-center justify-center">
-        <Loader2 className="h-6 w-6 text-emerald-400 animate-spin" />
+<div className="h-6 w-6 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -46,9 +46,7 @@ export default function AdminLogin() {
           <div className="inline-flex items-center justify-center gap-3 mb-4 group/flickr">
             {/* Flickr-styled pulsing dots — same branding cue as the navbar */}
             <span className="w-3 h-3 bg-[#0063db] rounded-full animate-pulse group-hover/flickr:animate-none" style={{ animationDelay: '0ms', animationDuration: '2s' }} />
-            <div className="inline-flex p-3 bg-emerald-100 rounded-2xl text-emerald-700">
-              <Shield className="h-8 w-8" />
-            </div>
+
             <span className="w-3 h-3 bg-[#ff0084] rounded-full animate-pulse group-hover/flickr:animate-none" style={{ animationDelay: '300ms', animationDuration: '2.4s' }} />
           </div>
           <h1 className="font-display font-bold text-2xl text-gray-900">
@@ -92,7 +90,7 @@ export default function AdminLogin() {
                 onClick={() => setShowPw(!showPw)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
-                {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+{showPw ? 'Hide' : 'Show'}
               </button>
             </div>
           </div>
@@ -112,7 +110,6 @@ export default function AdminLogin() {
               <span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             ) : (
               <>
-                <LogIn className="h-4 w-4" />
                 <span>Sign In</span>
               </>
             )}

@@ -1,9 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import {
-  Plus, X, Trash2, CheckCircle2, AlertCircle, Loader2, Calendar,
-  Award, Eye, HelpCircle, ChevronDown, ChevronUp,
-  Sparkles, ToggleLeft, ToggleRight, Clock,
-} from "lucide-react";
+
 import {
   adminFetchWeeklyChallenges,
   adminCreateWeeklyChallenge,
@@ -186,7 +182,7 @@ export default function AdminWeeklyChallenges() {
             ? "bg-emerald-50 border-emerald-200 text-emerald-800"
             : "bg-rose-50 border-rose-200 text-rose-800"
         }`}>
-          {toast.type === "success" ? <CheckCircle2 className="h-4 w-4 text-emerald-500" /> : <AlertCircle className="h-4 w-4 text-rose-500" />}
+    {toast.type === "success" ? '' : ''}
           {toast.message}
         </div>
       )}
@@ -203,7 +199,6 @@ export default function AdminWeeklyChallenges() {
           onClick={openCreate}
           className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm"
         >
-          <Plus className="h-3.5 w-3.5" />
           New Challenge
         </button>
       </div>
@@ -211,11 +206,11 @@ export default function AdminWeeklyChallenges() {
       {/* List */}
       {loading ? (
         <div className="flex items-center justify-center py-20 text-gray-400">
-          <Loader2 className="h-5 w-5 animate-spin mr-2" /> Loading…
+Loading…
         </div>
       ) : challenges.length === 0 ? (
         <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-200">
-          <Sparkles className="h-10 w-10 text-gray-300 mx-auto mb-3" />
+
           <p className="text-sm text-gray-500 font-medium">No weekly challenges yet</p>
           <p className="text-xs text-gray-400 mt-1">Create your first challenge to power the Advocacy Passport quiz.</p>
         </div>
@@ -238,34 +233,29 @@ export default function AdminWeeklyChallenges() {
                     <div className={`p-2.5 rounded-xl flex-shrink-0 ${
                       isCurrent ? "bg-emerald-100 text-emerald-600" : "bg-gray-100 text-gray-500"
                     }`}>
-                      <Award className="h-5 w-5" />
+
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="font-semibold text-gray-900 truncate">{c.title}</span>
                         {isCurrent && (
                           <span className="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full flex items-center gap-1">
-                            <Sparkles className="h-2.5 w-2.5" />
                             Active
                           </span>
                         )}
                       </div>
                       <div className="flex items-center gap-3 text-xs text-gray-400 mt-1">
-                        <span className="flex items-center gap-1">
-                          <Calendar className="h-3 w-3" />
+                        <span>
                           {new Date(c.week_start).toLocaleDateString()} – {new Date(c.week_end).toLocaleDateString()}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <HelpCircle className="h-3 w-3" />
+                        <span>
                           {c.questions.length} question{c.questions.length !== 1 ? "s" : ""}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <Award className="h-3 w-3 text-emerald-500" />
+                        <span>
                           <span className="font-semibold text-emerald-600">{c.completion_count || 0}</span>
                           completion{c.completion_count !== 1 ? "s" : ""}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
+                        <span>
                           {new Date(c.created_at).toLocaleDateString()}
                         </span>
                       </div>
@@ -282,27 +272,27 @@ export default function AdminWeeklyChallenges() {
                       }`}
                       title={isCurrent ? "Deactivate" : "Activate"}
                     >
-                      {isCurrent ? <ToggleRight className="h-5 w-5" /> : <ToggleLeft className="h-5 w-5" />}
+{isCurrent ? 'Deactivate' : 'Activate'}
                     </button>
                     <button
                       onClick={() => openEdit(c)}
                       className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                       title="Edit"
                     >
-                      <Eye className="h-4 w-4" />
+Edit
                     </button>
                     <button
                       onClick={() => del(c.id)}
                       className="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                       title="Delete"
                     >
-                      <Trash2 className="h-4 w-4" />
+Delete
                     </button>
                     <button
                       onClick={() => setExpandedId(isExpanded ? null : c.id)}
                       className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                     >
-                      {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+{isExpanded ? 'Collapse' : 'Expand'}
                     </button>
                   </div>
                 </div>
@@ -328,8 +318,7 @@ export default function AdminWeeklyChallenges() {
                                       : "bg-gray-50 text-gray-500 border border-gray-100"
                                   }`}
                                 >
-                                  {oi === q.correct && <CheckCircle2 className="h-3 w-3 inline mr-1 text-emerald-500" />}
-                                  {opt}
+                                          {opt}
                                 </div>
                               ))}
                             </div>
@@ -354,12 +343,12 @@ export default function AdminWeeklyChallenges() {
               onClick={() => setShowModal(false)}
               className="absolute top-4 right-4 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all"
             >
-              <X className="h-4 w-4" />
+
             </button>
 
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2.5 bg-emerald-100 rounded-xl text-emerald-600">
-                <Sparkles className="h-5 w-5" />
+
               </div>
               <div>
                 <h2 className="font-display font-bold text-lg text-gray-900">
@@ -420,7 +409,7 @@ export default function AdminWeeklyChallenges() {
                     onClick={addQuestion}
                     className="text-xs text-emerald-600 hover:text-emerald-700 font-semibold flex items-center gap-1"
                   >
-                    <Plus className="h-3 w-3" /> Add Question
+Add Question
                   </button>
                 </div>
 
@@ -434,7 +423,7 @@ export default function AdminWeeklyChallenges() {
                         className="p-1 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                         disabled={questions.length <= 1}
                       >
-                        <Trash2 className="h-3.5 w-3.5" />
+  Delete
                       </button>
                     </div>
 
@@ -496,7 +485,7 @@ export default function AdminWeeklyChallenges() {
                     isActive ? "text-emerald-600 bg-emerald-50" : "text-gray-400 bg-gray-100"
                   }`}
                 >
-                  {isActive ? <ToggleRight className="h-5 w-5" /> : <ToggleLeft className="h-5 w-5" />}
+{isActive ? 'Active' : 'Inactive'}
                 </button>
                 <div>
                   <span className="text-sm font-medium text-gray-700">Activate immediately</span>
@@ -514,9 +503,9 @@ export default function AdminWeeklyChallenges() {
                 className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2"
               >
                 {saving ? (
-                  <><Loader2 className="h-4 w-4 animate-spin" /> Saving…</>
+  <>Saving…</>
                 ) : (
-                  <><Plus className="h-4 w-4" /> {editingId ? "Update Challenge" : "Create Challenge"}</>
+<>{editingId ? "Update Challenge" : "Create Challenge"}</>
                 )}
               </button>
             </form>

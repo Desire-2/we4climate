@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  FileText, Download, Check, ArrowRight, Play, BookOpen, Calendar, User, Eye, Search, AlertCircle, Loader2 
-} from 'lucide-react';
+
 
 interface Publication {
   id: string;
@@ -153,7 +151,7 @@ export default function StoriesAndResources() {
           {/* Search bar controls */}
           <div className="relative max-w-sm w-full">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-              <Search className="h-4.5 w-4.5" />
+
             </span>
             <input
               type="text"
@@ -219,14 +217,8 @@ export default function StoriesAndResources() {
 
                       <div className="p-6">
                         <div className="flex items-center gap-4 text-xs font-medium text-gray-400 mb-3">
-                          <span className="flex items-center gap-1.5">
-                            <Calendar className="h-3.5 w-3.5 text-emerald-600" />
-                            {story.date}
-                          </span>
-                          <span className="flex items-center gap-1.5">
-                            <User className="h-3.5 w-3.5 text-emerald-600" />
-                            {story.author}
-                          </span>
+                          <span>{story.date}</span>
+                          <span>{story.author}</span>
                         </div>
 
                         <h3 className="font-display font-bold text-lg sm:text-xl text-gray-950 group-hover:text-emerald-700 duration-300 leading-snug">
@@ -239,20 +231,18 @@ export default function StoriesAndResources() {
                     </div>
 
                     <div className="p-6 pt-0 border-t border-gray-50 flex items-center justify-between text-xs font-semibold">
-                      <span className="text-gray-400">{story.readTime}</span>
-                      <a 
+                      <span className="text-gray-400">{story.readTime}</span>                        <a 
                         href="#contact"
-                        className="text-emerald-700 hover:text-emerald-600 flex items-center gap-1 group/btn"
+                        className="text-emerald-700 hover:text-emerald-600"
                       >
-                        <span>Request PDF Copy</span>
-                        <ArrowRight className="h-4 w-4 transform group-hover/btn:translate-x-0.5" />
+                        Request PDF Copy
                       </a>
                     </div>
                   </article>
                 ))
               ) : (
                 <div className="col-span-full py-16 text-center text-gray-400">
-                  <AlertCircle className="h-10 w-10 mx-auto mb-4 text-gray-300" />
+
                   <p className="text-sm">No stories or blogs match your search phrase</p>
                 </div>
               )}
@@ -287,8 +277,7 @@ export default function StoriesAndResources() {
                             {pub.category}
                           </span>
                           <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white text-xs">
-                            <span className="flex items-center gap-1 font-mono">
-                              <FileText className="h-4 w-4" />
+                            <span className="font-mono">
                               {pub.pages} Pages
                             </span>
                             <span className="bg-white/20 px-2 py-0.5 rounded backdrop-blur-sm pr-2 text-[11px] font-bold">
@@ -321,20 +310,11 @@ export default function StoriesAndResources() {
                           }`}
                         >
                           {isFinished ? (
-                            <>
-                              <Check className="h-4 w-4" />
-                              <span>Downloaded!</span>
-                            </>
+                            <span>Downloaded!</span>
                           ) : isDownloading ? (
-                            <>
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                              <span>Saving {downloadProgress}%...</span>
-                            </>
+                            <span>Saving {downloadProgress}%...</span>
                           ) : (
-                            <>
-                              <Download className="h-4 w-4" />
-                              <span>Download PDF</span>
-                            </>
+                            <span>Download PDF</span>
                           )}
                         </button>
                       </div>
@@ -343,7 +323,7 @@ export default function StoriesAndResources() {
                 })
               ) : (
                 <div className="col-span-full py-16 text-center text-gray-400">
-                  <AlertCircle className="h-10 w-10 mx-auto mb-4 text-gray-300" />
+
                   <p className="text-sm">No downloadable publications match your phrase</p>
                 </div>
               )}
@@ -353,9 +333,7 @@ export default function StoriesAndResources() {
 
         {/* Quality indicator banner */}
         <div className="mt-16 p-4 sm:p-6 bg-emerald-50 rounded-2xl border border-emerald-100 text-center max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-4">
-          <div className="p-2.5 bg-emerald-600 text-white rounded-xl">
-            <BookOpen className="h-5 w-5" />
-          </div>
+
           <p className="text-xs sm:text-sm font-semibold text-emerald-950">
             Are you a local researcher or representing a university? Inquire on collaborative publications and agroecology documentation by mailing <a href="mailto:info@we4climate.org" className="underline text-emerald-800 hover:text-emerald-700 font-bold">info@we4climate.org</a>.
           </p>

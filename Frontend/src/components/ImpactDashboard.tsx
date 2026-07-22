@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, useInView } from 'motion/react';
-import { BarChart, Quote } from 'lucide-react';
+
 import { fetchImpactStories, type ApiImpactStory } from '../api/client';
 
 // ── Animated counter that counts up when scrolled into view ──
@@ -83,7 +83,7 @@ export default function ImpactDashboard() {
               viewport={{ once: true }}
               className="rounded-2xl bg-emerald-100 p-3 shadow-sm"
             >
-              <BarChart className="h-5 w-5 text-emerald-700" />
+
             </motion.div>
             <div>
               <h3 className="font-display font-bold text-xl sm:text-2xl text-gray-900">
@@ -385,7 +385,7 @@ export default function ImpactDashboard() {
               ]).slice(0, 4).map((story, i) => (
                 <div key={story.id || i} className="bg-emerald-900/40 p-6 rounded-2xl border border-white/5 flex flex-col justify-between">
                   <div>
-                    <Quote className="h-8 w-8 text-emerald-400 opacity-30 mb-4" />
+
                     <p className="text-sm sm:text-base text-emerald-100/90 italic leading-relaxed">
                       &ldquo;{story.quote}&rdquo;
                     </p>

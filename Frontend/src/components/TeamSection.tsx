@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight, Linkedin, Users, X } from 'lucide-react';
+
 import { AnimatePresence, motion } from 'motion/react';
 
 interface TeamMember {
@@ -30,7 +30,7 @@ const teamMembers: TeamMember[] = [
   },
   {
     name: 'Tuyizere Sandrine',
-    role: 'Climate & Sustainability Advocate',
+    role: 'Partnership Officer.',
     photo: '/Images/Our_Team/tuyizere-sandrine.jpg',
     bio: 'Tuyizere Sandrine is an Entrepreneurial Leadership graduate from the African Leadership University with a strong passion for climate action and environmental sustainability. She is interested in conservation, sustainable development, and using innovation and data to address environmental challenges and create lasting social impact.',
     linkedin: 'https://www.linkedin.com/in/sandrine-tuyizere-8829382a0/',
@@ -38,7 +38,7 @@ const teamMembers: TeamMember[] = [
   },
   {
     name: 'Bienvenue Ishimwe',
-    role: 'Community Leader',
+    role: 'Development Officer',
     photo: '/Images/Our_Team/bienvenue-ishimwe.jpg',
     bio: 'I am a Rwandan, curious, and kind leader who believes right, not might, makes right. I value hard work, love for people, and dignity in every facet of our lives. I find no greater happiness than in serving others. My hobbies include swimming, debating, reading, watching football, and listening to music. I particularly enjoy debating paradoxical and philosophical topics that seem to defy logic: the idea of God, free will, what happens when we die, why we exist, fiction as the foundation of life, the origin of suffering, the concept of impermanence, and many more things that do not make sense.',
     linkedin: 'https://www.linkedin.com/in/bienvenue-ishimwe-2a4388327/',
@@ -62,8 +62,7 @@ export default function TeamSection() {
           transition={{ duration: 0.6 }}
           className="text-center max-w-3xl mx-auto mb-14"
         >
-          <h2 className="flex items-center justify-center gap-3 font-display font-bold text-4xl sm:text-5xl md:text-6xl text-gray-900 tracking-tight">
-            <Users className="h-8 w-8 text-emerald-600 sm:h-10 sm:w-10" />
+          <h2 className="font-display font-bold text-4xl sm:text-5xl md:text-6xl text-gray-900 tracking-tight">
             Our Team
           </h2>
           <p className="mt-5 indent-8 text-gray-600 leading-relaxed">
@@ -123,11 +122,10 @@ export default function TeamSection() {
                         onClick={(event) => event.stopPropagation()}
                         className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#0A66C2] transition-colors hover:text-[#004182]"
                       >
-                        <Linkedin className="h-4 w-4" />
                         LinkedIn
                       </a>
                       <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 transition-colors group-hover:gap-2 group-hover:text-emerald-900">
-                        Read more <ArrowRight className="h-4 w-4" />
+                        Read more
                       </span>
                     </div>
                   </div>
@@ -171,7 +169,7 @@ export default function TeamSection() {
                   aria-label="Close biography"
                   className="absolute right-4 top-4 rounded-full bg-white/20 p-2 text-white backdrop-blur-sm transition-all hover:bg-white/35"
                 >
-                  <X className="h-5 w-5" />
+
                 </button>
               </div>
 
@@ -193,7 +191,6 @@ export default function TeamSection() {
                     rel="noreferrer"
                     className="inline-flex items-center gap-2 rounded-xl bg-[#0A66C2] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#004182]"
                   >
-                    <Linkedin className="h-4 w-4" />
                     LinkedIn
                   </a>
                   <button

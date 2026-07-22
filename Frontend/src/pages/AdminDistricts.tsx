@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Save, Trash2, Pencil } from "lucide-react";
+
 import { adminFetchDistricts, adminUpdateDistrict, adminDeleteDistrict, type ApiDistrictMetric } from "../api/client";
 
 interface EditState {
@@ -92,11 +92,11 @@ export default function AdminDistricts() {
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-1">
                           {isEditing ? (
-                            <button onClick={() => save(r.id)} className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"><Save className="h-4 w-4" /></button>
+<button onClick={() => save(r.id)} className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors">Save</button>
                           ) : (
-                            <button onClick={() => startEdit(r)} className="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"><Pencil className="h-4 w-4" /></button>
+<button onClick={() => startEdit(r)} className="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors">Edit</button>
                           )}
-                          <button onClick={() => del(r.id)} className="p-1.5 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"><Trash2 className="h-4 w-4" /></button>
+<button onClick={() => del(r.id)} className="p-1.5 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">Delete</button>
                         </div>
                       </td>
                     </tr>

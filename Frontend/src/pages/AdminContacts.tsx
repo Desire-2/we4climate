@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Trash2, ChevronLeft, ChevronRight, Mail, Eye } from "lucide-react";
+
 import { adminFetchContacts, adminDeleteContact } from "../api/client";
 
 interface ContactItem {
@@ -60,8 +60,8 @@ export default function AdminContacts() {
                     <td className="px-4 py-3 text-xs text-gray-400">{new Date(r.submitted_at).toLocaleDateString()}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1">
-                        <button onClick={() => setSelected(r)} className="p-1.5 text-blue-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"><Eye className="h-4 w-4" /></button>
-                        <button onClick={() => del(r.id)} className="p-1.5 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"><Trash2 className="h-4 w-4" /></button>
+<button onClick={() => setSelected(r)} className="p-1.5 text-blue-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">View</button>
+<button onClick={() => del(r.id)} className="p-1.5 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">Delete</button>
                       </div>
                     </td>
                   </tr>
@@ -72,9 +72,9 @@ export default function AdminContacts() {
           </div>
           {pages > 1 && (
             <div className="flex items-center justify-center gap-3 mt-5">
-              <button disabled={page <= 1} onClick={() => setPage(p => p - 1)} className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50"><ChevronLeft className="h-4 w-4" /></button>
+<button disabled={page <= 1} onClick={() => setPage(p => p - 1)} className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50">Prev</button>
               <span className="text-xs text-gray-500 font-mono">{page} / {pages}</span>
-              <button disabled={page >= pages} onClick={() => setPage(p => p + 1)} className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50"><ChevronRight className="h-4 w-4" /></button>
+<button disabled={page >= pages} onClick={() => setPage(p => p + 1)} className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50">Next</button>
             </div>
           )}
 
@@ -84,7 +84,7 @@ export default function AdminContacts() {
               <div className="bg-white rounded-3xl max-w-lg w-full p-6 relative shadow-2xl" onClick={e => e.stopPropagation()}>
                 <button onClick={() => setSelected(null)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">✕</button>
                 <div className="flex items-center gap-2 mb-4">
-                  <Mail className="h-5 w-5 text-emerald-600" />
+
                   <h3 className="font-bold text-lg text-gray-900">{selected.subject}</h3>
                 </div>
                 <div className="text-xs text-gray-500 mb-4">

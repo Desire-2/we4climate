@@ -178,7 +178,7 @@ export default function AdvocacyPassportPage() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-emerald-300 bg-emerald-950/80 px-4 py-2 rounded-full border border-emerald-500/20 mb-6"
             >
-              <i className="bi bi-shield-check text-emerald-300 text-sm" />
+
             </motion.div>
 
             <h1 className="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-white tracking-tight leading-tight">
@@ -191,7 +191,7 @@ export default function AdvocacyPassportPage() {
                 Test your climate and conservation literacy and  earn your official Climate Advocate Certificate, and become part of a growing network of people making a difference globally.
               </p>
               <p className="text-sm text-emerald-200/50 italic flex items-center justify-center gap-2">
-                <i className="bi bi-share text-emerald-400 text-xs" />
+
                 Share our platform with your teams!
               </p>
               <div className="bg-emerald-950/60 border border-emerald-800/40 rounded-2xl p-5 text-left">
@@ -217,14 +217,9 @@ export default function AdvocacyPassportPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="bg-gradient-to-br from-emerald-900/80 to-emerald-950/80 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl overflow-hidden"
           >
-            {/* Keep the reference-style section header visible throughout the challenge flow. */}
+            {/* Section header */}
             <div className="flex border-b border-emerald-800/80">
-              <div className="flex flex-1 items-center justify-center gap-3 border-b-2 border-emerald-400 bg-emerald-900/70 px-4 py-5 text-center text-base font-bold text-emerald-300 sm:text-lg">
-                <i className="bi bi-award text-emerald-400 text-xl" />
-                Advocacy Passport Challenge
-              </div>
-              <div className="flex flex-1 items-center justify-center gap-3 px-4 py-5 text-center text-base font-bold text-emerald-200/45 sm:text-lg">
-                <i className="bi bi-patch-check text-emerald-200/35 text-xl" />
+              <div className="flex w-full items-center justify-center gap-3 border-b-2 border-emerald-400 bg-emerald-900/70 px-4 py-5 text-center text-base font-bold text-emerald-300 sm:text-lg">
                 Earn Your Certificate
               </div>
             </div>
@@ -242,7 +237,7 @@ export default function AdvocacyPassportPage() {
                       <div className="rounded-2xl border border-emerald-800/50 bg-emerald-950/45 p-5">
                         <p className="text-sm leading-relaxed text-emerald-100/80">
                           {challengeLoading ? (
-                            <span className="flex items-center gap-2"><i className="bi bi-arrow-repeat animate-spin text-emerald-400" /> Loading this week's challenge...</span>
+                            <span>Loading this week's challenge...</span>
                           ) : challengeTitle ? (
                             <>Take on <strong className="text-emerald-300">this week's challenge:</strong> &ldquo;<span className="font-bold text-amber-300">{challengeTitle}</span>&rdquo;</>
                           ) : (
@@ -251,7 +246,7 @@ export default function AdvocacyPassportPage() {
                         </p>
                         {challengeWeek && (
                           <div className="mt-3 flex w-fit items-center gap-1.5 rounded-full bg-emerald-950/60 px-3 py-1 text-[10px] font-mono text-emerald-300/60">
-                            <i className="bi bi-calendar3 text-xs text-emerald-300/60" />
+
                             {challengeWeek}
                           </div>
                         )}
@@ -260,7 +255,7 @@ export default function AdvocacyPassportPage() {
                       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div className="space-y-2">
                           <label className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-emerald-300/80">
-                            <i className="bi bi-patch-check text-sm text-emerald-400" />
+
                             Your Name
                           </label>
                           <input
@@ -273,7 +268,7 @@ export default function AdvocacyPassportPage() {
                         </div>
                         <div className="space-y-2">
                           <label className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-emerald-300/80">
-                            <i className="bi bi-envelope text-sm text-emerald-400" />
+
                             Email <span className="text-rose-400">*</span>
                           </label>
                           <input
@@ -305,7 +300,7 @@ export default function AdvocacyPassportPage() {
                               animate={{ opacity: 1, y: 0 }}
                               className="mt-1 flex items-center gap-1.5 text-[11px] text-rose-400"
                             >
-                              <i className="bi bi-exclamation-circle text-xs" />
+
                               {emailError}
                             </motion.p>
                           )}
@@ -318,7 +313,7 @@ export default function AdvocacyPassportPage() {
                           animate={{ opacity: 1, y: 0 }}
                           className="mt-4 flex items-center gap-2 rounded-xl border border-amber-400/20 bg-amber-400/10 px-4 py-2.5 text-xs text-amber-400"
                         >
-                          <i className="bi bi-exclamation-circle text-sm text-amber-400" />
+
                           {quizError}
                         </motion.p>
                       )}
@@ -329,9 +324,7 @@ export default function AdvocacyPassportPage() {
                         whileTap={{ scale: 0.98 }}
                         className="mt-6 flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-400 py-4 text-sm font-bold text-emerald-950 shadow-lg shadow-amber-500/20 transition-all duration-300 hover:from-amber-400 hover:to-amber-300"
                       >
-                        <i className="bi bi-book text-lg" />
                         <span>Begin Challenge</span>
-                        <i className="bi bi-arrow-right text-base" />
                       </motion.button>
                     </div>
 
@@ -358,7 +351,7 @@ export default function AdvocacyPassportPage() {
                     <div className="flex items-center justify-between flex-wrap gap-4">
                     <div className="flex items-center gap-3">
                       <div className="p-2.5 bg-emerald-500/10 rounded-xl border border-emerald-400/20">
-                        <i className="bi bi-question-circle text-emerald-400 text-xl" />
+  
                       </div>
                       <div>
                         <span className="text-sm font-mono text-emerald-400 font-semibold">
@@ -368,7 +361,7 @@ export default function AdvocacyPassportPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2 bg-emerald-950/60 border border-emerald-800/40 rounded-xl px-4 py-2">
-                      <i className="bi bi-trophy text-amber-400 text-sm" />
+
                         <span className="text-sm font-bold text-emerald-300">{quizScore}/{activeQuestions.length}</span>
                       </div>
                     </div>
@@ -434,14 +427,14 @@ export default function AdvocacyPassportPage() {
                         {selectedAnswer === activeQuestions[currentQuestion].correct ? (
                           <>
                             <div className="p-1.5 bg-emerald-500/20 rounded-full">
-                              <i className="bi bi-check-circle-fill text-emerald-400 text-lg" />
+
                             </div>
                             <span className="font-bold text-emerald-300">That's right — well done!</span>
                           </>
                         ) : (
                           <>
                             <div className="p-1.5 bg-rose-500/20 rounded-full">
-                              <i className="bi bi-x-circle text-rose-400 text-lg" />
+
                             </div>
                             <span className="font-bold text-rose-300">Not quite — here's what you need to know:</span>
                           </>
@@ -457,7 +450,7 @@ export default function AdvocacyPassportPage() {
                         className="w-full py-3 bg-gradient-to-r from-emerald-500 to-emerald-400 hover:from-emerald-400 hover:to-emerald-300 text-emerald-950 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all duration-200"
                       >
                         <span>{currentQuestion + 1 < activeQuestions.length ? 'Next Question' : 'See Your Results'}</span>
-                        <i className="bi bi-arrow-right text-sm" />
+
                       </motion.button>
                     </motion.div>
                     )}
@@ -491,12 +484,10 @@ export default function AdvocacyPassportPage() {
                           transition={{ type: "spring", stiffness: 200, damping: 15 }}
                           className="inline-flex p-4 bg-gradient-to-br from-amber-500/20 to-emerald-500/10 rounded-full border border-amber-400/20 mb-4"
                         >
-                          <i className="bi bi-trophy text-amber-400 text-3xl" />
+
                         </motion.div>
                         <h2 className="font-display font-extrabold text-2xl text-emerald-300 flex items-center justify-center gap-3">
-                          <i className="bi bi-star-fill text-amber-400 text-xl" />
                           Perfect Score! {quizScore}/{activeQuestions.length}
-                          <i className="bi bi-star-fill text-amber-400 text-xl" />
                         </h2>
                         <p className="text-sm text-emerald-200/60 mt-2">
                           Your official We4Climate Community Advocate Certificate is ready
@@ -509,12 +500,12 @@ export default function AdvocacyPassportPage() {
                         <div className="absolute -top-12 -left-12 w-36 h-36 bg-emerald-500 opacity-10 rounded-full blur-md" />
                         <div className="absolute top-6 right-6 flex flex-col items-center opacity-30">
                           <div className="p-2 bg-emerald-800 rounded-full text-white">
-                            <i className="bi bi-person-check text-lg" />
+
                           </div>
                           <span className="text-[7px] font-mono font-bold mt-0.5">VERIFIED</span>
                         </div>
                         <div className="absolute bottom-6 left-6 opacity-10">
-                          <i className="bi bi-globe2 text-emerald-700 text-5xl" />
+
                         </div>
 
                         <div className="space-y-2">
@@ -555,7 +546,7 @@ export default function AdvocacyPassportPage() {
                         <div className="mt-auto pt-4 flex justify-between items-end border-t border-gray-100 text-[8px] font-mono uppercase tracking-widest">
                           <div className="text-left">
                             <div className="flex items-center gap-1 border-b border-gray-200 pb-0.5">
-                              <i className="bi bi-calendar3 text-gray-400 text-xs" />
+
                               <span className="text-gray-400 text-[9px]">{new Date().toLocaleDateString()}</span>
                             </div>
                             <span className="text-emerald-800/80 block mt-1">Issue Date</span>
@@ -576,9 +567,9 @@ export default function AdvocacyPassportPage() {
                           className="flex-1 py-3.5 bg-gradient-to-r from-emerald-500 to-emerald-400 hover:from-emerald-400 hover:to-emerald-300 disabled:opacity-60 text-emerald-950 rounded-xl font-bold text-sm uppercase tracking-wider transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2"
                         >
                           {issuingCert ? (
-                            <><i className="bi bi-arrow-repeat animate-spin text-lg" /> Saving Certificate...</>
+<>Saving Certificate...</>
                           ) : (
-                            <><i className="bi bi-printer text-lg" /> Print / Save PDF</>
+<>Print / Save PDF</>
                           )}
                         </motion.button>
                         <motion.button
@@ -587,7 +578,6 @@ export default function AdvocacyPassportPage() {
                           whileTap={{ scale: 0.98 }}
                           className="flex-1 py-3.5 bg-emerald-950 border border-emerald-800 hover:bg-emerald-900 text-emerald-300 rounded-xl font-bold text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2"
                         >
-                          <i className="bi bi-arrow-repeat text-lg" />
                           Start Over
                         </motion.button>
                       </div>
@@ -602,7 +592,7 @@ export default function AdvocacyPassportPage() {
                           transition={{ type: "spring", stiffness: 200, damping: 15 }}
                           className="inline-flex p-4 bg-rose-500/10 rounded-full border border-rose-500/20 mb-4"
                         >
-                          <i className="bi bi-exclamation-circle text-rose-400 text-3xl" />
+
                         </motion.div>
                         <h2 className="font-display font-extrabold text-2xl text-rose-300">
                           Score: {quizScore}/{activeQuestions.length}
@@ -625,7 +615,6 @@ export default function AdvocacyPassportPage() {
                           whileTap={{ scale: 0.98 }}
                           className="mt-6 px-8 py-3.5 bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-emerald-950 rounded-xl font-bold text-sm shadow-lg shadow-amber-500/20 transition-all inline-flex items-center gap-2"
                         >
-                          <i className="bi bi-arrow-repeat text-base" />
                           Try Again
                         </motion.button>
                       </div>

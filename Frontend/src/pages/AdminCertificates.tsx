@@ -1,10 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import {
-  Trash2, ChevronLeft, ChevronRight, Search, Plus, X,
-  Award, FileText, Mail, User, Star, Download,
-  CheckCircle2, AlertCircle, Loader2, Pencil,
-  Filter, BarChart3,
-} from "lucide-react";
+
 import {
   adminFetchCertificates, adminFetchCertificateStats,
   adminCreateCertificate, adminUpdateCertificate, adminDeleteCertificate,
@@ -179,11 +174,6 @@ export default function AdminCertificates() {
               : "bg-rose-50 border-rose-200 text-rose-800"
           }`}
         >
-          {toast.type === "success" ? (
-            <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-          ) : (
-            <AlertCircle className="h-4 w-4 text-rose-500" />
-          )}
           {toast.message}
         </div>
       )}
@@ -200,14 +190,12 @@ export default function AdminCertificates() {
             disabled={data.length === 0}
             className="px-4 py-2 border border-gray-200 hover:bg-gray-50 disabled:opacity-40 rounded-xl text-xs font-semibold text-gray-600 transition-all flex items-center gap-1.5"
           >
-            <Download className="h-3.5 w-3.5" />
             Export CSV
           </button>
           <button
             onClick={openCreate}
             className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm"
           >
-            <Plus className="h-3.5 w-3.5" />
             Issue Certificate
           </button>
         </div>
@@ -218,7 +206,7 @@ export default function AdminCertificates() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div className="bg-white rounded-2xl border border-gray-100 p-4 flex items-center gap-3">
             <div className="p-2.5 bg-emerald-100 rounded-xl text-emerald-600">
-              <Award className="h-5 w-5" />
+
             </div>
             <div>
               <span className="text-2xl font-bold text-gray-900">{stats.total}</span>
@@ -227,7 +215,7 @@ export default function AdminCertificates() {
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 p-4 flex items-center gap-3">
             <div className="p-2.5 bg-amber-100 rounded-xl text-amber-600">
-              <Star className="h-5 w-5" />
+
             </div>
             <div>
               <span className="text-2xl font-bold text-gray-900">{stats.perfect_scores}</span>
@@ -237,7 +225,7 @@ export default function AdminCertificates() {
           {Object.entries(stats.score_distribution).map(([score, count]) => (
             <div key={score} className="bg-white rounded-2xl border border-gray-100 p-4 flex items-center gap-3">
               <div className="p-2.5 bg-blue-100 rounded-xl text-blue-600">
-                <BarChart3 className="h-5 w-5" />
+
               </div>
               <div>
                 <span className="text-2xl font-bold text-gray-900">{count}</span>
@@ -251,7 +239,7 @@ export default function AdminCertificates() {
       {/* ── Search bar ── */}
       <form onSubmit={handleSearch} className="flex items-center gap-2.5">
         <div className="relative flex-1 max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+
           <input
             type="text"
             value={searchInput}
@@ -265,7 +253,7 @@ export default function AdminCertificates() {
               onClick={clearSearch}
               className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
             >
-              <X className="h-4 w-4" />
+
             </button>
           )}
         </div>
@@ -273,7 +261,6 @@ export default function AdminCertificates() {
           type="submit"
           className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5"
         >
-          <Filter className="h-3.5 w-3.5" />
           Search
         </button>
         {search && (
@@ -286,7 +273,6 @@ export default function AdminCertificates() {
       {/* ── Table ── */}
       {loading ? (
         <div className="flex items-center justify-center py-20 text-gray-400">
-          <Loader2 className="h-5 w-5 animate-spin mr-2" />
           Loading…
         </div>
       ) : (
@@ -328,7 +314,6 @@ export default function AdminCertificates() {
                         />
                       ) : (
                         <span className="font-medium flex items-center gap-1.5">
-                          <User className="h-3.5 w-3.5 text-gray-400" />
                           {r.recipient_name}
                         </span>
                       )}
@@ -345,7 +330,6 @@ export default function AdminCertificates() {
                         />
                       ) : (
                         <span className="text-xs text-gray-500 flex items-center gap-1.5">
-                          <Mail className="h-3 w-3 text-gray-400" />
                           {r.recipient_email}
                         </span>
                       )}
@@ -360,7 +344,6 @@ export default function AdminCertificates() {
                             : "bg-gray-100 text-gray-600"
                         }`}
                       >
-                        <Star className={`h-3 w-3 ${r.score === 3 ? "fill-amber-400 text-amber-400" : "text-gray-400"}`} />
                         {r.score}/3
                       </span>
                     </td>
@@ -384,14 +367,14 @@ export default function AdminCertificates() {
                               className="p-1.5 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition-colors"
                               title="Save"
                             >
-                              <CheckCircle2 className="h-4 w-4" />
+Save
                             </button>
                             <button
                               onClick={cancelEdit}
                               className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                               title="Cancel"
                             >
-                              <X className="h-4 w-4" />
+Cancel
                             </button>
                           </>
                         ) : (
@@ -401,14 +384,14 @@ export default function AdminCertificates() {
                               className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                               title="Edit"
                             >
-                              <Pencil className="h-4 w-4" />
+Edit
                             </button>
                             <button
                               onClick={() => del(r.id)}
                               className="p-1.5 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                               title="Delete"
                             >
-                              <Trash2 className="h-4 w-4" />
+Delete
                             </button>
                           </>
                         )}
@@ -419,7 +402,7 @@ export default function AdminCertificates() {
                 {data.length === 0 && (
                   <tr>
                     <td colSpan={6} className="text-center py-16 text-gray-400">
-                      <Award className="h-8 w-8 mx-auto mb-2 opacity-40" />
+
                       <p className="font-medium">No certificates found</p>
                       {search ? (
                         <p className="text-xs mt-1">Try a different search term</p>
@@ -441,7 +424,7 @@ export default function AdminCertificates() {
                 onClick={() => setPage((p) => p - 1)}
                 className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-all"
               >
-                <ChevronLeft className="h-4 w-4" />
+Prev
               </button>
               <span className="text-xs font-mono text-gray-500">
                 {page} / {pages}
@@ -452,7 +435,7 @@ export default function AdminCertificates() {
                 onClick={() => setPage((p) => p + 1)}
                 className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-all"
               >
-                <ChevronRight className="h-4 w-4" />
+Next
               </button>
             </div>
           )}
@@ -467,12 +450,12 @@ export default function AdminCertificates() {
               onClick={() => setShowCreate(false)}
               className="absolute top-4 right-4 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all"
             >
-              <X className="h-4 w-4" />
+
             </button>
 
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2.5 bg-emerald-100 rounded-xl text-emerald-600">
-                <FileText className="h-5 w-5" />
+
               </div>
               <div>
                 <h2 className="font-display font-bold text-lg text-gray-900">Issue Certificate</h2>
@@ -520,7 +503,7 @@ export default function AdminCertificates() {
                       }`}
                     >
                       {s}/3
-                      {s === 3 && <Star className="h-3 w-3 inline ml-1 fill-amber-400 text-amber-400" />}
+
                     </button>
                   ))}
                 </div>
@@ -537,11 +520,7 @@ export default function AdminCertificates() {
                 disabled={saving}
                 className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2"
               >
-                {saving ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <><Plus className="h-4 w-4" /> Issue Certificate</>
-                )}
+                {saving ? 'Saving...' : 'Issue Certificate'}
               </button>
             </form>
           </div>

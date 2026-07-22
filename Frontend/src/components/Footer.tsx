@@ -1,4 +1,4 @@
-import { Facebook, Twitter, Instagram, Linkedin, ArrowUp, Mail } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Linkedin, Mail } from 'lucide-react';
 
 export default function Footer() {
   const scrollToTop = () => {
@@ -59,26 +59,26 @@ export default function Footer() {
             <h4 className="text-xs uppercase tracking-wider font-mono text-emerald-400 font-bold mb-4">Directory</h4>
             <ul className="space-y-2 text-xs text-emerald-100/70">
               <li>
-                <a href="#about" className="hover:text-emerald-300 transition-colors">Our Vision & Mission</a>
+                <a href="/about#about" className="hover:text-emerald-300 transition-colors">Our Vision & Mission</a>
               </li>
               <li>
-                <a href="#goals" className="hover:text-emerald-300 transition-colors">Strategic 10 Pillars</a>
+                <a href="/about#theories-of-change" className="hover:text-emerald-300 transition-colors">Strategic 10 Pillars</a>
               </li>
               <li>
-                <a href="#interactive" className="hover:text-emerald-300 transition-colors">Climate Quiz & Pledges</a>
+                <a href="/action#interactive" className="hover:text-emerald-300 transition-colors">Climate Quiz & Pledges</a>
               </li>
               <li>
-                <a href="#opportunities" className="hover:text-emerald-300 transition-colors">Green Careers Hub</a>
+                <a href="/opportunities" className="hover:text-emerald-300 transition-colors">Green Careers Hub</a>
               </li>
               <li>
-                <a href="#contact" className="hover:text-emerald-300 transition-colors">Board Coordinates</a>
+                <a href="/contact#contact" className="hover:text-emerald-300 transition-colors">Board Coordinates</a>
               </li>
             </ul>
           </div>
 
           {/* Community Links */}
           <div className="space-y-4">
-            <h4 className="text-xs uppercase tracking-wider font-mono text-emerald-400 font-bold">Community Hubs</h4>
+            <h4 className="text-xs uppercase tracking-wider font-mono text-emerald-400 font-bold">Connect with Us</h4>
             <div className="flex gap-2.5">
               <a 
                 href="https://www.facebook.com/profile.php?id=100064125695533" 
@@ -87,7 +87,7 @@ export default function Footer() {
                 className="p-2.5 bg-emerald-900 hover:bg-emerald-800 text-emerald-300 hover:text-emerald-100 border border-emerald-800 rounded-xl transition-all"
                 aria-label="Facebook URL link"
               >
-                <Facebook className="h-4 w-4" />
+<Facebook className="h-4 w-4" />
               </a>
               <a 
                 href="https://x.com/we4climate" 
@@ -96,7 +96,7 @@ export default function Footer() {
                 className="p-2.5 bg-emerald-900 hover:bg-emerald-800 text-emerald-300 hover:text-emerald-100 border border-emerald-800 rounded-xl transition-all"
                 aria-label="Twitter handle link"
               >
-                <Twitter className="h-4 w-4" />
+<Twitter className="h-4 w-4" />
               </a>
               <a 
                 href="https://www.instagram.com/we4climate_/" 
@@ -105,7 +105,7 @@ export default function Footer() {
                 className="p-2.5 bg-emerald-900 hover:bg-emerald-800 text-emerald-300 hover:text-emerald-100 border border-emerald-800 rounded-xl transition-all"
                 aria-label="Instagram contact link"
               >
-                <Instagram className="h-4 w-4" />
+<Instagram className="h-4 w-4" />
               </a>
               <a 
                 href="https://www.linkedin.com/company/108184046/admin/dashboard/" 
@@ -114,7 +114,7 @@ export default function Footer() {
                 className="p-2.5 bg-emerald-900 hover:bg-emerald-800 text-emerald-300 hover:text-emerald-100 border border-emerald-800 rounded-xl transition-all"
                 aria-label="LinkedIn profile link"
               >
-                <Linkedin className="h-4 w-4" />
+<Linkedin className="h-4 w-4" />
               </a>
             </div>
             <div className="text-xs text-emerald-100/60 leading-normal pt-1 flex items-center gap-1.5">
@@ -127,10 +127,10 @@ export default function Footer() {
         {/* Lower content */}
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center">
           <div className="space-y-1 sm:text-left">
-            <p className="text-[10px] text-emerald-100/40">
+            <p className="text-xs sm:text-sm text-emerald-100/60">
               © {currentYear} We4Climate. Kigali, Rwanda. All Rights Reserved.
             </p>
-            <p className="text-[9px] text-emerald-100/30 italic">
+            <p className="text-xs sm:text-sm text-emerald-100/40 italic">
               Empowering Rwanda's communities to achieve sustainable environmental and biodiversity conservation.
             </p>
           </div>
@@ -140,8 +140,7 @@ export default function Footer() {
             id="back-to-top-btn"
             className="p-2.5 bg-emerald-900 hover:bg-emerald-800 text-emerald-400 hover:text-emerald-200 border border-emerald-850 hover:border-emerald-500/40 rounded-xl transition-all shadow-lg flex items-center justify-center gap-1 text-xs font-semibold focus:outline-none"
           >
-            <span>Back to Top</span>
-            <ArrowUp className="h-4 w-4 animate-bounce-slow" />
+<span>Back to Top</span>
           </button>
         </div>
 

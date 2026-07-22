@@ -1,11 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { 
-  Menu, X, Mail, Facebook, Twitter, Instagram, 
-  Linkedin, Youtube, ChevronDown, ChevronRight, Home, Info, 
-  Award, BarChart3, Heart, Briefcase, BookOpen, HelpCircle, Phone,
-  Zap, Shield
-} from 'lucide-react';
+
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -38,20 +33,20 @@ export default function Navbar() {
 
   // Main navigation items shown in header
   const mainNavItems = [
-    { path: '/', label: 'Home', icon: Home },
-    { path: '/about', label: 'About Us', icon: Info },
-    { path: '/programs', label: 'Programs', icon: Award },
-    { path: '/impact', label: 'Impact', icon: BarChart3 },
-    { path: '/donate', label: 'Donate', icon: Heart },
-    { path: '/opportunities', label: 'Opportunities', icon: Briefcase },
-    { path: '/advocacy-passport', label: 'Earn Certificate', icon: Shield }
+    { path: '/', label: 'Home' },
+    { path: '/about', label: 'About Us' },
+    { path: '/programs', label: 'Programs' },
+    { path: '/impact', label: 'Impact' },
+    { path: '/donate', label: 'Donate' },
+    { path: '/opportunities', label: 'Opportunities' },
+    { path: '/advocacy-passport', label: 'Earn Certificate' }
   ];
 
   // Take Action Dropdown/collapsible sub-items
   const takeActionItems = [
-    { path: '/resources', label: 'Resources Manuals', icon: BookOpen },
-    { path: '/action', label: 'Action Desk', icon: HelpCircle },
-    { path: '/contact', label: 'Get in Touch', icon: Phone }
+    { path: '/resources', label: 'Resources Manuals' },
+    { path: '/action', label: 'Action Desk' },
+    { path: '/contact', label: 'Get in Touch' }
   ];
 
   const handleNavClick = (path: string) => {
@@ -149,7 +144,7 @@ export default function Navbar() {
                   }`}
                 >
                   <span>Take Action</span>
-                  <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${isDropdownHovered ? 'rotate-180' : ''}`} />
+
                 </button>
 
                 {/* Floater Dropdown Menu Panel */}
@@ -175,7 +170,6 @@ export default function Navbar() {
                           : 'text-gray-200 hover:text-white hover:bg-white/10'
                       }`}
                     >
-                      <subItem.icon className="h-4 w-4 text-emerald-400" />
                       <span>{subItem.label}</span>
                     </button>
                   ))}
@@ -198,7 +192,7 @@ export default function Navbar() {
                 className="p-2 sm:p-2.5 rounded-xl text-gray-200 hover:text-white hover:bg-white/10 transition-colors focus:outline-none"
                 aria-label="Toggle Navigation Drawer"
               >
-                {isMobileMenuOpen ? <X className="h-7 w-7 sm:h-8 sm:w-8" /> : <Menu className="h-7 w-7 sm:h-8 sm:w-8" />}
+{isMobileMenuOpen ? 'Close' : 'Menu'}
               </button>
             </div>
           </div>
@@ -241,7 +235,7 @@ export default function Navbar() {
             className="p-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-colors focus:outline-none"
             aria-label="Close menu"
           >
-            <X className="h-6 w-6" />
+
           </button>
         </div>
 
@@ -253,7 +247,6 @@ export default function Navbar() {
               Explore Dimensions
             </div>
             {mainNavItems.map((item) => {
-              const Icon = item.icon;
               const active = isActive(item.path);
               return (
                 <button
@@ -266,11 +259,7 @@ export default function Navbar() {
                       : 'text-gray-200 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <Icon className={`h-5 w-5 ${active ? 'text-emerald-400' : 'text-gray-400'}`} />
-                    <span>{item.label}</span>
-                  </div>
-                  <ChevronRight className="h-4 w-4 text-white/20" />
+                  <span>{item.label}</span>
                 </button>
               );
             })}
@@ -287,11 +276,7 @@ export default function Navbar() {
                   : 'text-white'
               }`}
             >
-              <div className="flex items-center gap-2.5">
-                <Zap className="h-5 w-5 text-emerald-400" />
-                <span>Take Action Hub</span>
-              </div>
-              <ChevronDown className={`h-5 w-5 transform transition-transform duration-300 ${isMobileTakeActionOpen ? 'rotate-180' : ''}`} />
+              <span>Take Action Hub</span>
             </button>
             
             <div 
@@ -301,20 +286,18 @@ export default function Navbar() {
             >
               <div className="pl-2 pr-1 py-1 space-y-1.5 bg-[#011f18] rounded-2xl border border-white/5">
                 {takeActionItems.map((subItem) => {
-                  const SubIcon = subItem.icon;
                   const active = isActive(subItem.path);
                   return (
                     <button
                       key={subItem.path}
                       id={`nav-mobile-sub-${subItem.label.toLowerCase().replace(/\s+/g, '-')}`}
                       onClick={() => handleNavClick(subItem.path)}
-                      className={`w-full text-left px-3.5 py-3 rounded-xl text-sm font-semibold flex items-center gap-3 transition-all ${
+                      className={`w-full text-left px-3.5 py-3 rounded-xl text-sm font-semibold transition-all ${
                         active
                           ? 'text-emerald-300 bg-emerald-900/50 font-bold shadow-inner' 
                           : 'text-gray-200 hover:text-white hover:bg-white/5'
                       }`}
                     >
-                      <SubIcon className={`h-4.5 w-4.5 ${active ? 'text-emerald-400' : 'text-emerald-500'}`} />
                       <span>{subItem.label}</span>
                     </button>
                   );
@@ -341,16 +324,16 @@ export default function Navbar() {
             {/* Compact Social Badges inside slideout */}
             <div className="flex items-center justify-center space-x-4 pt-2">
               <a href="https://www.facebook.com/profile.php?id=100064125695533" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors border border-transparent p-1 rounded">
-                <Facebook className="h-5 w-5" />
+<span>FB</span>
               </a>
               <a href="https://x.com/we4climate" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors border border-transparent p-1 rounded">
-                <Twitter className="h-5 w-5" />
+<span>X</span>
               </a>
               <a href="https://www.instagram.com/we4climate_/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors border border-transparent p-1 rounded">
-                <Instagram className="h-5 w-5" />
+<span>IG</span>
               </a>
               <a href="https://www.linkedin.com/company/108184046/admin/dashboard/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors border border-transparent p-1 rounded">
-                <Linkedin className="h-5 w-5" />
+<span>LI</span>
               </a>
               <button
                 onClick={() => { handleNavClick('/admin/login'); }}

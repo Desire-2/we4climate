@@ -1,15 +1,12 @@
-import { useState, type ReactNode } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Sprout, Users, Shield, Camera, Handshake, Lightbulb,
-  ArrowRight, X, Sparkles, Heart
-} from 'lucide-react';
+
 
 interface TheoryOfChange {
   id: number;
   title: string;
   statement: string;
-  icon: ReactNode;
+
   image: string;
   color: string;
 }
@@ -19,7 +16,7 @@ const THEORIES: TheoryOfChange[] = [
     id: 1,
     title: 'Regenerate Ecosystems, Restore Life',
     statement: 'When communities adopt regenerative agriculture, agroforestry, and ecosystem restoration practices, then degraded landscapes recover, biodiversity increases, soil health improves, and communities become more resilient to climate change.',
-    icon: <Sprout className="h-6 w-6" />,
+
     image: '/Images/Leonard/IMG_1132.jpg',
     color: 'from-emerald-500 to-emerald-700',
   },
@@ -27,7 +24,7 @@ const THEORIES: TheoryOfChange[] = [
     id: 2,
     title: 'Empower People, Transform Communities',
     statement: 'When farmers, youth, women, and schools gain practical knowledge, skills, and leadership opportunities, then they become agents of change who restore their environments, strengthen livelihoods, and inspire others to take action.',
-    icon: <Users className="h-6 w-6" />,
+
     image: '/Images/Leonard/IMG_1259.jpg',
     color: 'from-blue-500 to-blue-700',
   },
@@ -35,7 +32,7 @@ const THEORIES: TheoryOfChange[] = [
     id: 3,
     title: 'Build Climate Resilience Through Nature',
     statement: 'When communities invest in nature-based solutions such as food forests, rainwater harvesting, biodiversity conservation, and sustainable land management, then they become better prepared to withstand droughts, floods, and other climate-related challenges while securing food and water for future generations.',
-    icon: <Shield className="h-6 w-6" />,
+
     image: '/Images/Leonard/IMG_1295.jpg',
     color: 'from-cyan-500 to-cyan-700',
   },
@@ -43,7 +40,7 @@ const THEORIES: TheoryOfChange[] = [
     id: 4,
     title: 'Share Stories, Inspire Action',
     statement: 'When local restoration efforts and community innovations are documented and shared through storytelling, media, and education, then more people become aware, inspired, and motivated to replicate successful environmental solutions within their own communities.',
-    icon: <Camera className="h-6 w-6" />,
+
     image: '/Images/IMG_9085.jpg',
     color: 'from-amber-500 to-amber-700',
   },
@@ -51,7 +48,7 @@ const THEORIES: TheoryOfChange[] = [
     id: 5,
     title: 'Collaborate to Scale Impact',
     statement: 'When communities, researchers, governments, businesses, and development partners collaborate and exchange knowledge, then innovative solutions can be scaled more effectively, accelerating ecosystem restoration and sustainable development across Rwanda and Africa.',
-    icon: <Handshake className="h-6 w-6" />,
+
     image: '/Images/Homepage_pictures/IMG_9789.jpg',
     color: 'from-purple-500 to-purple-700',
   },
@@ -59,7 +56,7 @@ const THEORIES: TheoryOfChange[] = [
     id: 6,
     title: 'Innovation Drives Regeneration',
     statement: 'When scientific research, indigenous knowledge, digital technologies, and community experience are integrated into environmental action, then more effective, evidence-based, and locally appropriate solutions emerge to address climate change, land degradation, and biodiversity loss.',
-    icon: <Lightbulb className="h-6 w-6" />,
+
     image: '/Images/IMG_2583.jpg',
     color: 'from-rose-500 to-rose-700',
   },
@@ -121,10 +118,9 @@ export default function GoalsSection() {
 
                 {/* Read more */}
                 <div className="mt-5 pt-4 border-t border-gray-100 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-emerald-600 group-hover:gap-2 transition-all flex items-center gap-1">
-                    Read more <ArrowRight className="h-3.5 w-3.5" />
+                  <span className="text-xs font-semibold text-emerald-600 transition-all">
+                    Read more
                   </span>
-                  <Sparkles className="h-4 w-4 text-emerald-400/50 group-hover:text-emerald-400 transition-colors" />
                 </div>
               </div>
             </motion.div>
@@ -161,7 +157,7 @@ export default function GoalsSection() {
                   onClick={() => setSelectedTheory(null)}
                   className="absolute top-4 right-4 p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition-all"
                 >
-                  <X className="h-5 w-5" />
+
                 </button>
               </div>
 
@@ -182,10 +178,7 @@ export default function GoalsSection() {
 
                 {/* Bottom action */}
                 <div className="mt-8 pt-6 border-t border-gray-100 flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-sm text-gray-400">
-                    <Heart className="h-4 w-4 text-emerald-500" />
-                    <span>Theory of Change</span>
-                  </div>
+                  <span className="text-sm text-gray-400">Theory of Change</span>
                   <button
                     onClick={() => setSelectedTheory(null)}
                     className="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-bold rounded-xl text-sm transition-all shadow-md"

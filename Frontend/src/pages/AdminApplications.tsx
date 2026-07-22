@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { Trash2, ChevronLeft, ChevronRight, CheckCircle2, XCircle, Clock } from "lucide-react";
+
 import { adminFetchApplications, adminUpdateApplicationStatus, adminDeleteApplication, type ApiApplication } from "../api/client";
 
 const statusColors: Record<string, string> = {
@@ -11,11 +11,11 @@ const statusColors: Record<string, string> = {
 };
 
 const statusIcon: Record<string, ReactNode> = {
-  pending: <Clock className="h-3 w-3" />,
-  reviewed: <CheckCircle2 className="h-3 w-3" />,
-  shortlisted: <CheckCircle2 className="h-3 w-3" />,
-  accepted: <CheckCircle2 className="h-3 w-3" />,
-  rejected: <XCircle className="h-3 w-3" />,
+  pending: '',
+  reviewed: '',
+  shortlisted: '',
+  accepted: '',
+  rejected: '',
 };
 
 export default function AdminApplications() {
@@ -76,7 +76,6 @@ export default function AdminApplications() {
                     <td className="px-4 py-3 text-xs text-gray-500">{r.applicant_email}</td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold border ${statusColors[r.status] || statusColors.pending}`}>
-                        {statusIcon[r.status] || null}
                         {r.status}
                       </span>
                     </td>
@@ -100,7 +99,7 @@ export default function AdminApplications() {
                           </button>
                         )}
                         <button onClick={() => del(r.id)} className="p-1.5 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">
-                          <Trash2 className="h-3.5 w-3.5" />
+Delete
                         </button>
                       </div>
                     </td>
@@ -112,9 +111,9 @@ export default function AdminApplications() {
           </div>
           {pages > 1 && (
             <div className="flex items-center justify-center gap-3 mt-5">
-              <button disabled={page <= 1} onClick={() => setPage(p => p - 1)} className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50"><ChevronLeft className="h-4 w-4" /></button>
+<button disabled={page <= 1} onClick={() => setPage(p => p - 1)} className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50">Prev</button>
               <span className="text-xs text-gray-500 font-mono">{page} / {pages}</span>
-              <button disabled={page >= pages} onClick={() => setPage(p => p + 1)} className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50"><ChevronRight className="h-4 w-4" /></button>
+<button disabled={page >= pages} onClick={() => setPage(p => p + 1)} className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50">Next</button>
             </div>
           )}
         </>

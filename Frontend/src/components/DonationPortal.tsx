@@ -1,8 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  CreditCard, Smartphone, Check, ArrowRight, ShieldCheck, Heart, Sparkles, Award, RotateCcw, HelpCircle, Loader2 
-} from 'lucide-react';
+
 
 export default function DonationPortal() {
   const [amount, setAmount] = useState<number>(25);
@@ -129,7 +127,6 @@ export default function DonationPortal() {
                 {/* Form controls column: span 7 */}
                 <form onSubmit={handleStartSimulation} className="lg:col-span-7 p-6 sm:p-10 border-r border-white/10">
                   <h3 className="font-display font-bold text-xl text-white mb-6 flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-emerald-400" />
                     Configure Contribution
                   </h3>
 
@@ -235,8 +232,7 @@ export default function DonationPortal() {
                             : 'bg-emerald-950/40 text-emerald-200 border-white/5 hover:bg-white/5'
                         }`}
                       >
-                        <CreditCard className="h-4 w-4" />
-                        <span>Stripe Credit Card</span>
+                            <span>Stripe Credit Card</span>
                       </button>
 
                       {/* Rwanda Mobile Money */}
@@ -249,7 +245,6 @@ export default function DonationPortal() {
                             : 'bg-emerald-950/40 text-emerald-200 border-white/5 hover:bg-white/5'
                         }`}
                       >
-                        <Smartphone className="h-4 w-4" />
                         <span>Rwanda Mobile Money</span>
                       </button>
                     </div>
@@ -315,11 +310,10 @@ export default function DonationPortal() {
                     className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 rounded-xl font-extrabold text-base transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/50"
                   >
                     <span>Authorize Secure Donation</span>
-                    <ArrowRight className="h-5 w-5" />
+
                   </button>
 
                   <div className="mt-4 flex items-center justify-center gap-1.5 text-[10px] text-emerald-200/50">
-                    <ShieldCheck className="h-4 w-4" />
                     <span>256-bit Gatekeeper encryption standard. Authorized via secure SSL handshakes.</span>
                   </div>
                 </form>
@@ -397,14 +391,14 @@ export default function DonationPortal() {
                   {/* Outer border/badge style details */}
                   <div className="absolute top-0 left-0 w-full h-2 bg-emerald-500" />
                   <div className="absolute top-6 right-6 opacity-10">
-                    <Award className="h-32 w-32" />
+
                   </div>
 
                   {/* Header of official document */}
                   <div className="flex items-center gap-3.5 mb-8 border-b border-gray-100 pb-6 justify-between flex-wrap">
                     <div className="flex items-center gap-2">
                       <div className="p-2 bg-emerald-500 rounded-lg">
-                        <Award className="h-5 w-5 text-white" />
+
                       </div>
                       <div>
                         <h4 className="font-display font-black text-sm uppercase tracking-wider text-emerald-900">Certificate of Stewardship</h4>
@@ -443,7 +437,7 @@ export default function DonationPortal() {
                       <div>
                         <span className="text-[10px] text-gray-400 block font-mono">Project Verified</span>
                         <span className="text-sm sm:text-base font-bold text-emerald-800 flex items-center justify-center gap-1">
-                          <Check className="h-4 w-4 text-emerald-600" /> Yes
+Yes
                         </span>
                       </div>
                     </div>
@@ -466,7 +460,7 @@ export default function DonationPortal() {
                     onClick={resetDonation}
                     className="px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold text-sm flex items-center gap-1.5"
                   >
-                    <RotateCcw className="h-4 w-4" />
+
                     <span>Make Another Donation</span>
                   </button>
                 </div>
@@ -487,7 +481,7 @@ export default function DonationPortal() {
             className="fixed inset-0 z-50 bg-gray-950/90 backdrop-blur-md flex items-center justify-center p-4 text-white"
           >
             <div className="max-w-md w-full bg-emerald-900/90 border border-white/15 p-6 sm:p-8 rounded-3xl text-center shadow-2xl relative">
-              <Loader2 className="h-10 w-10 text-emerald-400 animate-spin mx-auto mb-6" />
+
 
               {simulationStep === 1 && (
                 <div>
@@ -531,7 +525,7 @@ export default function DonationPortal() {
               {simulationStep === 4 && (
                 <div>
                   <h4 className="text-lg font-bold text-emerald-400 flex items-center justify-center gap-1.5">
-                    <Check className="h-5 w-5 bg-emerald-500 text-emerald-950 rounded-full p-0.5" /> 
+
                     Transaction Approved
                   </h4>
                   <p className="text-sm text-emerald-200/70 mt-2">

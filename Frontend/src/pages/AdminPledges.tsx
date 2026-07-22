@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Trash2, ChevronLeft, ChevronRight, Search,
-  TreePine, Users, MapPin, Calendar,
-} from "lucide-react";
+
 import { adminFetchPledges, adminDeletePledge, type ApiPledge } from "../api/client";
 
 export default function AdminPledges() {
@@ -49,22 +46,19 @@ export default function AdminPledges() {
       {/* Stats summary */}
       <div className="grid grid-cols-3 gap-4 mb-6">
         <div className="bg-white rounded-xl border border-gray-100 p-4">
-          <div className="flex items-center gap-2 text-emerald-600 mb-1">
-            <TreePine className="h-4 w-4" />
+          <div>
             <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400">Total Trees</span>
           </div>
           <span className="font-display font-black text-2xl text-gray-900">{totalTrees.toLocaleString()}</span>
         </div>
         <div className="bg-white rounded-xl border border-gray-100 p-4">
-          <div className="flex items-center gap-2 text-blue-600 mb-1">
-            <Users className="h-4 w-4" />
+          <div>
             <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400">Pledges</span>
           </div>
           <span className="font-display font-black text-2xl text-gray-900">{data.length}</span>
         </div>
         <div className="bg-white rounded-xl border border-gray-100 p-4">
-          <div className="flex items-center gap-2 text-purple-600 mb-1">
-            <MapPin className="h-4 w-4" />
+          <div>
             <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400">Avg Per Pledge</span>
           </div>
           <span className="font-display font-black text-2xl text-gray-900">
@@ -75,7 +69,7 @@ export default function AdminPledges() {
 
       {/* Search */}
       <div className="relative max-w-xs mb-4">
-        <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+
         <input
           type="text"
           value={searchTerm}
@@ -112,7 +106,6 @@ export default function AdminPledges() {
                     <td className="px-4 py-3 font-medium">{r.name}</td>
                     <td className="px-4 py-3">
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold border bg-gray-100 text-gray-600 border-gray-200">
-                        <MapPin className="h-3 w-3" />
                         {r.district}
                       </span>
                     </td>
@@ -121,7 +114,6 @@ export default function AdminPledges() {
                     </td>
                     <td className="px-4 py-3 text-xs text-gray-500 max-w-[200px] truncate">{r.tree_type}</td>
                     <td className="px-4 py-3 text-xs text-gray-400 flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
                       {new Date(r.timestamp).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-3">
@@ -130,7 +122,7 @@ export default function AdminPledges() {
                         className="p-1.5 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                         title="Delete"
                       >
-                        <Trash2 className="h-4 w-4" />
+Delete
                       </button>
                     </td>
                   </tr>
@@ -146,7 +138,6 @@ export default function AdminPledges() {
                 onClick={() => setPage((p) => p - 1)}
                 className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-all"
               >
-                <ChevronLeft className="h-4 w-4" />
               </button>
               <span className="text-xs text-gray-500 font-mono">{page} / {pages}</span>
               <button
@@ -154,14 +145,13 @@ export default function AdminPledges() {
                 onClick={() => setPage((p) => p + 1)}
                 className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-all"
               >
-                <ChevronRight className="h-4 w-4" />
               </button>
             </div>
           )}
         </>
       ) : (
         <div className="text-center py-16 bg-white rounded-2xl border border-dashed border-gray-200">
-          <TreePine className="h-10 w-10 text-gray-300 mx-auto mb-3" />
+
           {searchTerm ? (
             <p className="text-sm text-gray-500">No pledges match your search.</p>
           ) : (

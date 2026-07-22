@@ -1,9 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import {
-  Plus, X, Trash2, CheckCircle2, AlertCircle, Loader2, Calendar,
-  Clock, Users, Monitor, ToggleLeft, ToggleRight, Star, User,
-  Pencil,
-} from "lucide-react";
+
 import {
   adminFetchWebinars,
   adminCreateWebinar,
@@ -110,7 +106,7 @@ export default function AdminWebinars() {
         <div className={`fixed top-6 right-6 z-50 flex items-center gap-2.5 px-5 py-3 rounded-xl shadow-xl border text-sm font-medium transition-all animate-in slide-in-from-right ${
           toast.type === "success" ? "bg-emerald-50 border-emerald-200 text-emerald-800" : "bg-rose-50 border-rose-200 text-rose-800"
         }`}>
-          {toast.type === "success" ? <CheckCircle2 className="h-4 w-4 text-emerald-500" /> : <AlertCircle className="h-4 w-4 text-rose-500" />}
+    {toast.type === "success" ? '' : ''}
           {toast.message}
         </div>
       )}
@@ -121,15 +117,15 @@ export default function AdminWebinars() {
           <p className="text-sm text-gray-500 mt-0.5">Manage the Webinar Classroom — expert-led sessions</p>
         </div>
         <button onClick={openCreate} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm">
-          <Plus className="h-3.5 w-3.5" /> New Webinar
+New Webinar
         </button>
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-20 text-gray-400"><Loader2 className="h-5 w-5 animate-spin mr-2" /> Loading…</div>
+        <div className="flex items-center justify-center py-20 text-gray-400">Loading…</div>
       ) : webinars.length === 0 ? (
         <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-200">
-          <Monitor className="h-10 w-10 text-gray-300 mx-auto mb-3" />
+
           <p className="text-sm text-gray-500 font-medium">No webinars yet</p>
           <p className="text-xs text-gray-400 mt-1">Create your first webinar for the community.</p>
         </div>
@@ -142,29 +138,28 @@ export default function AdminWebinars() {
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-start gap-3 min-w-0 flex-1">
                   <div className={`p-2.5 rounded-xl flex-shrink-0 ${w.is_active ? "bg-emerald-100 text-emerald-600" : "bg-gray-100 text-gray-500"}`}>
-                    <Monitor className="h-5 w-5" />
+
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-semibold text-gray-900">{w.title}</span>
                       {w.is_active && (
                         <span className="text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full flex items-center gap-1">
-                          <Star className="h-2.5 w-2.5 fill-emerald-400" /> Active
+Active
                         </span>
                       )}
                     </div>
                     <div className="flex items-center gap-2 mt-1">
-                      <User className="h-3 w-3 text-gray-400" />
+
                       <span className="text-xs text-gray-600">{w.speaker}</span>
                       {w.speaker_title && (
                         <span className="text-[10px] text-gray-400">— {w.speaker_title}</span>
                       )}
                     </div>
                     <div className="flex items-center gap-4 text-xs text-gray-400 mt-1.5 flex-wrap">
-                      <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> {w.date}</span>
-                      <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {w.time}</span>
-                      <span className="flex items-center gap-1">
-                        <Users className="h-3 w-3" />
+                      <span>{w.date}</span>
+                      <span>{w.time}</span>
+                      <span>
                         <span className="font-semibold text-emerald-600">{w.registered_count}</span>
                         {w.max_capacity ? (
                           <> / {w.max_capacity} seats</>
@@ -177,13 +172,13 @@ export default function AdminWebinars() {
                 </div>
                 <div className="flex items-center gap-1.5 flex-shrink-0">
                   <button onClick={() => toggleActive(w)} className={`p-2 rounded-lg transition-colors ${w.is_active ? "text-emerald-600 hover:bg-emerald-50" : "text-gray-400 hover:bg-gray-100"}`} title={w.is_active ? "Deactivate" : "Activate"}>
-                    {w.is_active ? <ToggleRight className="h-5 w-5" /> : <ToggleLeft className="h-5 w-5" />}
+{w.is_active ? 'Deactivate' : 'Activate'}
                   </button>
                   <button onClick={() => openEdit(w)} className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
-                    <Pencil className="h-4 w-4" />
+Edit
                   </button>
                   <button onClick={() => del(w.id)} className="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors" title="Delete">
-                    <Trash2 className="h-4 w-4" />
+Delete
                   </button>
                 </div>
               </div>
@@ -198,10 +193,10 @@ export default function AdminWebinars() {
         <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 backdrop-blur-sm p-4 overflow-y-auto pt-12">
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-xl p-6 sm:p-8 relative my-8">
             <button onClick={() => setShowModal(false)} className="absolute top-4 right-4 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all">
-              <X className="h-4 w-4" />
+
             </button>
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-2.5 bg-emerald-100 rounded-xl text-emerald-600"><Monitor className="h-5 w-5" /></div>
+
               <div>
                 <h2 className="font-display font-bold text-lg text-gray-900">{editingId ? "Edit Webinar" : "New Webinar"}</h2>
                 <p className="text-xs text-gray-500">Schedule an expert-led session for the community</p>
@@ -242,15 +237,14 @@ export default function AdminWebinars() {
 
               <label className="flex items-center gap-2.5 cursor-pointer pt-1">
                 <button type="button" onClick={() => setIsActive(!isActive)} className={`p-1.5 rounded-lg transition-colors ${isActive ? "text-emerald-600 bg-emerald-50" : "text-gray-400 bg-gray-100"}`}>
-                  {isActive ? <ToggleRight className="h-5 w-5" /> : <ToggleLeft className="h-5 w-5" />}
+  {isActive ? 'Active' : 'Inactive'}
                 </button>
                 <span className="text-sm font-medium text-gray-700">Active & visible to users</span>
               </label>
 
               {error && <p className="text-xs text-rose-600 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2">{error}</p>}
 
-              <button type="submit" disabled={saving} className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2">
-                {saving ? <><Loader2 className="h-4 w-4 animate-spin" /> Saving…</> : <><Plus className="h-4 w-4" /> {editingId ? "Update Webinar" : "Create Webinar"}</>}
+              <button type="submit" disabled={saving} className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2">{saving ? <>Saving…</> : <>{editingId ? "Update Webinar" : "Create Webinar"}</>}
               </button>
             </form>
           </div>

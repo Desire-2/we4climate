@@ -1,5 +1,5 @@
 import { useState, FormEvent, FocusEvent, ChangeEvent } from 'react';
-import { Mail, Phone, MapPin, Send, Facebook, Twitter, Instagram, Globe, CheckCircle2 } from 'lucide-react';
+
 import { submitContact } from '../api/client';
 
 export default function ContactSection() {
@@ -90,9 +90,7 @@ export default function ContactSection() {
             {/* Address cards */}
             <div className="space-y-4">
               <div className="flex gap-4 p-4 bg-white border border-gray-100 rounded-2xl shadow-sm">
-                <div className="p-3 bg-emerald-50 rounded-xl text-emerald-700 flex-shrink-0">
-                  <MapPin className="h-5 w-5" />
-                </div>
+
                 <div>
                   <span className="text-[10px] uppercase font-mono font-bold text-gray-400 block">HQ Coordinates</span>
                   <span className="text-gray-900 text-sm font-semibold">KK 508 St, Kicukiro, Kigali, Rwanda</span>
@@ -100,9 +98,7 @@ export default function ContactSection() {
               </div>
 
               <div className="flex gap-4 p-4 bg-white border border-gray-100 rounded-2xl shadow-sm">
-                <div className="p-3 bg-emerald-50 rounded-xl text-emerald-700 flex-shrink-0">
-                  <Phone className="h-5 w-5" />
-                </div>
+
                 <div>
                   <span className="text-[10px] uppercase font-mono font-bold text-gray-400 block">Telephone Hotline</span>
                   <span className="text-gray-900 text-sm font-semibold block">0787712266</span>
@@ -111,9 +107,7 @@ export default function ContactSection() {
               </div>
 
               <div className="flex gap-4 p-4 bg-white border border-gray-100 rounded-2xl shadow-sm">
-                <div className="p-3 bg-emerald-50 rounded-xl text-emerald-700 flex-shrink-0">
-                  <Mail className="h-5 w-5" />
-                </div>
+
                 <div>
                   <span className="text-[10px] uppercase font-mono font-bold text-gray-400 block">Electronic Address</span>
                   <span className="text-gray-900 text-sm font-semibold">info@we4climate.org</span>
@@ -130,9 +124,7 @@ export default function ContactSection() {
                 ))}
               </div>
               <div className="relative z-10 text-center space-y-2 max-w-xs">
-                <div className="inline-block p-2.5 bg-emerald-900 rounded-full text-emerald-300 animate-bounce">
-                  <MapPin className="h-6 w-6" />
-                </div>
+  
                 <h5 className="font-semibold text-white text-sm">Kicukiro Valley Sector</h5>
                 <p className="text-[10px] text-emerald-300/80 leading-relaxed">Coordinates: Kigali District Unit HQ. Direct connections to REMA and national community conservation partners.</p>
               </div>
@@ -149,7 +141,7 @@ export default function ContactSection() {
                   className="p-3 bg-white border border-gray-200 hover:border-emerald-500 hover:bg-emerald-50 text-gray-600 hover:text-emerald-700 rounded-xl transition-all shadow-sm flex items-center justify-center"
                   title="Facebook Interface"
                 >
-                  <Facebook className="h-5 w-5" />
+<span>FB</span>
                 </a>
                 <a 
                   href="https://x.com/we4climate" 
@@ -158,7 +150,7 @@ export default function ContactSection() {
                   className="p-3 bg-white border border-gray-200 hover:border-emerald-500 hover:bg-emerald-50 text-gray-600 hover:text-emerald-700 rounded-xl transition-all shadow-sm flex items-center justify-center"
                   title="Twitter Coordinates"
                 >
-                  <Twitter className="h-5 w-5" />
+<span>X</span>
                 </a>
                 <a 
                   href="https://www.instagram.com/we4climate_/" 
@@ -167,7 +159,7 @@ export default function ContactSection() {
                   className="p-3 bg-white border border-gray-200 hover:border-emerald-500 hover:bg-emerald-50 text-gray-600 hover:text-emerald-700 rounded-xl transition-all shadow-sm flex items-center justify-center"
                   title="Instagram coordinates invite"
                 >
-                  <Instagram className="h-5 w-5" />
+<span>IG</span>
                 </a>
               </div>
             </div>
@@ -249,13 +241,13 @@ export default function ContactSection() {
                 className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs uppercase tracking-widest shadow-md transition-all duration-300 hover:scale-[1.01] active:scale-95 focus:outline-none flex items-center justify-center gap-2"
               >
                 <span>Dispatch message</span>
-                <Send className="h-4 w-4" />
+
               </button>
             </form>
 
             {success && (
               <div id="contact-success-toast" className="mt-4 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl flex items-center gap-3 text-xs animate-fade-in">
-                <CheckCircle2 className="h-5 w-5 text-emerald-600 flex-shrink-0" />
+
                 <span>Message dispatched successfully! A secretary coordinate will verify your request soon.</span>
               </div>
             )}

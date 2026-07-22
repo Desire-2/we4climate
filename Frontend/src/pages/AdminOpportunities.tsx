@@ -1,8 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import {
-  Plus, Pencil, Trash2, ChevronLeft, ChevronRight,
-  X, Eye, EyeOff, ExternalLink, Globe, FileText,
-} from "lucide-react";
+
 import {
   adminFetchOpportunities, adminCreateOpportunity,
   adminUpdateOpportunity, adminDeleteOpportunity,
@@ -151,7 +148,6 @@ export default function AdminOpportunities() {
           onClick={openCreate}
           className="flex items-center gap-1.5 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-all shadow-md hover:shadow-lg active:scale-[0.97]"
         >
-          <Plus className="h-4 w-4" />
           <span>New Posting</span>
         </button>
       </div>
@@ -213,12 +209,10 @@ export default function AdminOpportunities() {
                     <td className="px-4 py-3">
                       {r.is_external ? (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold border bg-sky-100 text-sky-700 border-sky-200">
-                          <ExternalLink className="h-3 w-3" />
                           External
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold border bg-indigo-100 text-indigo-700 border-indigo-200">
-                          <FileText className="h-3 w-3" />
                           Internal
                         </span>
                       )}
@@ -242,21 +236,21 @@ export default function AdminOpportunities() {
                           className="p-1.5 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
                           title={r.is_active ? "Deactivate" : "Activate"}
                         >
-                          {r.is_active ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                          {r.is_active ? 'Deactivate' : 'Activate'}
                         </button>
                         <button
                           onClick={() => openEdit(r)}
                           className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                           title="Edit"
                         >
-                          <Pencil className="h-3.5 w-3.5" />
+Edit
                         </button>
                         <button
                           onClick={() => del(r.id)}
                           className="p-1.5 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                           title="Delete"
                         >
-                          <Trash2 className="h-3.5 w-3.5" />
+Delete
                         </button>
                       </div>
                     </td>
@@ -266,7 +260,7 @@ export default function AdminOpportunities() {
                   <tr>
                     <td colSpan={8} className="text-center py-12 text-gray-400">
                       <div className="flex flex-col items-center gap-2">
-                        <FileText className="h-8 w-8 text-gray-300" />
+
                         <p className="text-sm">No {showActive ? "active" : "inactive"} opportunities found.</p>
                         <button onClick={openCreate} className="text-xs text-emerald-600 font-semibold hover:text-emerald-500 underline">
                           Create your first posting
@@ -286,7 +280,7 @@ export default function AdminOpportunities() {
                 onClick={() => setPage((p) => p - 1)}
                 className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-all"
               >
-                <ChevronLeft className="h-4 w-4" />
+Prev
               </button>
               <span className="text-xs text-gray-500 font-mono">{page} / {pages}</span>
               <button
@@ -294,7 +288,7 @@ export default function AdminOpportunities() {
                 onClick={() => setPage((p) => p + 1)}
                 className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-all"
               >
-                <ChevronRight className="h-4 w-4" />
+Next
               </button>
             </div>
           )}
@@ -309,13 +303,11 @@ export default function AdminOpportunities() {
               onClick={() => setShowModal(false)}
               className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all"
             >
-              <X className="h-5 w-5" />
+
             </button>
 
             <div className="flex items-center gap-3 mb-6">
-              <div className={`p-2.5 rounded-xl ${editing ? "bg-blue-100 text-blue-700" : "bg-emerald-100 text-emerald-700"}`}>
-                {editing ? <Pencil className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
-              </div>
+
               <div>
                 <h2 className="font-display font-bold text-xl text-gray-900">
                   {editing ? "Edit Opportunity" : "New Opportunity"}
@@ -418,7 +410,6 @@ export default function AdminOpportunities() {
                     className="rounded border-gray-300 text-amber-600 focus:ring-amber-500"
                   />
                   <label htmlFor="is_external" className="text-xs font-semibold text-gray-700 flex items-center gap-1.5">
-                    <Globe className="h-3.5 w-3.5 text-amber-600" />
                     External posting — applications handled outside We4Climate
                   </label>
                 </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Heart } from 'lucide-react';
+
 
 interface HomePageProps {
   treesPledgedTotal: number;
@@ -101,11 +101,25 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
           ))}
         </div>
 
+        {/* Dark gradient overlay behind the hero text for readability over any image */}
+        <div className="absolute inset-x-0 bottom-0 h-1/2 z-10 bg-gradient-to-t from-black/70 via-black/30 to-transparent pointer-events-none" />
+
         {/* Hero message — anchored at the bottom of the slideshow */}
         <div className="pointer-events-none absolute inset-x-0 bottom-16 z-10 px-4 text-center sm:bottom-20">
           <h1
-            className="mx-auto max-w-6xl font-display text-xl font-bold leading-tight tracking-wider text-amber-300 sm:text-2xl md:text-3xl lg:text-4xl"
-            style={{ textShadow: '0 1px 0 #92400e, 0 2px 0 #78350f, 0 3px 0 #451a03, 0 4px 0 #000000, 0 5px 0 rgba(0,0,0,0.9), 0 6px 3px rgba(0,0,0,0.6), 0 0 3px rgba(0,0,0,0.5)' }}
+            className="mx-auto max-w-6xl font-display text-xl font-bold leading-tight tracking-wider text-white sm:text-2xl md:text-3xl lg:text-4xl"
+            style={{
+              textShadow: [
+                '0 1px 0 rgba(0,0,0,0.6)',
+                '0 2px 0 rgba(0,0,0,0.5)',
+                '0 3px 0 rgba(0,0,0,0.4)',
+                '0 4px 0 rgba(0,0,0,0.35)',
+                '0 5px 0 rgba(0,0,0,0.3)',
+                '0 6px 2px rgba(0,0,0,0.25)',
+                '0 8px 4px rgba(0,0,0,0.2)',
+                '0 12px 8px rgba(0,0,0,0.15)',
+              ].join(', '),
+            }}
           >
             We Promote Regenerative Agriculture, Ecosystem Restoration, Climate Resilience And Education
           </h1>
@@ -314,7 +328,6 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
               onClick={() => scrollToSection('hero')}
               className="inline-flex items-center gap-2 px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 rounded-xl font-bold text-base shadow-lg hover:scale-[1.02] active:scale-95 transition-all duration-300"
             >
-              <Heart className="h-5 w-5" />
               <span>Join Us in Restoring Our Planet</span>
             </button>
           </div>

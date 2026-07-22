@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Eye, Target } from 'lucide-react';
+
 
 export default function AboutSection() {
   const [activeTab, setActiveTab] = useState<'vision' | 'mission'>('vision');
@@ -26,7 +26,7 @@ export default function AboutSection() {
                     : 'text-emerald-200/50 hover:text-emerald-200 hover:bg-emerald-900/30'
                 }`}
               >
-                <Eye className={`h-6 w-6 ${activeTab === 'vision' ? 'text-emerald-400' : 'text-emerald-200/40'}`} />
+
                 Our Vision
               </button>
               <button
@@ -37,7 +37,7 @@ export default function AboutSection() {
                     : 'text-emerald-200/50 hover:text-emerald-200 hover:bg-emerald-900/30'
                 }`}
               >
-                <Target className={`h-6 w-6 ${activeTab === 'mission' ? 'text-emerald-400' : 'text-emerald-200/40'}`} />
+
                 Our Mission
               </button>
             </div>
@@ -49,9 +49,7 @@ export default function AboutSection() {
                   {/* Vision Text */}
                   <div>
                     <div className="flex items-center gap-3 mb-6">
-                      <div className="p-3 bg-emerald-800 rounded-2xl text-emerald-400">
-                        <Eye className="h-8 w-8" />
-                      </div>
+
                       <span className="text-sm font-mono uppercase tracking-widest text-emerald-400 font-semibold">
                         Our Vision
                       </span>
@@ -86,9 +84,7 @@ export default function AboutSection() {
                   {/* Mission Text */}
                   <div className="order-2 lg:order-1">
                     <div className="flex items-center gap-3 mb-6">
-                      <div className="p-3 bg-emerald-800 rounded-2xl text-emerald-400">
-                        <Target className="h-8 w-8" />
-                      </div>
+
                       <span className="text-sm font-mono uppercase tracking-widest text-emerald-400 font-semibold">
                         Our Mission
                       </span>

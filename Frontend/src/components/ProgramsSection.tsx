@@ -1,14 +1,10 @@
 import { motion } from 'motion/react';
 import { useState, useEffect } from 'react';
-import {
-  Landmark, Trees, Droplets, Globe, Apple, 
-  Hexagon, MapPin, ExternalLink, Sparkles, ArrowRight
-} from 'lucide-react';
 
 interface ProgramItem {
   id: string;
   title: string;
-  icon: typeof Landmark;
+  icon: string;
   description: string;
   image: string;
   link?: { text: string; url: string };
@@ -20,7 +16,7 @@ const programs: ProgramItem[] = [
   {
     id: 'leonard',
     title: 'Leonard Regeneration Center',
-    icon: Landmark,
+    icon: 'Landmark',
     description:
       'Our flagship community regeneration hub in Muhanga District serves as a living laboratory for regenerative agriculture, food forests, agroforestry, biodiversity conservation, sustainable livelihoods, environmental education, and climate innovation. The center welcomes farmers, youth, schools, researchers, and visitors to learn, practice, and replicate regenerative solutions.',
     image: '/Images/Leonard/IMG_0874.jpg',
@@ -31,7 +27,7 @@ const programs: ProgramItem[] = [
   {
     id: 'nursery',
     title: 'Community Tree Nursery Initiative',
-    icon: Trees,
+    icon: 'Trees',
     description:
       'We establish community tree nurseries to produce high-quality fruit trees, indigenous trees, and agroforestry seedlings that support ecosystem restoration, food security, and climate resilience. Beyond seedling production, the initiative provides hands-on training in nursery management, tree propagation, and restoration practices, enabling communities and schools to establish their own green spaces and food forests.',
     image: '/Images/Nursery.jpg',
@@ -42,7 +38,7 @@ const programs: ProgramItem[] = [
   {
     id: 'rainwater',
     title: 'Rainwater Harvesting & Water Resilience',
-    icon: Droplets,
+    icon: 'Droplets',
     description:
       'We promote sustainable water management through rainwater harvesting, connected ponds, water storage systems, and landscape restoration. By capturing and conserving rainwater, we improve irrigation, increase resilience to drought, restore watershed functions, and demonstrate practical climate adaptation solutions for farming communities.',
     image: '/Images/Rainwater.jpg',
@@ -52,7 +48,7 @@ const programs: ProgramItem[] = [
   {
     id: 'restoration',
     title: 'Ecosystem Restoration & Climate Action',
-    icon: Globe,
+    icon: 'Globe',
     description:
       'We restore degraded landscapes through agroforestry, tree growing, watershed restoration, biodiversity conservation, and sustainable land management. Working alongside communities, we implement nature-based solutions that improve ecosystem health, strengthen climate resilience, and support sustainable food systems.',
     image: '/Images/Restoration.jpg',
@@ -62,7 +58,7 @@ const programs: ProgramItem[] = [
   {
     id: 'kids4food',
     title: 'Kids4Food',
-    icon: Apple,
+    icon: 'Apple',
     description:
       'Kids4Food inspires the next generation of environmental leaders by integrating food forests, school gardens, agriculture clubs, and climate education into schools. The program provides children with practical skills while nurturing a lifelong commitment to caring for nature and building resilient communities.',
     image: '/Images/Kids4Food.jpg',
@@ -73,7 +69,7 @@ const programs: ProgramItem[] = [
   {
     id: 'apiary',
     title: 'Community Apiary Project',
-    icon: Hexagon,
+    icon: 'Hexagon',
     description:
       'Our Community Apiary Project promotes sustainable beekeeping as a nature-based livelihood that supports biodiversity, pollination, and ecosystem health. We establish community-managed apiaries, provide practical training in modern beekeeping, and empower youth, women, and local cooperatives to produce high-quality honey and other bee products. By integrating beekeeping with food forests, agroforestry, and ecosystem restoration, the project creates sustainable income opportunities while enhancing pollination, increasing agricultural productivity, and fostering environmental stewardship within local communities.',
     image: '/Images/Apiary.jpg',
@@ -235,19 +231,8 @@ export default function ProgramsSection() {
                         className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-white bg-emerald-500 hover:bg-emerald-400 hover:text-emerald-950 px-4 py-2.5 rounded-xl transition-all duration-300 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 hover:-translate-y-0.5"
                       >
                         {program.link.text}
-                        {program.link.url.startsWith('http') ? (
-                          <ExternalLink className="h-3.5 w-3.5" />
-                        ) : (
-                          <ArrowRight className="h-3.5 w-3.5" />
-                        )}
                       </a>
-                    ) : (
-                      <div />
-                    )}
-                    <div className="flex items-center gap-1 text-emerald-100/40 text-xs">
-                      <MapPin className="h-3 w-3" />
-                      <span>Rwanda</span>
-                    </div>
+                    ) : null}
                   </div>
                 </div>
 
