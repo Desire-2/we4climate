@@ -1,11 +1,25 @@
 import { Facebook, Twitter, Instagram, Linkedin, Mail } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Footer() {
+  const navigate = useNavigate();
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: 'smooth'
     });
+  };
+
+  const scrollToSection = (sectionId: string) => {
+    navigate('/about');
+    // Allow navigation to render before scrolling to the section
+    setTimeout(() => {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 150);
   };
 
   const currentYear = new Date().getFullYear();
@@ -62,16 +76,28 @@ export default function Footer() {
                 <a href="/about#about" className="hover:text-emerald-300 transition-colors">Our Vision & Mission</a>
               </li>
               <li>
-                <a href="/about#theories-of-change" className="hover:text-emerald-300 transition-colors">Strategic 10 Pillars</a>
+                <button
+                  type="button"
+                  onClick={() => scrollToSection('theories-of-change')}
+                  className="hover:text-emerald-300 transition-colors bg-transparent border-none cursor-pointer p-0 text-xs text-emerald-100/70 text-left"
+                >
+                  Theories of Change
+                </button>
               </li>
               <li>
-                <a href="/action#interactive" className="hover:text-emerald-300 transition-colors">Climate Quiz & Pledges</a>
+                <a href="/contact" className="hover:text-emerald-300 transition-colors">Contact Us</a>
               </li>
               <li>
-                <a href="/opportunities" className="hover:text-emerald-300 transition-colors">Green Careers Hub</a>
+                <button
+                  type="button"
+                  onClick={() => scrollToSection('team')}
+                  className="hover:text-emerald-300 transition-colors bg-transparent border-none cursor-pointer p-0 text-xs text-emerald-100/70 text-left"
+                >
+                  Our Team
+                </button>
               </li>
               <li>
-                <a href="/contact#contact" className="hover:text-emerald-300 transition-colors">Board Coordinates</a>
+                <a href="/advocacy-passport" className="hover:text-emerald-300 transition-colors">Earn Certificate</a>
               </li>
             </ul>
           </div>

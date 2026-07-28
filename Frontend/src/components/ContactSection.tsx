@@ -64,9 +64,6 @@ export default function ContactSection() {
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-emerald-700 font-mono text-sm font-semibold tracking-wider uppercase bg-emerald-100 px-4 py-1.5 rounded-full inline-block mb-3">
-            Contact
-          </span>
           <h2 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-gray-900 tracking-tight">
             Reach Out to Our Kigali Board
           </h2>
