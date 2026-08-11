@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 interface ProgramItem {
   id: string;
@@ -252,10 +253,10 @@ export default function ProgramsSection() {
           className="mt-16 text-center"
         >
           <p className="text-emerald-100/60 text-sm">
-            Want to partner, volunteer, or learn more about a specific program?{' '}
-            <a href="/contact" className="text-emerald-400 hover:text-emerald-300 underline underline-offset-2 font-medium transition-colors">
-              Get in touch with us
-            </a>
+            Volunteer with us{' '}
+            <Link to="/volunteer" className="inline-flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 underline underline-offset-2 font-semibold transition-colors">
+               Register
+            </Link>
           </p>
         </motion.div>
       </div>

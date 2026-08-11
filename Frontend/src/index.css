@@ -29,6 +29,18 @@ body {
   color: #1f2937;
 }
 
+/* Certificate fade-in animation (preview only) */
+@keyframes certificateFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;

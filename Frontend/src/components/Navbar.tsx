@@ -44,6 +44,7 @@ export default function Navbar() {
 
   // Take Action Dropdown/collapsible sub-items
   const takeActionItems = [
+    { path: '/volunteer', label: 'Volunteer with us' },
     { path: '/resources', label: 'Resources Manuals' },
     { path: '/action', label: 'Action Desk' },
     { path: '/contact', label: 'Get in Touch' }

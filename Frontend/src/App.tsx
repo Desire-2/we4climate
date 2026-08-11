@@ -17,6 +17,7 @@ import ActionPage from './pages/ActionPage';
 import AdvocacyPassportPage from './pages/AdvocacyPassportPage';
 import OpportunitiesPage from './pages/OpportunitiesPage';
 import ContactPage from './pages/ContactPage';
+import VolunteerPage from './pages/VolunteerPage';
 
 // Admin Pages
 import AdminLogin from './pages/AdminLogin';
@@ -233,6 +234,7 @@ export default function App() {
                   />
                   <Route path="/opportunities" element={<OpportunitiesPage />} />
                   <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/volunteer" element={<VolunteerPage />} />
                   {/* Fallback route redirection */}
                   <Route
                     path="*"

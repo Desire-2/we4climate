@@ -162,6 +162,40 @@ export async function submitApplication(payload: {
   });
 }
 
+/** Submit the full LRC volunteer application, including its attachments. */
+export async function submitVolunteerApplication(payload: {
+  opportunity_id: string;
+  applicant_name: string;
+  applicant_email: string;
+  details: Record<string, unknown>;
+  attachments: Record<string, File | null>;
+}): Promise<{ message: string; application: ApiApplication } | null> {
+  try {
+    const body = new FormData();
+    body.append("opportunity_id", payload.opportunity_id);
+    body.append("applicant_name", payload.applicant_name);
+    body.append("applicant_email", payload.applicant_email);
+    body.append("cover_letter", JSON.stringify(payload.details));
+
+    Object.entries(payload.attachments).forEach(([field, file]) => {
+      if (file) body.append(field, file);
+    });
+
+    const res = await fetch(`${API_BASE}/opportunities/apply`, {
+      method: "POST",
+      body,
+    });
+    if (!res.ok) {
+      console.warn(`API ${res.status} on /opportunities/apply`, await res.text().catch(() => ""));
+      return null;
+    }
+    return (await res.json()) as { message: string; application: ApiApplication };
+  } catch (err) {
+    console.warn("Volunteer application request failed – backend may be offline", err);
+    return null;
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /*  Impact                                                             */
 /* ------------------------------------------------------------------ */
