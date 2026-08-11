@@ -4,7 +4,11 @@ Flask-Migrate==4.1.0
 Flask-Cors==5.0.1
 Flask-Marshmallow==1.2.1
 marshmallow==3.26.1
+# Required by Flask-Marshmallow for Flask-SQLAlchemy integration
+marshmallow-sqlalchemy==0.30.0
 python-dotenv==1.1.0
 gunicorn==23.0.0
+# Brevo (Sendinblue) SDK for transactional email delivery
+brevo-python==5.0.2
 # PostgreSQL driver (uncommented for Render deployment which uses PostgreSQL)
 psycopg2-binary==2.9.10

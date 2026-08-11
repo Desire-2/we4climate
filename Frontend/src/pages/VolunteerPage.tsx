@@ -467,7 +467,7 @@ export default function VolunteerPage() {
     <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }} className="min-h-screen bg-[#f5faf6]">
       <main id="volunteer-form" className="mx-auto max-w-5xl scroll-mt-24 px-4 pb-10 pt-24 sm:scroll-mt-28 sm:px-6 sm:pb-16 sm:pt-28 lg:px-8">
         <div className="mb-8 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-          <div><h1 className="font-display text-3xl font-bold tracking-tight text-emerald-950">Start your application</h1><p className="mt-2 text-sm text-slate-500">Complete each step. You can go back at any time.</p></div>
+          <div><h1 className="font-display text-3xl font-bold tracking-tight text-emerald-950">Start your application</h1><p className="mt-2 text-sm text-slate-500">Complete each step. You can go back at any time.</p><p className="mt-3 w-fit rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-800">NB: We only host international volunteers for exchange(expert,students, travellers, etc).</p></div>
           <span className="text-xs text-slate-400"><span className="text-emerald-600">*</span> Required fields</span>
         </div>
 

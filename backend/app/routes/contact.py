@@ -7,6 +7,7 @@ from flask import Blueprint, jsonify, request
 from marshmallow import ValidationError
 
 from app import db
+from app.email_service import send_contact_notification
 from app.models import ContactMessage
 from app.schemas import ContactRequestSchema
 
@@ -35,9 +36,19 @@ def submit_contact():
         )
         db.session.add(msg)
         db.session.commit()
+
+        # Deliver a copy of the submission to the We4Climate inbox.
+        email_sent = send_contact_notification(
+            name=msg.name,
+            email=msg.email,
+            subject=msg.subject,
+            message=msg.message,
+        )
+
         return jsonify({
             "message": "Your inquiry has been received. We will respond shortly.",
             "contact": msg.to_dict(),
+            "email_sent": email_sent,
         }), 201
     except Exception as exc:
         db.session.rollback()

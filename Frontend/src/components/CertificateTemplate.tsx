@@ -1,10 +1,9 @@
 import React, { forwardRef } from 'react';
-import { COLORS, FONTS, DIMENSIONS, SECTION_DIVIDER_SVG, DEFAULT_TEMPLATE_VALUES } from '../config/certificateConfig';
+import { COLORS, FONTS, DIMENSIONS, DEFAULT_TEMPLATE_VALUES } from '../config/certificateConfig';
 import DecorativeBorder from './certificate/DecorativeBorder';
 import CertificateHeader from './certificate/CertificateHeader';
 import CertificateBody from './certificate/CertificateBody';
 import SkillsSection from './certificate/SkillsSection';
-import AwardSection from './certificate/AwardSection';
 import SignatureSection from './certificate/SignatureSection';
 import VerificationSection from './certificate/VerificationSection';
 
@@ -47,7 +46,6 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
       courseTitle = 'Climate & Environmental Literacy Assessment',
       description = DEFAULT_TEMPLATE_VALUES.description,
       topics = DEFAULT_TEMPLATE_VALUES.topics,
-      designation = DEFAULT_TEMPLATE_VALUES.designation,
       signerName = DEFAULT_TEMPLATE_VALUES.signerName,
       signerTitle = DEFAULT_TEMPLATE_VALUES.signerTitle,
       issueDate = new Date().toLocaleDateString('en-US', {
@@ -57,7 +55,7 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
       }),
       certificateCode,
       verificationDomain,
-      signatureImage,
+      signatureImage = '/signature1.png',
       organizationName = DEFAULT_TEMPLATE_VALUES.organizationName,
     } = data;
 
@@ -121,28 +119,6 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
 
           {/* ── Skills / Topics ── */}
           <SkillsSection scale={s} topics={topics} />
-
-          {/* Gold divider before award */}
-          <div
-            style={{
-              marginTop: 4 * s,
-              marginBottom: 4 * s,
-              opacity: 0.75,
-            }}
-            dangerouslySetInnerHTML={{
-              __html: SECTION_DIVIDER_SVG.replace(
-                /width="180" height="14"/,
-                `width="${180 * s}" height="${14 * s}"`,
-              ),
-            }}
-          />
-
-          {/* ── Award Designation ── */}
-          <AwardSection
-            scale={s}
-            designation={designation}
-            organizationName={organizationName}
-          />
 
           {/* ── Footer: centered signature with quiet lower-right verification ── */}
           <div

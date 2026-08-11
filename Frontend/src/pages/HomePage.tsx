@@ -328,7 +328,7 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
               onClick={() => scrollToSection('hero')}
               className="inline-flex items-center gap-2 px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 rounded-xl font-bold text-base shadow-lg hover:scale-[1.02] active:scale-95 transition-all duration-300"
             >
-              <span>Join Us in Restoring Our Planet</span>
+              <span>Join Us in restoring our planet by volunteering</span>
             </button>
           </div>
         </div>

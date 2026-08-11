@@ -8,6 +8,7 @@ export default function ContactSection() {
   const [subject, setSubject] = useState('General Inquiry');
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
+  const [emailDelivered, setEmailDelivered] = useState<boolean | null>(null);
   const [emailError, setEmailError] = useState('');
 
   const validateEmail = (value: string): string => {
@@ -48,11 +49,12 @@ export default function ContactSection() {
       console.warn('Backend unreachable – contact saved locally only');
     }
 
+    setEmailDelivered(result?.email_sent ?? null);
     setSuccess(true);
     setName('');
     setEmail('');
     setMessage('');
-    setTimeout(() => setSuccess(false), 4000);
+    setTimeout(() => setSuccess(false), 6000);
   };
 
   return (
@@ -165,7 +167,7 @@ export default function ContactSection() {
           {/* Right Column: Contact form (Col 7) */}
           <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-xl shadow-gray-200/50">
             <h3 className="font-display font-bold text-xl text-emerald-950 mb-2">Electronic Message Dispatch</h3>
-            <p className="text-xs text-gray-500 mb-6">File a direct request to our general assembly secretary. Responses typically take 24–48 hours.</p>
+            <p className="text-xs text-gray-500 mb-6">Your message is delivered straight to our inbox at <span className="font-semibold text-emerald-700">we4climate.rwanda@gmail.com</span>. Responses typically take 24–48 hours.</p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -245,7 +247,7 @@ export default function ContactSection() {
             {success && (
               <div id="contact-success-toast" className="mt-4 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl flex items-center gap-3 text-xs animate-fade-in">
 
-                <span>Message dispatched successfully! A secretary coordinate will verify your request soon.</span>
+                <span>{emailDelivered === false ? 'Message received! Our team will reach out within 24–48 hours.' : 'Message delivered to our inbox at we4climate.rwanda@gmail.com! Our team will respond within 24–48 hours.'}</span>
               </div>
             )}
           </div>

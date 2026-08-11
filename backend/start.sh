@@ -6,10 +6,16 @@
 # This is the CMD entrypoint for the Docker container.
 #
 # Environment variables (set in Render dashboard):
-#   DATABASE_URL   – PostgreSQL connection string (required)
-#   SECRET_KEY     – Flask secret key (required)
-#   PORT           – Port to bind (default: 5000)
-#   GUNICORN_WORKERS – Number of Gunicorn worker processes (default: 4)
+#   DATABASE_URL         – PostgreSQL connection string (required)
+#   SECRET_KEY           – Flask secret key (required)
+#   PORT                 – Port to bind (default: 5000)
+#   GUNICORN_WORKERS     – Number of Gunicorn worker processes (default: 4)
+#   BREVO_API_KEY        – Brevo API key for contact-form email delivery (required)
+#   CONTACT_RECIPIENT_EMAIL – Inbox that receives contact submissions
+#                            (default: we4climate.rwanda@gmail.com)
+#   CONTACT_SENDER_EMAIL    – Verified sender address in Brevo
+#                            (default: noreply@we4climate.org)
+#   CONTACT_SENDER_NAME     – Sender display name (default: We4Climate)
 # =============================================================================
 
 set -e  # Exit immediately on any error

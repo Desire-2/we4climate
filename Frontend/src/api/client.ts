@@ -476,7 +476,7 @@ export async function submitContact(payload: {
   email: string;
   subject: string;
   message: string;
-}): Promise<{ message: string } | null> {
+}): Promise<{ message: string; email_sent?: boolean } | null> {
   return request("/contact", {
     method: "POST",
     body: JSON.stringify(payload),
