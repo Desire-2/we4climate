@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 
 interface HomePageProps {
   treesPledgedTotal: number;
-  handleScrollToSection: (id: string) => void;
 }
 
 // Images from public/Images/Homepage_pictures for hero slideshow
@@ -33,6 +33,7 @@ function preloadImages(urls: string[]): Promise<void[]> {
 }
 
 export default function HomePage({ treesPledgedTotal }: HomePageProps) {
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [imagesReady, setImagesReady] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -52,13 +53,6 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [imagesReady]);
-
-  const scrollToSection = useCallback((id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, []);
 
   return (
     <div className="relative">
@@ -325,7 +319,7 @@ export default function HomePage({ treesPledgedTotal }: HomePageProps) {
           {/* Bottom CTA */}
           <div className="mt-16 text-center">
             <button
-              onClick={() => scrollToSection('hero')}
+              onClick={() => navigate('/volunteer')}
               className="inline-flex items-center gap-2 px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 rounded-xl font-bold text-base shadow-lg hover:scale-[1.02] active:scale-95 transition-all duration-300"
             >
               <span>Join Us in restoring our planet by volunteering</span>

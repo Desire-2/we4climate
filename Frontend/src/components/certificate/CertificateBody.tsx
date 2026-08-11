@@ -10,8 +10,8 @@ interface Props {
 
 /** The central statement is kept separate so the certificate can be re-used for other programs. */
 const CertificateBody: React.FC<Props> = ({ scale: s, recipientName, courseTitle, description }) => {
-  const nameSize = Math.max(45, Math.min(72, 1160 / Math.max(recipientName.length, 17))) * s;
-  const courseSize = Math.max(23, Math.min(35, 1160 / Math.max(courseTitle.length, 24))) * s;
+  const nameSize = Math.max(46, Math.min(76, 1160 / Math.max(recipientName.length, 17))) * s;
+  const courseSize = Math.max(23, Math.min(36, 1160 / Math.max(courseTitle.length, 24))) * s;
 
   return (
     <section
@@ -27,7 +27,7 @@ const CertificateBody: React.FC<Props> = ({ scale: s, recipientName, courseTitle
       <p
         style={{
           fontFamily: FONTS.families.sans,
-          fontSize: 18 * s,
+          fontSize: 19 * s,
           fontWeight: 700,
           letterSpacing: '0.29em',
           color: COLORS.primaryGreen,
@@ -63,7 +63,7 @@ const CertificateBody: React.FC<Props> = ({ scale: s, recipientName, courseTitle
         {recipientName}
       </h2>
 
-      <div style={{ maxWidth: '79%', marginTop: 10 * s }}>
+      <div style={{ maxWidth: '80%', marginTop: 12 * s }}>
         <p
           style={{
             fontFamily: FONTS.families.sans,
@@ -91,7 +91,7 @@ const CertificateBody: React.FC<Props> = ({ scale: s, recipientName, courseTitle
         <p
           style={{
             fontFamily: FONTS.families.sans,
-            fontSize: 19 * s,
+            fontSize: 20 * s,
             fontWeight: 400,
             color: COLORS.bodyText,
             margin: 0,

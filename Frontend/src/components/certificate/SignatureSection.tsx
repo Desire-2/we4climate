@@ -38,11 +38,11 @@ const SignatureSection: React.FC<Props> = ({
           src={signatureImage}
           alt={`Signature of ${signerName}`}
           style={{
-            height: 34 * s,
+            height: 52 * s,
             width: 'auto',
             maxWidth: '100%',
             objectFit: 'contain',
-            marginBottom: 3 * s,
+            marginBottom: 6 * s,
           }}
         />
       ) : (

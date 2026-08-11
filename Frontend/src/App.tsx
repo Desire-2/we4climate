@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { fetchImpactSummary } from './api/client';
@@ -34,7 +34,6 @@ import AdminImpact from './pages/AdminImpact';
 
 export default function App() {
   const [treesPledgedTotal, setTreesPledgedTotal] = useState(0);
-  const navigate = useNavigate();
   const location = useLocation();
 
   // Scroll to top on every route transition
@@ -70,20 +69,6 @@ export default function App() {
   // Update total synchronizing across pages
   const handlePledgeAdded = (count: number) => {
     setTreesPledgedTotal(prev => prev + count);
-  };
-
-  // Maps legacy button-scroll commands to explicit page navigations
-  const handleScrollToSection = (id: string) => {
-    if (id === 'hero') navigate('/');
-    else if (id === 'about') navigate('/about');
-    else if (id === 'programs') navigate('/programs');
-    else if (id === 'dashboard') navigate('/impact');
-    else if (id === 'resources') navigate('/resources');
-    else if (id === 'donate') navigate('/donate');
-    else if (id === 'interactive') navigate('/action');
-    else if (id === 'opportunities') navigate('/opportunities');
-    else if (id === 'contact') navigate('/contact');
-    else navigate('/');
   };
 
   return (
@@ -215,7 +200,6 @@ export default function App() {
                     element={
                       <HomePage
                         treesPledgedTotal={treesPledgedTotal}
-                        handleScrollToSection={handleScrollToSection}
                       />
                     }
                   />
@@ -241,7 +225,6 @@ export default function App() {
                     element={
                       <HomePage
                         treesPledgedTotal={treesPledgedTotal}
-                        handleScrollToSection={handleScrollToSection}
                       />
                     }
                   />

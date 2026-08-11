@@ -27,8 +27,8 @@ const SkillsSection: React.FC<Props> = ({ scale: s, topics }) => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: 7 * s,
-        margin: `${14 * s}px auto ${8 * s}px`,
+        gap: 9 * s,
+        margin: `${26 * s}px auto ${18 * s}px`,
         maxWidth: '88%',
       }}
     >
