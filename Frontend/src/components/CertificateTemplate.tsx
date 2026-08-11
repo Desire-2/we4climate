@@ -126,7 +126,7 @@ const CertificateTemplate = forwardRef<HTMLDivElement, CertificateTemplateProps>
               position: 'relative',
               marginTop: 'auto',
               width: '100%',
-              minHeight: 156 * s,
+              minHeight: 172 * s,
               paddingTop: 16 * s,
             }}
           >

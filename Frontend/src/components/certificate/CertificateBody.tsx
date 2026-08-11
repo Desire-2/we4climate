@@ -11,7 +11,7 @@ interface Props {
 /** The central statement is kept separate so the certificate can be re-used for other programs. */
 const CertificateBody: React.FC<Props> = ({ scale: s, recipientName, courseTitle, description }) => {
   const nameSize = Math.max(46, Math.min(76, 1160 / Math.max(recipientName.length, 17))) * s;
-  const courseSize = Math.max(23, Math.min(36, 1160 / Math.max(courseTitle.length, 24))) * s;
+  const courseSize = Math.max(24, Math.min(38, 1160 / Math.max(courseTitle.length, 24))) * s;
 
   return (
     <section
@@ -27,7 +27,7 @@ const CertificateBody: React.FC<Props> = ({ scale: s, recipientName, courseTitle
       <p
         style={{
           fontFamily: FONTS.families.sans,
-          fontSize: 19 * s,
+          fontSize: 23 * s,
           fontWeight: 700,
           letterSpacing: '0.29em',
           color: COLORS.primaryGreen,
@@ -67,7 +67,7 @@ const CertificateBody: React.FC<Props> = ({ scale: s, recipientName, courseTitle
         <p
           style={{
             fontFamily: FONTS.families.sans,
-            fontSize: 20 * s,
+            fontSize: 23 * s,
             fontWeight: 400,
             color: COLORS.bodyText,
             margin: 0,
@@ -91,7 +91,7 @@ const CertificateBody: React.FC<Props> = ({ scale: s, recipientName, courseTitle
         <p
           style={{
             fontFamily: FONTS.families.sans,
-            fontSize: 20 * s,
+            fontSize: 23 * s,
             fontWeight: 400,
             color: COLORS.bodyText,
             margin: 0,

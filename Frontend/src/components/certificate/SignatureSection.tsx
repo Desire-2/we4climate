@@ -38,11 +38,11 @@ const SignatureSection: React.FC<Props> = ({
           src={signatureImage}
           alt={`Signature of ${signerName}`}
           style={{
-            height: 52 * s,
+            height: 64 * s,
             width: 'auto',
             maxWidth: '100%',
             objectFit: 'contain',
-            marginBottom: 6 * s,
+            marginBottom: 7 * s,
           }}
         />
       ) : (
@@ -76,7 +76,7 @@ const SignatureSection: React.FC<Props> = ({
       <span
         style={{
           fontFamily: FONTS.families.sans,
-          fontSize: 15 * s,
+          fontSize: 17 * s,
           fontWeight: 700,
           color: COLORS.primaryGreen,
           letterSpacing: '0.02em',
@@ -89,7 +89,7 @@ const SignatureSection: React.FC<Props> = ({
       <span
         style={{
           fontFamily: FONTS.families.sans,
-          fontSize: 14 * s,
+          fontSize: 16 * s,
           fontWeight: 400,
           color: COLORS.bodyText,
           opacity: 0.75,
@@ -104,7 +104,7 @@ const SignatureSection: React.FC<Props> = ({
       <span
         style={{
           fontFamily: FONTS.families.sans,
-          fontSize: 13 * s,
+          fontSize: 15 * s,
           fontWeight: 400,
           color: COLORS.bodyText,
           opacity: 0.7,

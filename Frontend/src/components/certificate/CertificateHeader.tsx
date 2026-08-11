@@ -105,7 +105,7 @@ const CertificateHeader: React.FC<Props> = ({ scale: s, organizationName = 'We4C
         <span
           style={{
             fontFamily: FONTS.families.sans,
-            fontSize: 22 * s,
+            fontSize: 25 * s,
             fontWeight: 600,
             letterSpacing: '0.34em',
             color: COLORS.darkGold,

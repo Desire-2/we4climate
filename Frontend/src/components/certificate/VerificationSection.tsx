@@ -53,7 +53,7 @@ const VerificationSection: React.FC<Props> = ({
             style={{
               display: 'block',
               fontFamily: FONTS.families.sans,
-              fontSize: 14 * s,
+              fontSize: 15 * s,
               fontWeight: 700,
               letterSpacing: '0.14em',
               color: COLORS.primaryGreen,
@@ -66,7 +66,7 @@ const VerificationSection: React.FC<Props> = ({
             style={{
               display: 'block',
               fontFamily: FONTS.families.sans,
-              fontSize: 12 * s,
+              fontSize: 13 * s,
               color: COLORS.bodyText,
               marginTop: 3 * s,
             }}
@@ -112,7 +112,7 @@ const VerificationSection: React.FC<Props> = ({
         <span
           style={{
             fontFamily: 'monospace',
-            fontSize: 14 * s,
+            fontSize: 15 * s,
             fontWeight: 600,
             color: COLORS.gold,
             letterSpacing: '0.12em',
@@ -123,7 +123,7 @@ const VerificationSection: React.FC<Props> = ({
         <span
           style={{
             fontFamily: FONTS.families.sans,
-            fontSize: 12 * s,
+            fontSize: 13 * s,
             fontWeight: 400,
             color: COLORS.bodyText,
             opacity: 0.68,
