@@ -140,9 +140,9 @@ export default function StoriesAndResources() {
         {/* Title & Hub Nav controls */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-16 gap-6">
           <div>
-            <h2 className="mt-4 font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-gray-900">
+            <h1 className="mt-4 font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-gray-900">
               Resources and Materials
-            </h2>
+            </h1>
             <p className="mt-3 text-base sm:text-lg text-gray-500 max-w-2xl">
               Access research-backed manuals, technical guides, impact ledgers, and inspirational success stories directly from our action fields.
             </p>

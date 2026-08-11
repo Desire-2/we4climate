@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import { fetchImpactSummary } from './api/client';
 import { AuthProvider } from './contexts/AuthContext';
 import AdminLayout, { ProtectedRoute } from './components/AdminLayout';
+import SEO from './components/SEO';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -18,6 +19,7 @@ import AdvocacyPassportPage from './pages/AdvocacyPassportPage';
 import OpportunitiesPage from './pages/OpportunitiesPage';
 import ContactPage from './pages/ContactPage';
 import VolunteerPage from './pages/VolunteerPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 // Admin Pages
 import AdminLogin from './pages/AdminLogin';
@@ -73,6 +75,7 @@ export default function App() {
 
   return (
     <AuthProvider>
+      <SEO />
       <Routes>
         {/* ──── Public Frontend Routes ──── */}
         <Route
@@ -219,15 +222,7 @@ export default function App() {
                   <Route path="/opportunities" element={<OpportunitiesPage />} />
                   <Route path="/contact" element={<ContactPage />} />
                   <Route path="/volunteer" element={<VolunteerPage />} />
-                  {/* Fallback route redirection */}
-                  <Route
-                    path="*"
-                    element={
-                      <HomePage
-                        treesPledgedTotal={treesPledgedTotal}
-                      />
-                    }
-                  />
+                  <Route path="*" element={<NotFoundPage />} />
                 </Routes>
               </main>
               <Footer />

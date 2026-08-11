@@ -17,6 +17,13 @@ depends_on = None
 
 
 def upgrade():
+    # Idempotent: skip if the table already exists (e.g. schema created via
+    # db.create_all() before migrations were introduced).
+    bind = op.get_bind()
+    inspector = sa.inspect(bind)
+    if 'impact_goals' in inspector.get_table_names():
+        return
+
     op.create_table(
         'impact_goals',
         sa.Column('id', sa.Integer(), nullable=False),

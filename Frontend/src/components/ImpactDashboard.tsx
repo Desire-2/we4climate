@@ -58,9 +58,9 @@ export default function ImpactDashboard() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div>
-            <h2 className="font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-gray-900">
+            <h1 className="font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-gray-900">
               Action Metrics & Impact
-            </h2>
+            </h1>
             <p className="mt-3 text-base sm:text-lg text-gray-600 max-w-2xl">
               From regenerating degraded landscapes to empowering communities — every number represents a real story of restoration, resilience, and hope across Rwanda.
             </p>

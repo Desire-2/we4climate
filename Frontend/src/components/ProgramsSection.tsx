@@ -136,9 +136,9 @@ export default function ProgramsSection() {
           className="text-center max-w-3xl mx-auto mb-16"
         >
 
-          <h2 className="mt-6 font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white">
+          <h1 className="mt-6 font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white">
             Transforming Communities Through Action
-          </h2>
+          </h1>
           <p className="mt-4 text-emerald-100/70 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
             Each program is designed hand-in-hand with local communities — restoring landscapes, 
             building skills, and creating lasting climate resilience across Rwanda.

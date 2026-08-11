@@ -105,9 +105,9 @@ export default function DonationPortal() {
         
         {/* Title */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="mt-4 font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white mb-2">
+          <h1 className="mt-4 font-display font-bold text-3xl sm:text-4xl lg:text-5xl tracking-tight text-white mb-2">
             Support Our Work
-          </h2>
+          </h1>
           <p className="mt-3 text-emerald-100 text-sm sm:text-base leading-relaxed">
             Choose a recurring or single gift to help young climate leaders construct nursery beds, purchase local organic seed supplies, and train Rwandese farmers.
           </p>

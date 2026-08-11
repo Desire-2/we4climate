@@ -185,9 +185,9 @@ export default function OpportunityHub() {
           <span className="text-emerald-700 font-mono text-sm font-semibold tracking-wider uppercase bg-emerald-100 px-4 py-1.5 rounded-full inline-block mb-3">
             Get Involved
           </span>
-          <h2 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-gray-900 tracking-tight">
+          <h1 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-gray-900 tracking-tight">
             Decent Green Jobs & Learning Platforms
-          </h2>
+          </h1>
           <p className="mt-4 text-lg text-gray-650 leading-relaxed">
             Linking our energetic community members to constructive, compensated internships, leadership roles, and expert-led webinars across Rwanda.
           </p>

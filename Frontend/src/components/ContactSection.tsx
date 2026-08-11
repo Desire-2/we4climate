@@ -66,9 +66,9 @@ export default function ContactSection() {
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-gray-900 tracking-tight">
+          <h1 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-gray-900 tracking-tight">
             Reach Out to Our Kigali Board
-          </h2>
+          </h1>
           <p className="mt-4 text-lg text-gray-650 leading-relaxed">
             Have questions about registrations, green projects, or intergenerational dialogs? Contact our headquarters directly.
           </p>
