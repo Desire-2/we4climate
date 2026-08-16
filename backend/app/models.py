@@ -441,6 +441,7 @@ class Volunteer(db.Model):
     status = db.Column(db.String(50), default="pending", nullable=False)
     rating = db.Column(db.Integer, nullable=True)  # 1-5 stars
     admin_notes = db.Column(db.Text, nullable=True)
+    status_message = db.Column(db.Text, nullable=True)  # message sent with last status change
 
     submitted_at = db.Column(
         db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False
@@ -511,6 +512,7 @@ class Volunteer(db.Model):
             "status": self.status,
             "rating": self.rating,
             "admin_notes": self.admin_notes or "",
+            "status_message": self.status_message or "",
             "submitted_at": self.submitted_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
         }

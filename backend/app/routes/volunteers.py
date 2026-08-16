@@ -251,7 +251,50 @@ def update_volunteer_admin(vol_id):
 
     try:
         if "status" in data and data["status"] is not None:
-            volunteer.status = data["status"]
+            new_status = data["status"]
+            old_status = volunteer.status
+            message = (data.get("status_message") or "").strip()
+            volunteer.status = new_status
+            if message:
+                volunteer.status_message = message
+
+            # Send status-change email (best-effort)
+            if new_status != old_status:
+                try:
+                    from app.email_service import send_email
+                    from app.volunteer_emails import (
+                        volunteer_approved, volunteer_rejected,
+                        volunteer_suspended, volunteer_completed,
+                    )
+                    programs_text = ", ".join(volunteer.programs or []) or ""
+
+                    if new_status == "approved":
+                        subject, html = volunteer_approved(
+                            volunteer.full_name, programs_text,
+                            volunteer.arrival_date or "", volunteer.departure_date or "",
+                            message,
+                        )
+                    elif new_status == "rejected":
+                        subject, html = volunteer_rejected(
+                            volunteer.full_name, message, message,
+                        )
+                    elif new_status == "suspended":
+                        subject, html = volunteer_suspended(
+                            volunteer.full_name, message, message,
+                        )
+                    elif new_status == "completed":
+                        subject, html = volunteer_completed(
+                            volunteer.full_name, volunteer.hours_logged,
+                            programs_text, message,
+                        )
+                    else:
+                        subject = html = None
+
+                    if subject and html:
+                        send_email(volunteer.email, subject, html)
+                except Exception as email_err:
+                    logger.warning("Failed to send status email to %s: %s", volunteer.email, email_err)
+
         if "hours_logged" in data and data["hours_logged"] is not None:
             volunteer.hours_logged = float(data["hours_logged"])
         if "rating" in data:

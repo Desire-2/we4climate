@@ -974,6 +974,7 @@ export interface ApiVolunteer {
   status: string;
   rating: number | null;
   admin_notes: string;
+  status_message: string;
   submitted_at: string;
   updated_at: string;
 }
@@ -1034,7 +1035,7 @@ export async function adminGetVolunteer(id: number): Promise<ApiVolunteer | null
 
 export async function adminUpdateVolunteer(
   id: number,
-  data: Partial<{ status: string; hours_logged: number; rating: number | null; admin_notes: string }>,
+  data: Partial<{ status: string; status_message: string; hours_logged: number; rating: number | null; admin_notes: string }>,
 ): Promise<ApiVolunteer | null> {
   return adminRequest<ApiVolunteer>(`/volunteers/admin/${id}`, {
     method: "PATCH",

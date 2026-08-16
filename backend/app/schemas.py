@@ -279,6 +279,7 @@ class VolunteerAdminUpdateSchema(Schema):
         allow_none=True,
         validate=validate.OneOf(["pending", "approved", "active", "completed", "suspended", "rejected"]),
     )
+    status_message = fields.String(allow_none=True, validate=validate.Length(max=2000))
     hours_logged = fields.Float(allow_none=True, validate=validate.Range(min=0))
     rating = fields.Integer(allow_none=True, validate=validate.Range(min=1, max=5))
     admin_notes = fields.String(allow_none=True)
