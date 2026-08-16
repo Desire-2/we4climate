@@ -61,9 +61,9 @@ function StatCard({ label, value, color, icon }: { label: string; value: number 
 
 function FieldRow({ label, value }: { label: string; value: string; key?: string }) {
   return (
-    <div className="flex items-start justify-between gap-4 py-2.5 border-b border-gray-50 last:border-0">
-      <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 shrink-0 min-w-[130px]">{label}</span>
-      <span className="text-xs text-gray-700 leading-relaxed text-right">{value || "—"}</span>
+    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-4 py-2.5 border-b border-gray-50 last:border-0">
+      <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 sm:shrink-0 sm:min-w-[130px]">{label}</span>
+      <span className="text-xs text-gray-700 leading-relaxed sm:text-right">{value || "—"}</span>
     </div>
   );
 }
@@ -81,6 +81,8 @@ function ActionDropdown({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const [pos, setPos] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -89,6 +91,20 @@ function ActionDropdown({
     if (open) document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, [open]);
+
+  const toggle = () => {
+    if (!open && btnRef.current) {
+      const rect = btnRef.current.getBoundingClientRect();
+      const menuH = 340;
+      const menuW = 200;
+      let top = rect.bottom + 4;
+      let left = rect.right - menuW;
+      if (top + menuH > window.innerHeight) top = rect.top - menuH - 4;
+      if (left < 8) left = 8;
+      setPos({ top, left });
+    }
+    setOpen(!open);
+  };
 
   const next = statusNext[vol.status];
 
@@ -105,7 +121,8 @@ function ActionDropdown({
   return (
     <div ref={ref} className="relative">
       <button
-        onClick={() => setOpen(!open)}
+        ref={btnRef}
+        onClick={toggle}
         className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all"
         title="Actions"
       >
@@ -114,18 +131,24 @@ function ActionDropdown({
         </svg>
       </button>
       {open && (
-        <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-100 rounded-xl shadow-xl z-50 py-1.5 animate-in fade-in slide-in-from-top-2">
-          {items.map((item) => (
-            <button
-              key={item.action}
-              onClick={() => { setOpen(false); onAction(item.action, vol); }}
-              className={`w-full text-left px-4 py-2 text-xs font-semibold flex items-center gap-2.5 transition-colors ${item.color}`}
-            >
-              <span className="text-sm w-4 text-center">{item.icon}</span>
-              {item.label}
-            </button>
-          ))}
-        </div>
+        <>
+          <div className="fixed inset-0 z-[99]" onClick={() => setOpen(false)} />
+          <div
+            className="fixed w-50 bg-white border border-gray-100 rounded-xl shadow-2xl z-[100] py-1.5"
+            style={{ top: pos.top, left: pos.left }}
+          >
+            {items.map((item) => (
+              <button
+                key={item.action}
+                onClick={() => { setOpen(false); onAction(item.action, vol); }}
+                className={`w-full text-left px-4 py-2.5 text-xs font-semibold flex items-center gap-2.5 transition-colors ${item.color}`}
+              >
+                <span className="text-sm w-4 text-center">{item.icon}</span>
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
@@ -310,74 +333,75 @@ export default function AdminVolunteers() {
   return (
     <div className="min-h-screen bg-gray-50/50">
       {/* ── Header ── */}
-      <div className="bg-white border-b border-gray-100 px-6 sm:px-8 py-5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
-              <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+      <div className="bg-white border-b border-gray-100 px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
             </div>
             <div>
-              <h1 className="font-display font-bold text-xl text-gray-900">Volunteer Management</h1>
-              <p className="text-xs text-gray-500 mt-0.5">{total} total &middot; {totalFiltered} shown{filterStatus ? ` (${filterStatus})` : ""}</p>
+              <h1 className="font-display font-bold text-base sm:text-xl text-gray-900">Volunteer Management</h1>
+              <p className="text-[11px] sm:text-xs text-gray-500 mt-0.5">{total} total &middot; {totalFiltered} shown{filterStatus ? ` (${filterStatus})` : ""}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
             {selected.size > 0 && (
               <>
-                <button onClick={() => bulkStatus("approved")} className="px-3 py-2 text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl hover:bg-emerald-100 transition-colors flex items-center gap-1.5">
+                <button onClick={() => bulkStatus("approved")} className="px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl hover:bg-emerald-100 transition-colors flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Approve ({selected.size})
                 </button>
-                <button onClick={() => bulkStatus("rejected")} className="px-3 py-2 text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200 rounded-xl hover:bg-rose-100 transition-colors flex items-center gap-1.5">
+                <button onClick={() => bulkStatus("rejected")} className="px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200 rounded-xl hover:bg-rose-100 transition-colors flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-rose-500" /> Reject ({selected.size})
                 </button>
               </>
             )}
-            <a href={adminExportVolunteersUrl(filterStatus ? { status: filterStatus } : undefined)} target="_blank" rel="noopener noreferrer" className="px-3 py-2 text-xs font-bold bg-white text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+            <a href={adminExportVolunteersUrl(filterStatus ? { status: filterStatus } : undefined)} target="_blank" rel="noopener noreferrer" className="px-2.5 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold bg-white text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
               Export CSV
             </a>
-            <button onClick={() => { setStats(null); adminFetchVolunteerStats().then((s) => { setStats(s); setShowStats(true); }); }} className="px-4 py-2 text-xs font-bold bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 transition-colors shadow-md shadow-emerald-600/20 flex items-center gap-1.5">
+            <button onClick={() => { setStats(null); adminFetchVolunteerStats().then((s) => { setStats(s); setShowStats(true); }); }} className="px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 transition-colors shadow-md shadow-emerald-600/20 flex items-center gap-1.5">
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
-              Stats
+              <span className="hidden sm:inline">Stats</span>
             </button>
           </div>
         </div>
       </div>
 
-      <div className="p-6 sm:p-8">
+      <div className="p-4 sm:p-6 lg:p-8">
         {/* ── Filters ── */}
-        <div className="flex flex-wrap items-center gap-2 mb-5">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-4 sm:mb-5">
           {VALID_STATUSES.map((s) => (
             <button
               key={s}
               onClick={() => { setFilterStatus(filterStatus === s ? "" : s); setPage(1); }}
-              className={`px-3 py-1.5 rounded-xl text-[11px] font-bold border transition-all flex items-center gap-1.5 ${
+              className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl text-[10px] sm:text-[11px] font-bold border transition-all flex items-center gap-1 sm:gap-1.5 ${
                 filterStatus === s ? `${statusColors[s]} shadow-sm` : "bg-white text-gray-500 border-gray-200 hover:border-gray-300"
               }`}
             >
               <span className={`w-1.5 h-1.5 rounded-full ${statusDot[s]}`} />
-              {s.charAt(0).toUpperCase() + s.slice(1)}
+              <span className="hidden sm:inline">{s.charAt(0).toUpperCase() + s.slice(1)}</span>
+              <span className="sm:hidden">{s.slice(0, 3).toUpperCase()}</span>
               <span className="ml-0.5 opacity-60">{statusCounts[s] || 0}</span>
             </button>
           ))}
           {filterStatus && (
             <button onClick={() => { setFilterStatus(""); setPage(1); }} className="px-2 py-1 text-[11px] font-bold text-gray-400 hover:text-gray-600 underline ml-1">Clear</button>
           )}
-          <div className="flex items-center gap-1.5 ml-auto">
-            <div className="relative">
+          <div className="flex items-center gap-1.5 ml-auto w-full sm:w-auto">
+            <div className="relative flex-1 sm:flex-initial">
               <svg className="w-3.5 h-3.5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
               <input
                 type="text"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter") { setSearch(searchInput); setPage(1); } }}
-                placeholder="Search name, email, nationality..."
-                className="pl-9 pr-3 py-2 text-xs bg-white border border-gray-200 rounded-xl focus:border-emerald-500 focus:outline-none w-56"
+                placeholder="Search name, email..."
+                className="pl-9 pr-3 py-2 text-xs bg-white border border-gray-200 rounded-xl focus:border-emerald-500 focus:outline-none w-full sm:w-56"
               />
             </div>
           </div>
         </div>
 
-        {/* ── Table ── */}
+        {/* ── Desktop Table ── */}
         {loading ? (
           <div className="text-center py-20">
             <div className="inline-flex items-center gap-3 text-gray-400">
@@ -387,7 +411,8 @@ export default function AdminVolunteers() {
           </div>
         ) : (
           <>
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            {/* Desktop table (hidden on mobile) */}
+            <div className="hidden md:block bg-white rounded-2xl border border-gray-100 shadow-sm">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gray-100 text-left text-[10px] uppercase tracking-widest text-gray-400 font-bold bg-gray-50/80">
@@ -454,20 +479,68 @@ export default function AdminVolunteers() {
                       </td>
                     </tr>
                   ))}
-                  {data.length === 0 && (
-                    <tr>
-                      <td colSpan={8} className="text-center py-16 text-gray-400">
-                        <div className="flex flex-col items-center gap-3">
-                          <svg className="w-12 h-12 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                          <p className="text-sm font-medium">No volunteers found</p>
-                          <p className="text-xs">Try adjusting your filters or search query</p>
-                        </div>
-                      </td>
-                    </tr>
-                  )}
                 </tbody>
               </table>
             </div>
+
+            {/* Mobile cards (hidden on desktop) */}
+            <div className="md:hidden space-y-3">
+              {data.map((r) => (
+                <div key={r.id} className={`bg-white rounded-2xl border border-gray-100 shadow-sm p-4 ${selected.has(r.id) ? "ring-2 ring-emerald-200" : ""}`}>
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <input type="checkbox" checked={selected.has(r.id)} onChange={() => toggleSelect(r.id)} className="rounded border-gray-300 mt-0.5" />
+                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-[11px] font-bold">
+                        {r.full_name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-gray-900 truncate">{r.full_name}</p>
+                        <p className="text-[11px] text-gray-400 truncate">{r.email}</p>
+                      </div>
+                    </div>
+                    <ActionDropdown vol={r} onAction={handleAction} />
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2 mb-3">
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold border ${statusColors[r.status] || statusColors.pending}`}>
+                      <span className={`w-1.5 h-1.5 rounded-full ${statusDot[r.status] || "bg-gray-400"}`} />
+                      {r.status}
+                    </span>
+                    <span className="text-[11px] font-mono text-gray-400">{r.hours_logged}h</span>
+                    <div className="flex items-center gap-0.5 ml-auto">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button key={star} onClick={() => updateRating(r.id, r.rating === star ? null : star)} className={`text-xs transition-colors ${star <= (r.rating || 0) ? "text-amber-400" : "text-gray-200"}`}>★</button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {(r.programs || []).length > 0 && (
+                    <div className="flex flex-wrap gap-1 mb-2">
+                      {(r.programs || []).slice(0, 3).map((p) => (
+                        <span key={p} className="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-medium">{p}</span>
+                      ))}
+                      {(r.programs || []).length > 3 && (
+                        <span className="text-[10px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">+{(r.programs || []).length - 3}</span>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="text-[11px] text-gray-400 font-mono">
+                    {r.arrival_date || "—"} → {r.departure_date || "—"}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {data.length === 0 && (
+              <div className="text-center py-16 text-gray-400 bg-white rounded-2xl border border-gray-100">
+                <div className="flex flex-col items-center gap-3">
+                  <svg className="w-12 h-12 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                  <p className="text-sm font-medium">No volunteers found</p>
+                  <p className="text-xs">Try adjusting your filters or search query</p>
+                </div>
+              </div>
+            )}
 
             {pages > 1 && (
               <div className="flex items-center justify-center gap-2 mt-6">
@@ -495,18 +568,18 @@ export default function AdminVolunteers() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={() => setDetailVol(null)}>
           <div className="bg-white rounded-3xl max-w-2xl w-full relative shadow-2xl max-h-[85vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
             {/* Sticky header */}
-            <div className="px-6 sm:px-8 pt-6 pb-4 border-b border-gray-100 flex items-center justify-between shrink-0">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-sm font-bold">
+            <div className="px-4 sm:px-6 lg:px-8 pt-5 pb-4 border-b border-gray-100 flex items-start sm:items-center justify-between gap-3 shrink-0">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-xs sm:text-sm font-bold shrink-0">
                   {detailVol.full_name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
                 </div>
-                <div>
-                  <h2 className="font-display font-bold text-lg text-gray-900">{detailVol.full_name}</h2>
-                  <p className="text-xs text-gray-400">VOL-{detailVol.id} &middot; {detailVol.email}</p>
+                <div className="min-w-0">
+                  <h2 className="font-display font-bold text-base sm:text-lg text-gray-900 truncate">{detailVol.full_name}</h2>
+                  <p className="text-[11px] text-gray-400 truncate">VOL-{detailVol.id} &middot; {detailVol.email}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold border ${statusColors[detailVol.status]}`}>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className={`inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-lg text-[10px] font-bold border ${statusColors[detailVol.status]}`}>
                   <span className={`w-1.5 h-1.5 rounded-full ${statusDot[detailVol.status]}`} />
                   {detailVol.status}
                 </span>
@@ -517,7 +590,7 @@ export default function AdminVolunteers() {
             </div>
 
             {/* Scrollable body */}
-            <div className="px-6 sm:px-8 py-5 overflow-y-auto flex-1 space-y-5">
+            <div className="px-4 sm:px-6 lg:px-8 py-5 overflow-y-auto flex-1 space-y-5">
               {renderDetailGroup("Personal Information", [
                 ["Full Name", detailVol.full_name], ["Email", detailVol.email], ["Phone", detailVol.phone],
                 ["Gender", detailVol.gender], ["Date of Birth", detailVol.date_of_birth], ["Nationality", detailVol.nationality],
@@ -578,11 +651,11 @@ export default function AdminVolunteers() {
             </div>
 
             {/* Sticky footer */}
-            <div className="px-6 sm:px-8 py-4 border-t border-gray-100 flex items-center justify-between shrink-0 bg-gray-50/50 rounded-b-3xl">
-              <p className="text-[11px] text-gray-400">Submitted {new Date(detailVol.submitted_at).toLocaleDateString()}</p>
-              <div className="flex gap-2">
+            <div className="px-4 sm:px-6 lg:px-8 py-3 sm:py-4 border-t border-gray-100 flex items-center justify-between shrink-0 bg-gray-50/50 rounded-b-3xl">
+              <p className="text-[10px] sm:text-[11px] text-gray-400 truncate">Submitted {new Date(detailVol.submitted_at).toLocaleDateString()}</p>
+              <div className="flex gap-2 shrink-0">
                 {statusNext[detailVol.status] && (
-                  <button onClick={() => { setDetailVol(null); setStatusModal({ vol: detailVol, newStatus: statusNext[detailVol.status]! }); }} className="px-4 py-2 text-xs font-bold bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 transition-colors shadow-md">
+                  <button onClick={() => { setDetailVol(null); setStatusModal({ vol: detailVol, newStatus: statusNext[detailVol.status]! }); }} className="px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 transition-colors shadow-md">
                     Advance to {statusNext[detailVol.status]}
                   </button>
                 )}
