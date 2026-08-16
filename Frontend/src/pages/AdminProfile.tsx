@@ -88,7 +88,7 @@ export default function AdminProfile() {
   }
 
   return (
-    <div className="p-6 sm:p-8 max-w-2xl">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-2xl">
       <div className="mb-8">
         <h1 className="font-display font-bold text-2xl text-gray-900">Profile</h1>
         <p className="text-sm text-gray-500 mt-1">Manage your admin account</p>

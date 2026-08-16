@@ -46,7 +46,7 @@ export default function AdminDashboard() {
   }, []);
 
   return (
-    <div className="p-6 sm:p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       <div className="mb-8">
         <h1 className="font-display font-bold text-2xl text-gray-900">
           Dashboard
