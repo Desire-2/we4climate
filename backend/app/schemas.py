@@ -1,7 +1,9 @@
 """
 Marshmallow schemas for request validation and response serialization.
 """
-from marshmallow import Schema, fields, validate, ValidationError, validates_schema
+import json
+
+from marshmallow import Schema, fields, validate, ValidationError, validates_schema, pre_load
 
 
 # -----------------------------------------------------------------------
@@ -254,6 +256,17 @@ class VolunteerRequestSchema(Schema):
     applicantName = fields.String(allow_none=True, validate=validate.Length(max=255))
     signature = fields.String(allow_none=True, validate=validate.Length(max=255))
     declarationDate = fields.String(allow_none=True, validate=validate.Length(max=50))
+
+    @pre_load
+    def _parse_json_lists(self, data, **kwargs):
+        for key in ("programs", "conduct"):
+            val = data.get(key)
+            if isinstance(val, str):
+                try:
+                    data[key] = json.loads(val)
+                except (json.JSONDecodeError, TypeError):
+                    pass
+        return data
 
 
 class VolunteerHoursSchema(Schema):
