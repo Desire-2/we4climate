@@ -1,5 +1,5 @@
-import { type ReactNode } from "react";
-import { Navigate } from "react-router-dom";
+import { type ReactNode, useEffect } from "react";
+import { Navigate, useLocation } from "react-router-dom";
 import AdminSidebar from "./AdminSidebar";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -22,6 +22,12 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
 }
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminSidebar />
