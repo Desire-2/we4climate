@@ -23,10 +23,12 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen flex bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       <AdminSidebar />
-      <main className="flex-1 overflow-y-auto p-6 lg:p-8">
-        {children}
+      <main className="lg:ml-64 min-h-screen">
+        <div className="p-4 sm:p-6 lg:p-8 pt-16 lg:pt-8">
+          {children}
+        </div>
       </main>
     </div>
   );

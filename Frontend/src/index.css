@@ -41,6 +41,20 @@ body {
   }
 }
 
+/* Mobile sidebar slide-in */
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.25s ease-out;
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
