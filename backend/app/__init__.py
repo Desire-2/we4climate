@@ -81,7 +81,7 @@ def create_app() -> Flask:
 
     @app.route("/uploads/applications/<path:filename>")
     def uploaded_application_file(filename):
-        return send_from_directory(app.config["UPLOAD_FOLDER"], filename, as_attachment=True)
+        return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
     # ------------------------------------------------------------------
     # Ensure models are imported and tables exist (needed for SQLite dev fallback)
