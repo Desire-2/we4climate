@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { MapPin } from "lucide-react";
 
 import {
   adminFetchDistricts, adminCreateDistrict, adminUpdateDistrict, adminDeleteDistrict,
@@ -462,7 +463,7 @@ Goals
               <div className="text-center py-12 text-gray-400">Loading…</div>
             ) : districts.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200">
-                <Map className="h-10 w-10 text-gray-300 mx-auto mb-3" />
+                <MapPin className="h-10 w-10 text-gray-300 mx-auto mb-3" />
                 <p className="text-sm text-gray-400 font-medium">No districts configured yet</p>
                 <button onClick={openNewDistrict} className="mt-3 text-sm text-emerald-600 font-semibold hover:underline">Create your first district</button>
               </div>
