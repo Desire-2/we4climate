@@ -21,11 +21,12 @@ def _use_blob() -> bool:
     """Check once whether Vercel Blob is available."""
     global _USE_BLOB
     if _USE_BLOB is None:
-        _USE_BLOB = bool(os.environ.get("BLOB_READ_WRITE_TOKEN"))
+        token = os.environ.get("BLOB_READ_WRITE_TOKEN", "")
+        _USE_BLOB = token.startswith("vercel_blob_rw_") and "xxx" not in token
         if _USE_BLOB:
             logger.info("BLOB_READ_WRITE_TOKEN detected – using Vercel Blob storage")
         else:
-            logger.info("No BLOB_READ_WRITE_TOKEN – falling back to local disk storage")
+            logger.info("No valid BLOB_READ_WRITE_TOKEN – falling back to local disk storage")
     return _USE_BLOB
 
 
