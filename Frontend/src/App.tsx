@@ -30,9 +30,11 @@ import AdminApplications from './pages/AdminApplications';
 import AdminContacts from './pages/AdminContacts';
 import AdminDistricts from './pages/AdminDistricts';
 import AdminOpportunities from './pages/AdminOpportunities';
+import AdminVolunteers from './pages/AdminVolunteers';
 import AdminWeeklyChallenges from './pages/AdminWeeklyChallenges';
 import AdminWebinars from './pages/AdminWebinars';
 import AdminImpact from './pages/AdminImpact';
+import AdminProfile from './pages/AdminProfile';
 
 export default function App() {
   const [treesPledgedTotal, setTreesPledgedTotal] = useState(0);
@@ -150,6 +152,16 @@ export default function App() {
           }
         />
         <Route
+          path="/admin/volunteers"
+          element={
+            <ProtectedRoute>
+              <AdminLayout>
+                <AdminVolunteers />
+              </AdminLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/admin/districts"
           element={
             <ProtectedRoute>
@@ -185,6 +197,16 @@ export default function App() {
             <ProtectedRoute>
               <AdminLayout>
                 <AdminImpact />
+              </AdminLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/profile"
+          element={
+            <ProtectedRoute>
+              <AdminLayout>
+                <AdminProfile />
               </AdminLayout>
             </ProtectedRoute>
           }

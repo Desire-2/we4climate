@@ -56,11 +56,13 @@ export interface ApiCertificate {
 export interface ApiApplication {
   id: number;
   opportunity_id: string;
+  opportunity_title: string | null;
   applicant_name: string;
   applicant_email: string;
   resume_url: string | null;
   cover_letter: string | null;
   status: string;
+  admin_notes: string;
   submitted_at: string;
 }
 
@@ -544,10 +546,24 @@ export async function adminVerify(): Promise<{
   valid: boolean;
   admin?: { id: number; username: string; created_at?: string };
 } | null> {
-  return adminRequest<{
-    valid: boolean;
-    admin?: { id: number; username: string; created_at?: string };
-  }>("/admin/verify");
+  const token = getAdminToken();
+  if (!token) return { valid: false };
+  try {
+    const res = await fetch(`${API_BASE}/admin/verify`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (res.status === 401) {
+      setAdminToken(null);
+      return { valid: false };
+    }
+    if (!res.ok) return null; // transient error — don't clear token
+    return (await res.json()) as { valid: boolean; admin?: { id: number; username: string; created_at?: string } };
+  } catch {
+    return null; // network error — don't clear token
+  }
 }
 
 export async function adminLogout(): Promise<void> {
@@ -565,17 +581,25 @@ export async function adminFetchStats(): Promise<{
   total_stories: number;
   total_webinars: number;
   total_trees_planted: number;
+  total_volunteers: number;
 } | null> {
   return adminRequest("/admin/stats");
 }
 
-export async function adminFetchOpportunities(page = 1): Promise<{
+export async function adminFetchOpportunities(
+  page = 1,
+  filter?: "active" | "inactive",
+): Promise<{
   items: ApiOpportunity[];
   total: number;
   page: number;
   pages: number;
+  active_count: number;
+  inactive_count: number;
 } | null> {
-  return adminRequest(`/admin/opportunities?page=${page}&per_page=50`);
+  const params = new URLSearchParams({ page: String(page), per_page: "50" });
+  if (filter) params.set("status", filter);
+  return adminRequest(`/admin/opportunities?${params.toString()}`);
 }
 
 export async function adminCreateOpportunity(
@@ -681,13 +705,22 @@ export async function adminDeleteCertificate(id: number): Promise<boolean> {
   return res !== null;
 }
 
-export async function adminFetchApplications(page = 1): Promise<{
+export async function adminFetchApplications(
+  page = 1,
+  filters?: { status?: string; opportunity_id?: string; search?: string },
+): Promise<{
   items: ApiApplication[];
   total: number;
+  total_filtered: number;
   page: number;
   pages: number;
+  status_counts: Record<string, number>;
 } | null> {
-  return adminRequest(`/admin/applications?page=${page}&per_page=50`);
+  const params = new URLSearchParams({ page: String(page), per_page: "50" });
+  if (filters?.status) params.set("status", filters.status);
+  if (filters?.opportunity_id) params.set("opportunity_id", filters.opportunity_id);
+  if (filters?.search) params.set("search", filters.search);
+  return adminRequest(`/admin/applications?${params.toString()}`);
 }
 
 export async function adminUpdateApplicationStatus(
@@ -702,6 +735,42 @@ export async function adminUpdateApplicationStatus(
     },
   );
   return res !== null;
+}
+
+export async function adminUpdateApplicationNotes(
+  id: number,
+  admin_notes: string,
+): Promise<boolean> {
+  const res = await adminRequest<ApiApplication>(
+    `/admin/applications/${id}`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({ admin_notes }),
+    },
+  );
+  return res !== null;
+}
+
+export async function adminBulkUpdateApplications(
+  ids: number[],
+  payload: { status?: string; admin_notes?: string },
+): Promise<boolean> {
+  const res = await adminRequest<{ message: string; updated: number }>(
+    "/admin/applications/bulk",
+    {
+      method: "POST",
+      body: JSON.stringify({ ids, ...payload }),
+    },
+  );
+  return res !== null;
+}
+
+export function adminExportApplicationsUrl(filters?: { status?: string; opportunity_id?: string }): string {
+  const params = new URLSearchParams();
+  if (filters?.status) params.set("status", filters.status);
+  if (filters?.opportunity_id) params.set("opportunity_id", filters.opportunity_id);
+  const token = localStorage.getItem("admin_token") || "";
+  return `${API_BASE}/admin/applications/export?${params.toString()}&token=${encodeURIComponent(token)}`;
 }
 
 export async function adminDeleteApplication(id: number): Promise<boolean> {
@@ -805,4 +874,227 @@ export async function adminDeleteStory(id: number): Promise<boolean> {
     { method: "DELETE" },
   );
   return res !== null;
+}
+
+// -----------------------------------------------------------------------
+// Admin – Profile Management
+// -----------------------------------------------------------------------
+
+export interface ApiAdminProfile {
+  id: number;
+  username: string;
+  created_at: string;
+}
+
+/** Fetch the current admin user's profile. */
+export async function adminFetchProfile(): Promise<ApiAdminProfile | null> {
+  return adminRequest<ApiAdminProfile>("/admin/profile");
+}
+
+/** Update the current admin user's username. */
+export async function adminUpdateProfile(
+  username: string,
+): Promise<ApiAdminProfile | null> {
+  return adminRequest<ApiAdminProfile>("/admin/profile", {
+    method: "PUT",
+    body: JSON.stringify({ username }),
+  });
+}
+
+/** Change the current admin user's password. */
+export async function adminChangePassword(
+  current_password: string,
+  new_password: string,
+): Promise<{ message: string } | null> {
+  return adminRequest<{ message: string }>("/admin/password", {
+    method: "PUT",
+    body: JSON.stringify({ current_password, new_password }),
+  });
+}
+
+/* ------------------------------------------------------------------ */
+/*  Volunteers (dedicated management system)                            */
+/* ------------------------------------------------------------------ */
+
+export interface ApiVolunteer {
+  id: number;
+  full_name: string;
+  gender: string;
+  date_of_birth: string;
+  nationality: string;
+  country_of_residence: string;
+  passport_number: string;
+  email: string;
+  phone: string;
+  occupation: string;
+  organization: string;
+  emergency_full_name: string;
+  emergency_relationship: string;
+  emergency_country: string;
+  emergency_phone: string;
+  emergency_email: string;
+  programs: string[];
+  other_program: string;
+  arrival_date: string;
+  departure_date: string;
+  length_of_stay: string;
+  availability: string;
+  educational_background: string;
+  professional_experience: string;
+  technical_skills: string;
+  languages_spoken: string;
+  previous_volunteer_experience: string;
+  relevant_certifications: string;
+  motivation: string;
+  hope_to_learn: string;
+  contribution: string;
+  medical_conditions: string;
+  allergies: string;
+  dietary_requirements: string;
+  emergency_medical_info: string;
+  need_accommodation: string;
+  room_preference: string;
+  need_invitation_letter: string;
+  need_airport_pickup: string;
+  expected_arrival_airport: string;
+  flight_details: string;
+  media_consent: string;
+  code_of_conduct: string[];
+  declaration_accepted: boolean;
+  applicant_name_declaration: string;
+  signature: string;
+  declaration_date: string;
+  passport_copy_url: string;
+  passport_photo_url: string;
+  cv_url: string;
+  motivation_letter_url: string;
+  recommendation_letter_url: string;
+  certificates_url: string;
+  hours_logged: number;
+  status: string;
+  rating: number | null;
+  admin_notes: string;
+  submitted_at: string;
+  updated_at: string;
+}
+
+/** Submit the full volunteer application via dedicated endpoint. */
+export async function submitVolunteerApplicationNew(payload: {
+  [key: string]: string | File | null | Record<string, unknown> | string[];
+}): Promise<{ message: string; volunteer: ApiVolunteer } | null> {
+  try {
+    const body = new FormData();
+    Object.entries(payload).forEach(([key, value]) => {
+      if (value === null || value === undefined) return;
+      if (value instanceof File) {
+        body.append(key, value);
+      } else if (typeof value === "object" && !(value instanceof File)) {
+        body.append(key, JSON.stringify(value));
+      } else {
+        body.append(key, String(value));
+      }
+    });
+
+    const res = await fetch(`${API_BASE}/volunteers`, {
+      method: "POST",
+      body,
+    });
+    if (!res.ok) {
+      console.warn(`API ${res.status} on /volunteers`, await res.text().catch(() => ""));
+      return null;
+    }
+    return (await res.json()) as { message: string; volunteer: ApiVolunteer };
+  } catch (err) {
+    console.warn("Volunteer application request failed – backend may be offline", err);
+    return null;
+  }
+}
+
+export async function adminFetchVolunteers(
+  page = 1,
+  filters?: { status?: string; search?: string; program?: string },
+): Promise<{
+  items: ApiVolunteer[];
+  total: number;
+  total_filtered: number;
+  page: number;
+  pages: number;
+  status_counts: Record<string, number>;
+} | null> {
+  const params = new URLSearchParams({ page: String(page), per_page: "50" });
+  if (filters?.status) params.set("status", filters.status);
+  if (filters?.search) params.set("search", filters.search);
+  if (filters?.program) params.set("program", filters.program);
+  return adminRequest(`/volunteers/admin?${params.toString()}`);
+}
+
+export async function adminGetVolunteer(id: number): Promise<ApiVolunteer | null> {
+  return adminRequest<ApiVolunteer>(`/volunteers/admin/${id}`);
+}
+
+export async function adminUpdateVolunteer(
+  id: number,
+  data: Partial<{ status: string; hours_logged: number; rating: number | null; admin_notes: string }>,
+): Promise<ApiVolunteer | null> {
+  return adminRequest<ApiVolunteer>(`/volunteers/admin/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function adminLogVolunteerHours(
+  id: number,
+  hours: number,
+  description?: string,
+): Promise<{ message: string; hours_logged: number; volunteer: ApiVolunteer } | null> {
+  return adminRequest(`/volunteers/admin/${id}/hours`, {
+    method: "POST",
+    body: JSON.stringify({ hours, description }),
+  });
+}
+
+export async function adminDeleteVolunteer(id: number): Promise<boolean> {
+  const res = await adminRequest<{ message: string }>(
+    `/volunteers/admin/${id}`,
+    { method: "DELETE" },
+  );
+  return res !== null;
+}
+
+export async function adminBulkUpdateVolunteers(
+  ids: number[],
+  payload: { status?: string },
+): Promise<boolean> {
+  const res = await adminRequest<{ message: string; updated: number }>(
+    "/volunteers/admin/bulk",
+    {
+      method: "POST",
+      body: JSON.stringify({ ids, ...payload }),
+    },
+  );
+  return res !== null;
+}
+
+export async function adminFetchVolunteerStats(): Promise<{
+  total: number;
+  pending: number;
+  approved: number;
+  active: number;
+  completed: number;
+  rejected: number;
+  suspended: number;
+  total_hours_logged: number;
+  average_hours: number;
+  top_programs: Array<{ name: string; count: number }>;
+  top_nationalities: Array<{ name: string; count: number }>;
+  availability_breakdown: Record<string, number>;
+} | null> {
+  return adminRequest("/volunteers/admin/stats");
+}
+
+export function adminExportVolunteersUrl(filters?: { status?: string }): string {
+  const params = new URLSearchParams();
+  if (filters?.status) params.set("status", filters.status);
+  const token = localStorage.getItem("admin_token") || "";
+  return `${API_BASE}/volunteers/admin/export?${params.toString()}&token=${encodeURIComponent(token)}`;
 }

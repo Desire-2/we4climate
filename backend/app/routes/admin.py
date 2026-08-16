@@ -1,12 +1,12 @@
 """
 /api/admin – authentication, dashboard stats, and full CRUD for all models.
 """
+import logging
 import os
-import traceback
 import hashlib
 import secrets
 from functools import wraps
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 from marshmallow import ValidationError
 from flask import Blueprint, jsonify, request, g
@@ -25,15 +25,18 @@ from app.models import (
     ImpactStory,
     YearlyTarget,
     ImpactGoal,
+    Volunteer,
 )
 
 admin_bp = Blueprint("admin", __name__)
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Auth helpers
 # ---------------------------------------------------------------------------
 
 PEPPER = os.environ.get("ADMIN_PEPPER", "we4climate-dev-pepper")
+TOKEN_MAX_AGE_DAYS = 30  # tokens expire after 30 days
 
 
 def _hash_password(password: str) -> str:
@@ -52,26 +55,52 @@ def _check_password(password: str, stored: str) -> bool:
         return False
 
 
-TOKENS: dict[str, int] = {}  # token -> admin_user_id
-
-
 def _generate_token() -> str:
     return secrets.token_urlsafe(48)
 
 
+def _cleanup_expired_tokens():
+    """Remove tokens older than TOKEN_MAX_AGE_DAYS."""
+    cutoff = datetime.now(timezone.utc) - timedelta(days=TOKEN_MAX_AGE_DAYS)
+    # Handle both naive and aware datetimes for SQLite/PostgreSQL compatibility
+    for admin in AdminUser.query.filter(AdminUser.token.isnot(None)).all():
+        created = admin.token_created_at
+        if created is None:
+            continue
+        if created.tzinfo is None:
+            created = created.replace(tzinfo=timezone.utc)
+        if created < cutoff:
+            admin.token = None
+            admin.token_created_at = None
+    db.session.commit()
+
+
 def require_admin(f):
-    """Decorator – require a valid Bearer token from an admin user."""
+    """Decorator - require a valid Bearer token from an admin user."""
 
     @wraps(f)
     def wrapper(*args, **kwargs):
         auth = request.headers.get("Authorization", "")
         token = auth.removeprefix("Bearer ").strip()
-        admin_id = TOKENS.get(token)
-        if admin_id is None:
+        if not token:
             return jsonify({"error": "Unauthorized"}), 401
-        admin = db.session.get(AdminUser, admin_id)
+
+        admin = AdminUser.query.filter_by(token=token).first()
         if admin is None:
             return jsonify({"error": "Unauthorized"}), 401
+
+        # Check token expiry
+        if admin.token_created_at:
+            created = admin.token_created_at
+            if created.tzinfo is None:
+                created = created.replace(tzinfo=timezone.utc)
+            age = datetime.now(timezone.utc) - created
+            if age > timedelta(days=TOKEN_MAX_AGE_DAYS):
+                admin.token = None
+                admin.token_created_at = None
+                db.session.commit()
+                return jsonify({"error": "Token expired"}), 401
+
         g.admin_user = admin
         return f(*args, **kwargs)
 
@@ -96,9 +125,18 @@ def login():
     if not admin or not _check_password(password, admin.password_hash):
         return jsonify({"error": "Invalid credentials"}), 401
 
-    token = _generate_token()
-    TOKENS[token] = admin.id
-    return jsonify({"token": token, "admin": admin.to_dict()}), 200
+    # Invalidate any previous token for this admin
+    admin.token = _generate_token()
+    admin.token_created_at = datetime.now(timezone.utc)
+    db.session.commit()
+
+    # Periodically clean up expired tokens
+    try:
+        _cleanup_expired_tokens()
+    except Exception:
+        logger.warning("Token cleanup failed", exc_info=True)
+
+    return jsonify({"token": admin.token, "admin": admin.to_dict()}), 200
 
 
 @admin_bp.route("/verify", methods=["GET"])
@@ -112,9 +150,9 @@ def verify_token():
 @require_admin
 def logout():
     """Invalidate the current token."""
-    auth = request.headers.get("Authorization", "")
-    token = auth.removeprefix("Bearer ").strip()
-    TOKENS.pop(token, None)
+    g.admin_user.token = None
+    g.admin_user.token_created_at = None
+    db.session.commit()
     return jsonify({"message": "Logged out"}), 200
 
 
@@ -172,19 +210,28 @@ def update_webinar_admin(webinar_id):
     data = request.get_json(silent=True)
     if not data:
         return jsonify({"error": "Invalid payload"}), 400
+
+    from app.schemas import WebinarRequestSchema
+    schema = WebinarRequestSchema(partial=True)
     try:
-        webinar.title = data.get("title", webinar.title)
-        webinar.speaker = data.get("speaker", webinar.speaker)
-        webinar.speaker_title = data.get("speaker_title", webinar.speaker_title)
-        webinar.date = data.get("date", webinar.date)
-        webinar.time = data.get("time", webinar.time)
-        webinar.description = data.get("description", webinar.description)
-        webinar.max_capacity = data.get("max_capacity", webinar.max_capacity)
-        webinar.is_active = data.get("is_active", webinar.is_active)
+        validated = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"error": "Validation failed", "details": err.messages}), 422
+
+    try:
+        webinar.title = validated.get("title", webinar.title)
+        webinar.speaker = validated.get("speaker", webinar.speaker)
+        webinar.speaker_title = validated.get("speaker_title", webinar.speaker_title)
+        webinar.date = validated.get("date", webinar.date)
+        webinar.time = validated.get("time", webinar.time)
+        webinar.description = validated.get("description", webinar.description)
+        webinar.max_capacity = validated.get("max_capacity", webinar.max_capacity)
+        webinar.is_active = validated.get("is_active", webinar.is_active)
         db.session.commit()
         return jsonify(webinar.to_dict()), 200
     except Exception as exc:
         db.session.rollback()
+        logger.exception("Failed to update webinar %s", webinar_id)
         return jsonify({"error": str(exc)}), 500
 
 
@@ -261,22 +308,29 @@ def update_weekly_challenge(challenge_id):
     if not data:
         return jsonify({"error": "Invalid payload"}), 400
 
+    from app.schemas import WeeklyChallengeRequestSchema
+    schema = WeeklyChallengeRequestSchema(partial=True)
     try:
-        # If activating this challenge, deactivate all others
-        if data.get("is_active"):
+        validated = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"error": "Validation failed", "details": err.messages}), 422
+
+    try:
+        if validated.get("is_active"):
             WeeklyChallenge.query.filter(
                 WeeklyChallenge.id != challenge_id
             ).filter_by(is_active=True).update({"is_active": False})
 
-        challenge.title = data.get("title", challenge.title)
-        challenge.week_start = data.get("week_start", challenge.week_start)
-        challenge.week_end = data.get("week_end", challenge.week_end)
-        challenge.questions = data.get("questions", challenge.questions)
-        challenge.is_active = data.get("is_active", challenge.is_active)
+        challenge.title = validated.get("title", challenge.title)
+        challenge.week_start = validated.get("week_start", challenge.week_start)
+        challenge.week_end = validated.get("week_end", challenge.week_end)
+        challenge.questions = validated.get("questions", challenge.questions)
+        challenge.is_active = validated.get("is_active", challenge.is_active)
         db.session.commit()
         return jsonify(challenge.to_dict()), 200
     except Exception as exc:
         db.session.rollback()
+        logger.exception("Failed to update weekly challenge %s", challenge_id)
         return jsonify({"error": str(exc)}), 500
 
 
@@ -328,6 +382,7 @@ def dashboard_stats():
         contacts = ContactMessage.query.count()
         districts = DistrictMetric.query.count()
         opportunities = Opportunity.query.count()
+        volunteers_count = Volunteer.query.count()
         total_trees = db.session.query(db.func.sum(DistrictMetric.trees_planted)).scalar() or 0
 
         return jsonify({
@@ -335,13 +390,15 @@ def dashboard_stats():
             "total_certificates": certificates,
             "total_applications": applications,
             "total_contacts": contacts,
-            "total_districts": districts,        "total_opportunities": opportunities,
-        "total_stories": ImpactStory.query.count(),
-        "total_webinars": Webinar.query.count(),
-        "total_trees_planted": total_trees,
+            "total_districts": districts,
+            "total_opportunities": opportunities,
+            "total_stories": ImpactStory.query.count(),
+            "total_webinars": Webinar.query.count(),
+            "total_trees_planted": total_trees,
+            "total_volunteers": volunteers_count,
         }), 200
     except Exception as exc:
-        traceback.print_exc()
+        logger.exception("Failed to compute dashboard stats")
         return jsonify({"error": str(exc)}), 500
 
 
@@ -355,7 +412,18 @@ def dashboard_stats():
 def list_opportunities_admin():
     page = request.args.get("page", 1, type=int)
     per = request.args.get("per_page", 50, type=int)
-    pag = Opportunity.query.order_by(Opportunity.created_at.desc()).paginate(
+    status = (request.args.get("status") or "").strip().lower()
+
+    q = Opportunity.query
+    if status == "active":
+        q = q.filter_by(is_active=True)
+    elif status == "inactive":
+        q = q.filter_by(is_active=False)
+
+    active_count = Opportunity.query.filter_by(is_active=True).count()
+    inactive_count = Opportunity.query.filter_by(is_active=False).count()
+
+    pag = q.order_by(Opportunity.created_at.desc()).paginate(
         page=page, per_page=per, error_out=False
     )
     return jsonify({
@@ -363,6 +431,8 @@ def list_opportunities_admin():
         "total": pag.total,
         "page": pag.page,
         "pages": pag.pages,
+        "active_count": active_count,
+        "inactive_count": inactive_count,
     }), 200
 
 
@@ -394,8 +464,7 @@ def create_opportunity():
         db.session.commit()
         return jsonify(opp.to_dict()), 201
     except Exception as exc:
-        db.session.rollback()
-        traceback.print_exc()
+        logger.exception("Failed to create opportunity")
         return jsonify({"error": str(exc)}), 500
 
 
@@ -496,12 +565,13 @@ def list_certificates_admin():
 
     q = Certificate.query
     if search:
-        like = f"%{search}%"
+        safe_search = search.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+        like = f"%{safe_search}%"
         q = q.filter(
             db.or_(
-                Certificate.recipient_name.ilike(like),
-                Certificate.recipient_email.ilike(like),
-                Certificate.certificate_code.ilike(like),
+                Certificate.recipient_name.ilike(like, escape="\\"),
+                Certificate.recipient_email.ilike(like, escape="\\"),
+                Certificate.certificate_code.ilike(like, escape="\\"),
             )
         )
     pag = q.order_by(Certificate.issued_at.desc()).paginate(
@@ -583,14 +653,23 @@ def update_certificate(cert_id):
     data = request.get_json(silent=True)
     if not data:
         return jsonify({"error": "Invalid payload"}), 400
+
+    from app.schemas import CertificateRequestSchema
+    schema = CertificateRequestSchema(partial=True)
     try:
-        cert.recipient_name = data.get("recipient_name", cert.recipient_name)
-        cert.recipient_email = data.get("recipient_email", cert.recipient_email)
-        cert.score = data.get("score", cert.score)
+        validated = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"error": "Validation failed", "details": err.messages}), 422
+
+    try:
+        cert.recipient_name = validated.get("recipient_name", cert.recipient_name)
+        cert.recipient_email = validated.get("recipient_email", cert.recipient_email)
+        cert.score = validated.get("score", cert.score)
         db.session.commit()
         return jsonify(cert.to_dict()), 200
     except Exception as exc:
         db.session.rollback()
+        logger.exception("Failed to update certificate %s", cert_id)
         return jsonify({"error": str(exc)}), 500
 
 
@@ -613,20 +692,52 @@ def delete_certificate(cert_id):
 # Manage Applications
 # ---------------------------------------------------------------------------
 
+VALID_APP_STATUSES = {"pending", "reviewed", "shortlisted", "accepted", "rejected"}
+
 
 @admin_bp.route("/applications", methods=["GET"])
 @require_admin
 def list_applications_admin():
     page = request.args.get("page", 1, type=int)
     per = request.args.get("per_page", 50, type=int)
-    pag = Application.query.order_by(Application.submitted_at.desc()).paginate(
+    status_filter = (request.args.get("status") or "").strip().lower()
+    opp_filter = (request.args.get("opportunity_id") or "").strip()
+    search = (request.args.get("search") or "").strip()
+
+    q = Application.query
+
+    if status_filter and status_filter in VALID_APP_STATUSES:
+        q = q.filter(Application.status == status_filter)
+    if opp_filter:
+        q = q.filter(Application.opportunity_id == opp_filter)
+    if search:
+        safe_search = search.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+        like = f"%{safe_search}%"
+        q = q.filter(
+            db.or_(
+                Application.applicant_name.ilike(like, escape="\\"),
+                Application.applicant_email.ilike(like, escape="\\"),
+            )
+        )
+
+    total_filtered = q.count()
+    status_counts = {}
+    base_q = Application.query
+    if opp_filter:
+        base_q = base_q.filter(Application.opportunity_id == opp_filter)
+    for s in VALID_APP_STATUSES:
+        status_counts[s] = base_q.filter(Application.status == s).count()
+
+    pag = q.order_by(Application.submitted_at.desc()).paginate(
         page=page, per_page=per, error_out=False
     )
     return jsonify({
         "items": [a.to_dict() for a in pag.items],
         "total": pag.total,
+        "total_filtered": total_filtered,
         "page": pag.page,
         "pages": pag.pages,
+        "status_counts": status_counts,
     }), 200
 
 
@@ -637,18 +748,97 @@ def update_application_status(app_id):
     if not app_rec:
         return jsonify({"error": "Application not found"}), 404
     data = request.get_json(silent=True)
-    if not data or "status" not in data:
-        return jsonify({"error": "Status field required"}), 400
-    valid = {"pending", "reviewed", "shortlisted", "accepted", "rejected"}
-    if data["status"] not in valid:
-        return jsonify({"error": f"Invalid status. Valid: {', '.join(sorted(valid))}"}), 422
+    if not data:
+        return jsonify({"error": "Invalid payload"}), 400
+
     try:
-        app_rec.status = data["status"]
+        if "status" in data:
+            if data["status"] not in VALID_APP_STATUSES:
+                return jsonify({"error": f"Invalid status. Valid: {', '.join(sorted(VALID_APP_STATUSES))}"}), 422
+            app_rec.status = data["status"]
+        if "admin_notes" in data:
+            app_rec.admin_notes = data["admin_notes"] or None
         db.session.commit()
         return jsonify(app_rec.to_dict()), 200
     except Exception as exc:
         db.session.rollback()
         return jsonify({"error": str(exc)}), 500
+
+
+@admin_bp.route("/applications/bulk", methods=["POST"])
+@require_admin
+def bulk_update_applications():
+    """Bulk update status or notes for multiple applications."""
+    data = request.get_json(silent=True)
+    if not data or "ids" not in data:
+        return jsonify({"error": "ids list is required"}), 400
+
+    ids = data["ids"]
+    status = data.get("status")
+    notes = data.get("admin_notes")
+
+    if not isinstance(ids, list) or not ids:
+        return jsonify({"error": "ids must be a non-empty list"}), 422
+    if status and status not in VALID_APP_STATUSES:
+        return jsonify({"error": f"Invalid status. Valid: {', '.join(sorted(VALID_APP_STATUSES))}"}), 422
+
+    try:
+        apps = Application.query.filter(Application.id.in_(ids)).all()
+        updated = 0
+        for app_rec in apps:
+            if status:
+                app_rec.status = status
+            if notes is not None:
+                app_rec.admin_notes = notes or None
+            updated += 1
+        db.session.commit()
+        return jsonify({"message": f"Updated {updated} applications", "updated": updated}), 200
+    except Exception as exc:
+        db.session.rollback()
+        return jsonify({"error": str(exc)}), 500
+
+
+@admin_bp.route("/applications/export", methods=["GET"])
+@require_admin
+def export_applications_csv():
+    """Export applications as CSV."""
+    import csv
+    import io
+
+    opp_filter = (request.args.get("opportunity_id") or "").strip()
+    status_filter = (request.args.get("status") or "").strip().lower()
+
+    q = Application.query
+    if opp_filter:
+        q = q.filter(Application.opportunity_id == opp_filter)
+    if status_filter and status_filter in VALID_APP_STATUSES:
+        q = q.filter(Application.status == status_filter)
+
+    apps = q.order_by(Application.submitted_at.desc()).all()
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["ID", "Opportunity ID", "Applicant Name", "Email", "Status", "Admin Notes", "Resume URL", "Submitted At"])
+
+    for a in apps:
+        writer.writerow([
+            a.id,
+            a.opportunity_id,
+            a.applicant_name,
+            a.applicant_email,
+            a.status,
+            a.admin_notes or "",
+            a.resume_url or "",
+            a.submitted_at.isoformat() if a.submitted_at else "",
+        ])
+
+    from flask import Response
+    csv_content = output.getvalue()
+    return Response(
+        csv_content,
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment; filename=applications_export.csv"},
+    )
 
 
 @admin_bp.route("/applications/<int:app_id>", methods=["DELETE"])
@@ -685,29 +875,37 @@ def create_district_admin():
     if not data:
         return jsonify({"error": "Invalid payload"}), 400
 
-    exists = DistrictMetric.query.filter_by(district_name=data.get("district_name", "")).first()
+    from app.schemas import DistrictMetricRequestSchema
+    schema = DistrictMetricRequestSchema()
+    try:
+        validated = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"error": "Validation failed", "details": err.messages}), 422
+
+    exists = DistrictMetric.query.filter_by(district_name=validated["district_name"]).first()
     if exists:
         return jsonify({"error": "District already exists"}), 409
 
     try:
         metric = DistrictMetric(
-            district_name=data.get("district_name", ""),
-            province=data.get("province", "Eastern Province"),
-            province_key=data.get("province_key", "east"),
-            description=data.get("description", ""),
-            species=data.get("species", []),
-            map_coords_x=data.get("map_coords_x", 50.0),
-            map_coords_y=data.get("map_coords_y", 50.0),
-            trees_planted=data.get("trees_planted", 0),
-            community_members=data.get("community_members", 0),
-            farmers_trained=data.get("farmers_trained", 0),
-            active_sites=data.get("active_sites", 0),
+            district_name=validated["district_name"],
+            province=validated["province"],
+            province_key=validated["province_key"],
+            description=validated.get("description", ""),
+            species=validated.get("species", []),
+            map_coords_x=validated.get("map_coords_x", 50.0),
+            map_coords_y=validated.get("map_coords_y", 50.0),
+            trees_planted=validated.get("trees_planted", 0),
+            community_members=validated.get("community_members", 0),
+            farmers_trained=validated.get("farmers_trained", 0),
+            active_sites=validated.get("active_sites", 0),
         )
         db.session.add(metric)
         db.session.commit()
         return jsonify(metric.to_dict()), 201
     except Exception as exc:
         db.session.rollback()
+        logger.exception("Failed to create district")
         return jsonify({"error": str(exc)}), 500
 
 
@@ -720,22 +918,31 @@ def update_district(district_id):
     data = request.get_json(silent=True)
     if not data:
         return jsonify({"error": "Invalid payload"}), 400
+
+    from app.schemas import DistrictMetricRequestSchema
+    schema = DistrictMetricRequestSchema(partial=True)
     try:
-        metric.district_name = data.get("district_name", metric.district_name)
-        metric.province = data.get("province", metric.province)
-        metric.province_key = data.get("province_key", metric.province_key)
-        metric.description = data.get("description", metric.description)
-        metric.species = data.get("species", metric.species)
-        metric.map_coords_x = data.get("map_coords_x", metric.map_coords_x)
-        metric.map_coords_y = data.get("map_coords_y", metric.map_coords_y)
-        metric.trees_planted = data.get("trees_planted", metric.trees_planted)
-        metric.community_members = data.get("community_members", metric.community_members)
-        metric.farmers_trained = data.get("farmers_trained", metric.farmers_trained)
-        metric.active_sites = data.get("active_sites", metric.active_sites)
+        validated = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"error": "Validation failed", "details": err.messages}), 422
+
+    try:
+        metric.district_name = validated.get("district_name", metric.district_name)
+        metric.province = validated.get("province", metric.province)
+        metric.province_key = validated.get("province_key", metric.province_key)
+        metric.description = validated.get("description", metric.description)
+        metric.species = validated.get("species", metric.species)
+        metric.map_coords_x = validated.get("map_coords_x", metric.map_coords_x)
+        metric.map_coords_y = validated.get("map_coords_y", metric.map_coords_y)
+        metric.trees_planted = validated.get("trees_planted", metric.trees_planted)
+        metric.community_members = validated.get("community_members", metric.community_members)
+        metric.farmers_trained = validated.get("farmers_trained", metric.farmers_trained)
+        metric.active_sites = validated.get("active_sites", metric.active_sites)
         db.session.commit()
         return jsonify(metric.to_dict()), 200
     except Exception as exc:
         db.session.rollback()
+        logger.exception("Failed to update district %s", district_id)
         return jsonify({"error": str(exc)}), 500
 
 
@@ -810,16 +1017,32 @@ def update_yearly_target_admin(target_id):
     data = request.get_json(silent=True)
     if not data:
         return jsonify({"error": "Invalid payload"}), 400
+
+    from app.schemas import YearlyTargetRequestSchema
+    schema = YearlyTargetRequestSchema(partial=True)
     try:
-        target.year = data.get("year", target.year)
-        target.trees_target = data.get("trees_target", target.trees_target)
-        target.members_target = data.get("members_target", target.members_target)
-        target.farmers_target = data.get("farmers_target", target.farmers_target)
-        target.sites_target = data.get("sites_target", target.sites_target)
+        validated = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"error": "Validation failed", "details": err.messages}), 422
+
+    # Check for duplicate year if year is being changed
+    new_year = validated.get("year")
+    if new_year and new_year != target.year:
+        existing = YearlyTarget.query.filter_by(year=new_year).first()
+        if existing:
+            return jsonify({"error": f"Target for year {new_year} already exists"}), 409
+
+    try:
+        target.year = validated.get("year", target.year)
+        target.trees_target = validated.get("trees_target", target.trees_target)
+        target.members_target = validated.get("members_target", target.members_target)
+        target.farmers_target = validated.get("farmers_target", target.farmers_target)
+        target.sites_target = validated.get("sites_target", target.sites_target)
         db.session.commit()
         return jsonify(target.to_dict()), 200
     except Exception as exc:
         db.session.rollback()
+        logger.exception("Failed to update yearly target %s", target_id)
         return jsonify({"error": str(exc)}), 500
 
 
@@ -891,18 +1114,27 @@ def update_goal_admin(goal_id):
     data = request.get_json(silent=True)
     if not data:
         return jsonify({"error": "Invalid payload"}), 400
+
+    from app.schemas import ImpactGoalRequestSchema
+    schema = ImpactGoalRequestSchema(partial=True)
     try:
-        goal.title = data.get("title", goal.title)
-        goal.description = data.get("description", goal.description)
-        goal.icon = data.get("icon", goal.icon)
-        goal.milestone = data.get("milestone", goal.milestone)
-        goal.action_details = data.get("action_details", goal.action_details)
-        goal.sort_order = data.get("sort_order", goal.sort_order)
-        goal.is_active = data.get("is_active", goal.is_active)
+        validated = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"error": "Validation failed", "details": err.messages}), 422
+
+    try:
+        goal.title = validated.get("title", goal.title)
+        goal.description = validated.get("description", goal.description)
+        goal.icon = validated.get("icon", goal.icon)
+        goal.milestone = validated.get("milestone", goal.milestone)
+        goal.action_details = validated.get("action_details", goal.action_details)
+        goal.sort_order = validated.get("sort_order", goal.sort_order)
+        goal.is_active = validated.get("is_active", goal.is_active)
         db.session.commit()
         return jsonify(goal.to_dict()), 200
     except Exception as exc:
         db.session.rollback()
+        logger.exception("Failed to update goal %s", goal_id)
         return jsonify({"error": str(exc)}), 500
 
 
@@ -974,18 +1206,27 @@ def update_story_admin(story_id):
     data = request.get_json(silent=True)
     if not data:
         return jsonify({"error": "Invalid payload"}), 400
+
+    from app.schemas import ImpactStoryRequestSchema
+    schema = ImpactStoryRequestSchema(partial=True)
     try:
-        story.name = data.get("name", story.name)
-        story.title = data.get("title", story.title)
-        story.quote = data.get("quote", story.quote)
-        story.initials = data.get("initials", story.initials) or story.name[:2].upper()
-        story.district_name = data.get("district_name", story.district_name)
-        story.is_active = data.get("is_active", story.is_active)
-        story.sort_order = data.get("sort_order", story.sort_order)
+        validated = schema.load(data)
+    except ValidationError as err:
+        return jsonify({"error": "Validation failed", "details": err.messages}), 422
+
+    try:
+        story.name = validated.get("name", story.name)
+        story.title = validated.get("title", story.title)
+        story.quote = validated.get("quote", story.quote)
+        story.initials = validated.get("initials", story.initials) or story.name[:2].upper()
+        story.district_name = validated.get("district_name", story.district_name)
+        story.is_active = validated.get("is_active", story.is_active)
+        story.sort_order = validated.get("sort_order", story.sort_order)
         db.session.commit()
         return jsonify(story.to_dict()), 200
     except Exception as exc:
         db.session.rollback()
+        logger.exception("Failed to update story %s", story_id)
         return jsonify({"error": str(exc)}), 500
 
 
@@ -1037,4 +1278,82 @@ def delete_contact(contact_id):
         return jsonify({"message": "Contact message deleted"}), 200
     except Exception as exc:
         db.session.rollback()
+        return jsonify({"error": str(exc)}), 500
+
+
+# ---------------------------------------------------------------------------
+# Profile Management
+# ---------------------------------------------------------------------------
+
+
+@admin_bp.route("/profile", methods=["GET"])
+@require_admin
+def get_profile():
+    """Return the current admin user's profile."""
+    return jsonify(g.admin_user.to_dict()), 200
+
+
+@admin_bp.route("/profile", methods=["PUT"])
+@require_admin
+def update_profile():
+    """Update the current admin user's username."""
+    data = request.get_json(silent=True)
+    if not data:
+        return jsonify({"error": "Invalid payload"}), 400
+
+    new_username = (data.get("username") or "").strip()
+    if not new_username:
+        return jsonify({"error": "Username is required"}), 400
+    if len(new_username) < 3 or len(new_username) > 80:
+        return jsonify({"error": "Username must be between 3 and 80 characters"}), 422
+
+    # Check if username is already taken by another admin
+    existing = AdminUser.query.filter(
+        AdminUser.username == new_username,
+        AdminUser.id != g.admin_user.id,
+    ).first()
+    if existing:
+        return jsonify({"error": "Username is already taken"}), 409
+
+    try:
+        g.admin_user.username = new_username
+        db.session.commit()
+        return jsonify(g.admin_user.to_dict()), 200
+    except Exception as exc:
+        db.session.rollback()
+        logger.exception("Failed to update profile")
+        return jsonify({"error": str(exc)}), 500
+
+
+@admin_bp.route("/password", methods=["PUT"])
+@require_admin
+def change_password():
+    """Change the current admin user's password."""
+    data = request.get_json(silent=True)
+    if not data:
+        return jsonify({"error": "Invalid payload"}), 400
+
+    current_password = data.get("current_password") or ""
+    new_password = data.get("new_password") or ""
+
+    if not current_password:
+        return jsonify({"error": "Current password is required"}), 400
+    if not new_password:
+        return jsonify({"error": "New password is required"}), 400
+    if len(new_password) < 6:
+        return jsonify({"error": "New password must be at least 6 characters"}), 422
+
+    if not _check_password(current_password, g.admin_user.password_hash):
+        return jsonify({"error": "Current password is incorrect"}), 403
+
+    try:
+        g.admin_user.password_hash = _hash_password(new_password)
+        # Invalidate all sessions for this admin (clear their token)
+        g.admin_user.token = None
+        g.admin_user.token_created_at = None
+        db.session.commit()
+        return jsonify({"message": "Password changed successfully"}), 200
+    except Exception as exc:
+        db.session.rollback()
+        logger.exception("Failed to change password")
         return jsonify({"error": str(exc)}), 500

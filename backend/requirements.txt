@@ -12,3 +12,5 @@ gunicorn==23.0.0
 brevo-python==5.0.2
 # PostgreSQL driver (uncommented for Render deployment which uses PostgreSQL)
 psycopg2-binary==2.9.10
+# Vercel Blob Storage for file uploads
+vercel-blob>=0.4.2

@@ -6,6 +6,11 @@ import { useAuth } from "../contexts/AuthContext";
 export default function AdminLogin() {
   const { token, loading, login } = useAuth();
   const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPw, setShowPw] = useState(false);
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
 
   // Already authenticated — redirect to dashboard
   if (!loading && token) {
@@ -20,11 +25,6 @@ export default function AdminLogin() {
       </div>
     );
   }
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPw, setShowPw] = useState(false);
-  const [error, setError] = useState("");
-  const [busy, setBusy] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();

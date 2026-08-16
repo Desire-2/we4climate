@@ -1,7 +1,7 @@
 """
 /api/certificates – climate quiz certification.
 """
-import traceback
+import logging
 
 from flask import Blueprint, jsonify, request
 from marshmallow import ValidationError
@@ -11,6 +11,7 @@ from app.models import Certificate
 from app.schemas import CertificateRequestSchema
 
 certificates_bp = Blueprint("certificates", __name__)
+logger = logging.getLogger(__name__)
 
 
 @certificates_bp.route("", methods=["POST"])
@@ -43,5 +44,5 @@ def issue_certificate():
         return jsonify(certificate.to_dict()), 201
     except Exception as exc:
         db.session.rollback()
-        traceback.print_exc()
+        logger.exception("Failed to issue certificate")
         return jsonify({"error": "Failed to issue certificate", "details": str(exc)}), 500

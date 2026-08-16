@@ -1,7 +1,7 @@
 """
 /api/contact – community inquiry submissions.
 """
-import traceback
+import logging
 
 from flask import Blueprint, jsonify, request
 from marshmallow import ValidationError
@@ -12,6 +12,7 @@ from app.models import ContactMessage
 from app.schemas import ContactRequestSchema
 
 contact_bp = Blueprint("contact", __name__)
+logger = logging.getLogger(__name__)
 
 
 @contact_bp.route("", methods=["POST"])
@@ -52,5 +53,5 @@ def submit_contact():
         }), 201
     except Exception as exc:
         db.session.rollback()
-        traceback.print_exc()
+        logger.exception("Failed to save contact message")
         return jsonify({"error": "Failed to save contact message", "details": str(exc)}), 500

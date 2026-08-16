@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { adminFetchStats, fetchActiveWeeklyChallenge, type ApiWeeklyChallenge } from "../api/client";
+import { adminFetchStats, adminFetchVolunteerStats, fetchActiveWeeklyChallenge, type ApiWeeklyChallenge } from "../api/client";
 
 interface Stats {
   total_pledges: number;
@@ -12,11 +12,13 @@ interface Stats {
   total_opportunities: number;
   total_webinars: number;
   total_trees_planted: number;
+  total_volunteers: number;
 }
 
 const cards = [
   { key: "total_pledges" as const, label: "Pledges", color: "bg-emerald-100 text-emerald-700", link: "/admin/pledges" },
   { key: "total_certificates" as const, label: "Certificates", color: "bg-amber-100 text-amber-700", link: "/admin/certificates" },
+  { key: "total_volunteers" as const, label: "Volunteers", color: "bg-teal-100 text-teal-700", link: "/admin/volunteers" },
   { key: "total_opportunities" as const, label: "Opportunities", color: "bg-cyan-100 text-cyan-700", link: "/admin/opportunities" },
   { key: "total_webinars" as const, label: "Webinars", color: "bg-violet-100 text-violet-700", link: "/admin/webinars" },
   { key: "total_applications" as const, label: "Applications", color: "bg-blue-100 text-blue-700", link: "/admin/applications" },
@@ -27,12 +29,16 @@ const cards = [
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats | null>(null);
+  const [volStats, setVolStats] = useState<Awaited<ReturnType<typeof adminFetchVolunteerStats>> | null>(null);
   const [challenge, setChallenge] = useState<ApiWeeklyChallenge | null>(null);
   const [challengeLoaded, setChallengeLoaded] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    adminFetchStats().then(setStats);
+    adminFetchStats().then((s) => {
+      setStats(s);
+    });
+    adminFetchVolunteerStats().then(setVolStats);
     fetchActiveWeeklyChallenge().then((c) => {
       setChallenge(c);
       setChallengeLoaded(true);
@@ -103,7 +109,9 @@ export default function AdminDashboard() {
       {/* ── Stats Grid ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {cards.map((card) => {
-          const value = stats ? stats[card.key] : "—";
+          const value = card.key === "total_volunteers"
+            ? (volStats ? volStats.total : (stats ? stats.total_volunteers : "—"))
+            : (stats ? stats[card.key as keyof Stats] : "—");
           return (
             <button
               key={card.key}
@@ -121,6 +129,30 @@ export default function AdminDashboard() {
           );
         })}
       </div>
+
+      {/* ── Volunteer Quick Stats ── */}
+      {volStats && volStats.total > 0 && (
+        <button
+          onClick={() => navigate("/admin/volunteers")}
+          className="w-full mt-6 bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200 rounded-2xl p-5 sm:p-6 text-left hover:shadow-md transition-all group"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-display font-bold text-teal-900 text-lg">Volunteer Program</h3>
+              <p className="text-xs text-teal-600 mt-1">
+                {volStats.active} active volunteers · {volStats.pending} pending review · {volStats.total_hours_logged}h logged
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              {volStats.top_programs.slice(0, 3).map((p) => (
+                <span key={p.name} className="px-2 py-1 bg-white border border-teal-200 rounded-lg text-[10px] font-bold text-teal-700">
+                  {p.name} ({p.count})
+                </span>
+              ))}
+            </div>
+          </div>
+        </button>
+      )}
     </div>
   );
 }

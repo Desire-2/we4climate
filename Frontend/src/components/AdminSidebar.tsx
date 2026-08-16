@@ -4,6 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 
 const links = [
   { path: "/admin/dashboard", label: "Dashboard" },
+  { path: "/admin/volunteers", label: "Volunteers" },
   { path: "/admin/opportunities", label: "Opportunities" },
   { path: "/admin/webinars", label: "Webinars" },
   { path: "/admin/pledges", label: "Pledges" },
@@ -56,9 +57,16 @@ export default function AdminSidebar() {
       </div>
 
       <div className="p-3 border-t border-emerald-800 space-y-2">
-        <div className="px-3 py-2 text-xs text-emerald-300/60 font-mono truncate">
-          {username}
-        </div>
+        <button
+          onClick={() => navigate("/admin/profile")}
+          className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm transition-all ${
+            location.pathname === "/admin/profile"
+              ? "bg-emerald-800/60 text-emerald-300"
+              : "text-emerald-100/70 hover:text-white hover:bg-white/5"
+          }`}
+        >
+          <span>{username}</span>
+        </button>
         <button
           onClick={async () => {
             await logout();

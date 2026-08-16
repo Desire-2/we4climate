@@ -2,20 +2,21 @@
 /api/opportunities – job, internship, volunteer & workshop postings and applications.
 """
 import json
-import os
-import traceback
+import logging
 import uuid
 from pathlib import Path
 
 from flask import Blueprint, current_app, jsonify, request
 from marshmallow import ValidationError
 from werkzeug.utils import secure_filename
+import vercel_blob
 
 from app import db
 from app.models import Application, Opportunity
 from app.schemas import ApplicationRequestSchema
 
 opportunities_bp = Blueprint("opportunities", __name__)
+logger = logging.getLogger(__name__)
 
 ATTACHMENT_RULES = {
     "passportCopy": {".pdf", ".jpg", ".jpeg", ".png"},
@@ -28,10 +29,9 @@ ATTACHMENT_RULES = {
 
 
 def _save_application_files() -> tuple[dict[str, str], list[str]]:
-    """Save validated multipart attachments and return public paths plus disk paths."""
+    """Upload validated multipart attachments to Vercel Blob and return URLs plus blob paths."""
     uploaded: dict[str, str] = {}
-    saved_paths: list[str] = []
-    upload_folder = current_app.config["UPLOAD_FOLDER"]
+    saved_blob_paths: list[str] = []
 
     for field_name, allowed_extensions in ATTACHMENT_RULES.items():
         file = request.files.get(field_name)
@@ -43,13 +43,13 @@ def _save_application_files() -> tuple[dict[str, str], list[str]]:
         if not safe_name or extension not in allowed_extensions:
             raise ValueError(f"Unsupported file type for {field_name}")
 
-        stored_name = f"{uuid.uuid4().hex}_{safe_name}"
-        disk_path = os.path.join(upload_folder, stored_name)
-        file.save(disk_path)
-        saved_paths.append(disk_path)
-        uploaded[field_name] = f"/uploads/applications/{stored_name}"
+        stored_name = f"applications/{uuid.uuid4().hex}_{safe_name}"
+        file_data = file.read()
+        result = vercel_blob.put(stored_name, file_data, {"addRandomSuffix": "false"})
+        saved_blob_paths.append(stored_name)
+        uploaded[field_name] = result["url"]
 
-    return uploaded, saved_paths
+    return uploaded, saved_blob_paths
 
 
 @opportunities_bp.route("", methods=["GET"])
@@ -61,9 +61,9 @@ def list_opportunities():
 
 @opportunities_bp.route("/<int:opp_id>", methods=["GET"])
 def get_opportunity(opp_id):
-    """Get a single opportunity by ID."""
+    """Get a single active opportunity by ID."""
     opp = db.session.get(Opportunity, opp_id)
-    if not opp:
+    if not opp or not opp.is_active:
         return jsonify({"error": "Opportunity not found"}), 404
     return jsonify(opp.to_dict()), 200
 
@@ -81,9 +81,32 @@ def submit_application():
     except ValidationError as err:
         return jsonify({"error": "Invalid payload parameters", "details": err.messages}), 422
 
-    saved_paths: list[str] = []
+    opp_id_raw = validated["opportunity_id"]
     try:
-        uploaded_files, saved_paths = _save_application_files()
+        opp_id_int = int(opp_id_raw)
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid opportunity ID"}), 422
+
+    opp = db.session.get(Opportunity, opp_id_int)
+    if not opp:
+        return jsonify({"error": "Opportunity not found", "details": f"No opportunity with id {opp_id_int} exists."}), 404
+    if not opp.is_active:
+        return jsonify({"error": "Opportunity is no longer accepting applications"}), 410
+
+    existing = Application.query.filter_by(
+        opportunity_id=str(opp_id_int),
+        applicant_email=validated["applicant_email"],
+    ).first()
+    if existing:
+        return jsonify({
+            "error": "Duplicate application",
+            "details": "You have already applied to this opportunity.",
+            "application_id": existing.id,
+        }), 409
+
+    saved_blob_paths: list[str] = []
+    try:
+        uploaded_files, saved_blob_paths = _save_application_files()
         cover_letter = validated.get("cover_letter")
         if uploaded_files:
             try:
@@ -95,7 +118,7 @@ def submit_application():
                 pass
 
         application = Application(
-            opportunity_id=validated["opportunity_id"],
+            opportunity_id=str(opp_id_int),
             applicant_name=validated["applicant_name"],
             applicant_email=validated["applicant_email"],
             resume_url=uploaded_files.get("cv") or validated.get("resume_url"),
@@ -109,10 +132,10 @@ def submit_application():
         }), 201
     except Exception as exc:
         db.session.rollback()
-        for path in saved_paths:
+        for blob_path in saved_blob_paths:
             try:
-                os.remove(path)
-            except OSError:
+                vercel_blob.delete(blob_path)
+            except Exception:
                 pass
-        traceback.print_exc()
+        logger.exception("Failed to submit application")
         return jsonify({"error": "Failed to submit application", "details": str(exc)}), 500

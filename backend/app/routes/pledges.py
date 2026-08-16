@@ -1,7 +1,7 @@
 """
 /api/pledges – community tree-planting pledges.
 """
-import traceback
+import logging
 
 from flask import Blueprint, jsonify, request
 from marshmallow import ValidationError
@@ -11,6 +11,7 @@ from app.models import Pledge, DistrictMetric
 from app.schemas import PledgeSchema
 
 pledges_bp = Blueprint("pledges", __name__)
+logger = logging.getLogger(__name__)
 
 
 @pledges_bp.route("", methods=["GET"])
@@ -22,7 +23,7 @@ def list_pledges():
         )
         return jsonify([p.to_dict() for p in pledges]), 200
     except Exception as exc:
-        traceback.print_exc()
+        logger.exception("Failed to fetch pledges")
         return jsonify({"error": "Failed to fetch pledges", "details": str(exc)}), 500
 
 
@@ -57,6 +58,10 @@ def create_pledge():
         else:
             metric = DistrictMetric(
                 district_name=validated["district"],
+                province="Kigali City",
+                province_key="kigali",
+                description="Community hub district supporting tree-planting and environmental awareness campaigns.",
+                species=["Grevillea", "Markhamia lutea", "Avocado"],
                 trees_planted=validated["trees_count"],
                 community_members=0,
                 farmers_trained=0,
@@ -68,5 +73,5 @@ def create_pledge():
         return jsonify(pledge.to_dict()), 201
     except Exception as exc:
         db.session.rollback()
-        traceback.print_exc()
+        logger.exception("Failed to create pledge")
         return jsonify({"error": "Failed to create pledge", "details": str(exc)}), 500

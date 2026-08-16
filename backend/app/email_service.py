@@ -126,3 +126,38 @@ def send_contact_notification(name: str, email: str, subject: str, message: str)
     except Exception as exc:  # never let email issues break the request
         logger.exception("Failed to send contact notification email: %s", exc)
         return False
+
+
+def send_email(to: str, subject: str, html: str) -> bool:
+    """Send a transactional email via Brevo.
+
+    Returns True when Brevo accepted the email for delivery, False otherwise.
+    Never raises – callers must not fail a request because of email problems.
+    """
+    api_key = os.environ.get("BREVO_API_KEY", "").strip()
+    sender_email = os.environ.get("CONTACT_SENDER_EMAIL", "noreply@we4climate.org").strip()
+    sender_name = os.environ.get("CONTACT_SENDER_NAME", "We4Climate").strip()
+
+    if not api_key:
+        logger.warning("BREVO_API_KEY not configured – skipping email to %s", to)
+        return False
+
+    try:
+        from brevo import Brevo
+        from brevo.transactional_emails import (
+            SendTransacEmailRequestSender,
+            SendTransacEmailRequestToItem,
+        )
+
+        client = Brevo(api_key=api_key)
+        client.transactional_emails.send_transac_email(
+            subject=subject,
+            html_content=html,
+            sender=SendTransacEmailRequestSender(name=sender_name, email=sender_email),
+            to=[SendTransacEmailRequestToItem(email=to, name=to)],
+        )
+        logger.info("Email accepted for delivery to %s: %s", to, subject)
+        return True
+    except Exception as exc:
+        logger.exception("Failed to send email to %s: %s", to, exc)
+        return False

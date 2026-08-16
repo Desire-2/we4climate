@@ -1,13 +1,14 @@
 """
 /api/impact – dynamic district metrics, stories, and aggregate counters.
 """
-import traceback
+import logging
 
 from flask import Blueprint, jsonify
 
 from app.models import DistrictMetric, ImpactStory, YearlyTarget, ImpactGoal
 
 impact_bp = Blueprint("impact", __name__)
+logger = logging.getLogger(__name__)
 
 
 @impact_bp.route("/summary", methods=["GET"])
@@ -27,7 +28,7 @@ def summary():
             "total_active_sites": total_sites,
         }), 200
     except Exception as exc:
-        traceback.print_exc()
+        logger.exception("Failed to compute summary")
         return jsonify({"error": "Failed to compute summary", "details": str(exc)}), 500
 
 
@@ -38,7 +39,7 @@ def districts():
         rows = DistrictMetric.query.order_by(DistrictMetric.district_name).all()
         return jsonify([r.to_dict() for r in rows]), 200
     except Exception as exc:
-        traceback.print_exc()
+        logger.exception("Failed to fetch districts")
         return jsonify({"error": "Failed to fetch districts", "details": str(exc)}), 500
 
 
@@ -49,7 +50,7 @@ def yearly_targets():
         rows = YearlyTarget.query.order_by(YearlyTarget.year.asc()).all()
         return jsonify([r.to_dict() for r in rows]), 200
     except Exception as exc:
-        traceback.print_exc()
+        logger.exception("Failed to fetch yearly targets")
         return jsonify({"error": "Failed to fetch yearly targets", "details": str(exc)}), 500
 
 
@@ -60,7 +61,7 @@ def goals():
         rows = ImpactGoal.query.filter_by(is_active=True).order_by(ImpactGoal.sort_order.asc()).all()
         return jsonify([r.to_dict() for r in rows]), 200
     except Exception as exc:
-        traceback.print_exc()
+        logger.exception("Failed to fetch goals")
         return jsonify({"error": "Failed to fetch goals", "details": str(exc)}), 500
 
 
@@ -71,5 +72,5 @@ def stories():
         rows = ImpactStory.query.filter_by(is_active=True).order_by(ImpactStory.sort_order.asc()).all()
         return jsonify([r.to_dict() for r in rows]), 200
     except Exception as exc:
-        traceback.print_exc()
+        logger.exception("Failed to fetch stories")
         return jsonify({"error": "Failed to fetch stories", "details": str(exc)}), 500

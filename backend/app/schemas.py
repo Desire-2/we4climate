@@ -1,7 +1,7 @@
 """
 Marshmallow schemas for request validation and response serialization.
 """
-from marshmallow import Schema, fields, validate, ValidationError
+from marshmallow import Schema, fields, validate, ValidationError, validates_schema
 
 
 # -----------------------------------------------------------------------
@@ -111,6 +111,12 @@ class WeeklyChallengeRequestSchema(Schema):
     )
     is_active = fields.Boolean(required=False, load_default=False)
 
+    @validates_schema
+    def validate_week_end_after_start(self, data, **kwargs):
+        if "week_start" in data and "week_end" in data:
+            if data["week_end"] < data["week_start"]:
+                raise ValidationError("week_end must be after week_start")
+
 
 # -----------------------------------------------------------------------
 # Webinar schemas
@@ -190,3 +196,76 @@ class ContactRequestSchema(Schema):
     message = fields.String(
         required=True, validate=validate.Length(min=10, max=5000)
     )
+
+
+# -----------------------------------------------------------------------
+# Volunteer schemas
+# -----------------------------------------------------------------------
+class VolunteerRequestSchema(Schema):
+    fullName = fields.String(required=True, validate=validate.Length(min=1, max=255))
+    gender = fields.String(allow_none=True, validate=validate.Length(max=50))
+    dateOfBirth = fields.String(allow_none=True, validate=validate.Length(max=50))
+    nationality = fields.String(allow_none=True, validate=validate.Length(max=100))
+    countryOfResidence = fields.String(allow_none=True, validate=validate.Length(max=100))
+    passportNumber = fields.String(allow_none=True, validate=validate.Length(max=100))
+    email = fields.Email(required=True, validate=validate.Length(min=1, max=255))
+    phone = fields.String(allow_none=True, validate=validate.Length(max=100))
+    occupation = fields.String(allow_none=True, validate=validate.Length(max=255))
+    organization = fields.String(allow_none=True, validate=validate.Length(max=255))
+
+    emergencyFullName = fields.String(allow_none=True, validate=validate.Length(max=255))
+    emergencyRelationship = fields.String(allow_none=True, validate=validate.Length(max=100))
+    emergencyCountry = fields.String(allow_none=True, validate=validate.Length(max=100))
+    emergencyPhone = fields.String(allow_none=True, validate=validate.Length(max=100))
+    emergencyEmail = fields.String(allow_none=True, validate=validate.Length(max=255))
+
+    programs = fields.List(fields.String(), required=False, load_default=[])
+    otherProgram = fields.String(allow_none=True, validate=validate.Length(max=500))
+    arrivalDate = fields.String(allow_none=True, validate=validate.Length(max=50))
+    departureDate = fields.String(allow_none=True, validate=validate.Length(max=50))
+    lengthOfStay = fields.String(allow_none=True, validate=validate.Length(max=100))
+    availability = fields.String(allow_none=True, validate=validate.Length(max=50))
+
+    educationalBackground = fields.String(allow_none=True)
+    professionalExperience = fields.String(allow_none=True)
+    technicalSkills = fields.String(allow_none=True)
+    languagesSpoken = fields.String(allow_none=True, validate=validate.Length(max=500))
+    previousVolunteerExperience = fields.String(allow_none=True)
+    relevantCertifications = fields.String(allow_none=True)
+    motivation = fields.String(allow_none=True)
+    hopeToLearn = fields.String(allow_none=True)
+    contribution = fields.String(allow_none=True)
+
+    medicalConditions = fields.String(allow_none=True)
+    allergies = fields.String(allow_none=True)
+    dietaryRequirements = fields.String(allow_none=True, validate=validate.Length(max=255))
+    emergencyMedicalInformation = fields.String(allow_none=True)
+
+    needAccommodation = fields.String(allow_none=True, validate=validate.Length(max=10))
+    roomPreference = fields.String(allow_none=True, validate=validate.Length(max=50))
+    needInvitationLetter = fields.String(allow_none=True, validate=validate.Length(max=10))
+    needAirportPickup = fields.String(allow_none=True, validate=validate.Length(max=10))
+    expectedArrivalAirport = fields.String(allow_none=True, validate=validate.Length(max=255))
+    flightDetails = fields.String(allow_none=True)
+
+    mediaConsent = fields.String(allow_none=True, validate=validate.Length(max=10))
+    conduct = fields.List(fields.String(), required=False, load_default=[])
+    declarationAccepted = fields.Boolean(required=False, load_default=False)
+    applicantName = fields.String(allow_none=True, validate=validate.Length(max=255))
+    signature = fields.String(allow_none=True, validate=validate.Length(max=255))
+    declarationDate = fields.String(allow_none=True, validate=validate.Length(max=50))
+
+
+class VolunteerHoursSchema(Schema):
+    hours = fields.Float(required=True, validate=validate.Range(min=0.1, max=24))
+    description = fields.String(allow_none=True, validate=validate.Length(max=500))
+
+
+class VolunteerAdminUpdateSchema(Schema):
+    status = fields.String(
+        allow_none=True,
+        validate=validate.OneOf(["pending", "approved", "active", "completed", "suspended", "rejected"]),
+    )
+    hours_logged = fields.Float(allow_none=True, validate=validate.Range(min=0))
+    rating = fields.Integer(allow_none=True, validate=validate.Range(min=1, max=5))
+    admin_notes = fields.String(allow_none=True)

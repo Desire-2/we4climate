@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { submitVolunteerApplication } from '../api/client';
+import { submitVolunteerApplicationNew } from '../api/client';
 
 const PROGRAMS = [
   'Regenerative Agriculture',
@@ -138,7 +138,7 @@ function StepHeader({ title, description }: { title: string; description: string
   );
 }
 
-function ChoiceCard({ checked, label, onChange, name, value, type = 'checkbox' }: { checked: boolean; label: string; onChange: () => void; name: string; value: string; type?: 'checkbox' | 'radio' }) {
+function ChoiceCard({ checked, label, onChange, name, value, type = 'checkbox' }: { checked: boolean; label: string; onChange: () => void; name: string; value: string; type?: 'checkbox' | 'radio'; key?: string }) {
   return (
     <label className={`flex cursor-pointer items-start gap-3 rounded-xl border px-4 py-3 text-sm transition-all ${checked ? 'border-emerald-500 bg-emerald-50 text-emerald-900 shadow-sm' : 'border-slate-200 bg-white text-slate-600 hover:border-emerald-300 hover:bg-emerald-50/50'}`}>
       <input type={type} name={name} value={value} checked={checked} onChange={onChange} className="sr-only" />
@@ -271,17 +271,64 @@ export default function VolunteerPage() {
 
     setSubmitError('');
     setIsSubmitting(true);
-    const details = {
-      ...form,
-      attachmentNames: Object.fromEntries(Object.entries(attachments).map(([key, file]) => [key, (file as File | null)?.name || null])),
+
+    // Build structured form data for the dedicated volunteer endpoint
+    const formData: Record<string, string | File | null | string[]> = {
+      fullName: form.fullName.trim(),
+      gender: form.gender,
+      dateOfBirth: form.dateOfBirth,
+      nationality: form.nationality,
+      countryOfResidence: form.countryOfResidence,
+      passportNumber: form.passportNumber,
+      email: form.email.trim(),
+      phone: form.phone,
+      occupation: form.occupation,
+      organization: form.organization,
+      emergencyFullName: form.emergencyFullName,
+      emergencyRelationship: form.emergencyRelationship,
+      emergencyCountry: form.emergencyCountry,
+      emergencyPhone: form.emergencyPhone,
+      emergencyEmail: form.emergencyEmail,
+      programs: form.programs,
+      otherProgram: form.otherProgram,
+      arrivalDate: form.arrivalDate,
+      departureDate: form.departureDate,
+      lengthOfStay: form.lengthOfStay,
+      availability: form.availability,
+      educationalBackground: form.educationalBackground,
+      professionalExperience: form.professionalExperience,
+      technicalSkills: form.technicalSkills,
+      languagesSpoken: form.languagesSpoken,
+      previousVolunteerExperience: form.previousVolunteerExperience,
+      relevantCertifications: form.relevantCertifications,
+      motivation: form.motivation,
+      hopeToLearn: form.hopeToLearn,
+      contribution: form.contribution,
+      medicalConditions: form.medicalConditions,
+      allergies: form.allergies,
+      dietaryRequirements: form.dietaryRequirements,
+      emergencyMedicalInformation: form.emergencyMedicalInformation,
+      needAccommodation: form.needAccommodation,
+      roomPreference: form.roomPreference,
+      needInvitationLetter: form.needInvitationLetter,
+      needAirportPickup: form.needAirportPickup,
+      expectedArrivalAirport: form.expectedArrivalAirport,
+      flightDetails: form.flightDetails,
+      mediaConsent: form.mediaConsent,
+      conduct: form.conduct,
+      declarationAccepted: String(form.declarationAccepted),
+      applicantName: form.applicantName,
+      signature: form.signature,
+      declarationDate: form.declarationDate,
+      passportCopy: attachments.passportCopy,
+      passportPhoto: attachments.passportPhoto,
+      cv: attachments.cv,
+      motivationLetter: attachments.motivationLetter,
+      recommendationLetter: attachments.recommendationLetter,
+      certificates: attachments.certificates,
     };
-    const result = await submitVolunteerApplication({
-      opportunity_id: 'lrc-international-volunteer',
-      applicant_name: form.fullName.trim(),
-      applicant_email: form.email.trim(),
-      details,
-      attachments,
-    });
+
+    const result = await submitVolunteerApplicationNew(formData);
     setIsSubmitting(false);
 
     if (!result) {
@@ -289,7 +336,7 @@ export default function VolunteerPage() {
       return;
     }
 
-    setApplicationId(result.application.id);
+    setApplicationId(result.volunteer.id);
     setSubmitted(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
