@@ -37,14 +37,14 @@ export default function AdminPledges() {
   const totalTrees = data.reduce((sum, r) => sum + r.trees_count, 0);
 
   return (
-    <div className="p-6 sm:p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       <div className="mb-6">
         <h1 className="font-display font-bold text-2xl text-gray-900">Pledges</h1>
         <p className="text-sm text-gray-500 mt-1">Community tree-planting pledges submitted by users</p>
       </div>
 
       {/* Stats summary */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
         <div className="bg-white rounded-xl border border-gray-100 p-4">
           <div>
             <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400">Total Trees</span>
@@ -68,8 +68,7 @@ export default function AdminPledges() {
       </div>
 
       {/* Search */}
-      <div className="relative max-w-xs mb-4">
-
+      <div className="relative w-full sm:max-w-xs mb-4">
         <input
           type="text"
           value={searchTerm}
@@ -88,7 +87,7 @@ export default function AdminPledges() {
         </div>
       ) : filtered.length > 0 ? (
         <>
-          <div className="overflow-x-auto bg-white rounded-2xl border border-gray-100 shadow-sm">
+          <div className="hidden md:block overflow-x-auto bg-white rounded-2xl border border-gray-100 shadow-sm">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100 text-left text-[10px] uppercase tracking-widest text-gray-400 font-bold bg-gray-50/50">
@@ -119,7 +118,7 @@ export default function AdminPledges() {
                     <td className="px-4 py-3">
                       <button
                         onClick={() => del(r.id)}
-                        className="p-1.5 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                        className="px-3 py-2 text-xs font-semibold text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                         title="Delete"
                       >
 Delete
@@ -131,27 +130,57 @@ Delete
             </table>
           </div>
 
+          <div className="md:hidden space-y-3">
+            {filtered.map((r) => (
+              <div key={r.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-medium text-gray-900 truncate">{r.name}</h3>
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold border bg-gray-100 text-gray-600 border-gray-200 mt-1">
+                      {r.district}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => del(r.id)}
+                    className="px-3 py-2 text-xs font-semibold text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors shrink-0"
+                    title="Delete"
+                  >
+Delete
+                  </button>
+                </div>
+                <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
+                  <span className="font-display font-bold text-emerald-700 text-base">{r.trees_count} trees</span>
+                  <span className="truncate">{r.tree_type}</span>
+                </div>
+                <div className="text-[10px] text-gray-400 mt-2">
+                  {new Date(r.timestamp).toLocaleDateString()}
+                </div>
+              </div>
+            ))}
+          </div>
+
           {pages > 1 && (
             <div className="flex items-center justify-center gap-3 mt-5">
               <button
                 disabled={page <= 1}
                 onClick={() => setPage((p) => p - 1)}
-                className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-all"
+                className="p-2.5 text-xs font-semibold rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-all"
               >
+Prev
               </button>
               <span className="text-xs text-gray-500 font-mono">{page} / {pages}</span>
               <button
                 disabled={page >= pages}
                 onClick={() => setPage((p) => p + 1)}
-                className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-all"
+                className="p-2.5 text-xs font-semibold rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-all"
               >
+Next
               </button>
             </div>
           )}
         </>
       ) : (
         <div className="text-center py-16 bg-white rounded-2xl border border-dashed border-gray-200">
-
           {searchTerm ? (
             <p className="text-sm text-gray-500">No pledges match your search.</p>
           ) : (

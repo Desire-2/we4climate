@@ -164,7 +164,7 @@ export default function AdminCertificates() {
   };
 
   return (
-    <div className="p-6 sm:p-8 space-y-6">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6">
       {/* ── Toast ── */}
       {toast && (
         <div
@@ -277,7 +277,7 @@ export default function AdminCertificates() {
         </div>
       ) : (
         <>
-          <div className="overflow-x-auto bg-white rounded-2xl border border-gray-100 shadow-sm">
+          <div className="hidden md:block overflow-x-auto bg-white rounded-2xl border border-gray-100 shadow-sm">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100 text-left text-[10px] uppercase tracking-widest text-gray-400 font-bold">
@@ -364,14 +364,14 @@ export default function AdminCertificates() {
                           <>
                             <button
                               onClick={() => saveEdit(r.id)}
-                              className="p-1.5 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition-colors"
+                              className="px-3 py-2 text-xs font-semibold text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition-colors"
                               title="Save"
                             >
 Save
                             </button>
                             <button
                               onClick={cancelEdit}
-                              className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                              className="px-3 py-2 text-xs font-semibold text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                               title="Cancel"
                             >
 Cancel
@@ -381,14 +381,14 @@ Cancel
                           <>
                             <button
                               onClick={() => startEdit(r)}
-                              className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                              className="px-3 py-2 text-xs font-semibold text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                               title="Edit"
                             >
 Edit
                             </button>
                             <button
                               onClick={() => del(r.id)}
-                              className="p-1.5 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                              className="px-3 py-2 text-xs font-semibold text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                               title="Delete"
                             >
 Delete
@@ -416,13 +416,112 @@ Delete
             </table>
           </div>
 
+          {/* ── Mobile card layout ── */}
+          <div className="md:hidden space-y-3">
+            {data.map((r) => (
+              <div key={r.id} className="bg-white rounded-2xl border border-gray-100 p-4">
+                <div className="flex items-start justify-between mb-3">
+                  <span className="font-mono text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-lg">
+                    {r.certificate_code}
+                  </span>
+                  <span
+                    className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold ${
+                      r.score === 3
+                        ? "bg-amber-100 text-amber-700"
+                        : "bg-gray-100 text-gray-600"
+                    }`}
+                  >
+                    {r.score}/3
+                  </span>
+                </div>
+
+                {editingId === r.id ? (
+                  <div className="space-y-2 mb-3">
+                    <input
+                      type="text"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      className="w-full px-3 py-2 border border-emerald-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200"
+                      autoFocus
+                      placeholder="Recipient name"
+                    />
+                    <input
+                      type="email"
+                      value={editEmail}
+                      onChange={(e) => setEditEmail(e.target.value)}
+                      className="w-full px-3 py-2 border border-emerald-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200"
+                      placeholder="Recipient email"
+                    />
+                  </div>
+                ) : (
+                  <>
+                    <p className="font-medium text-sm text-gray-900">{r.recipient_name}</p>
+                    <p className="text-xs text-gray-500">{r.recipient_email}</p>
+                  </>
+                )}
+
+                <p className="text-xs text-gray-400 mt-2">
+                  {new Date(r.issued_at).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </p>
+
+                <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
+                  {editingId === r.id ? (
+                    <>
+                      <button
+                        onClick={() => saveEdit(r.id)}
+                        className="px-3 py-2 text-xs font-semibold text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg transition-colors"
+                      >
+Save
+                      </button>
+                      <button
+                        onClick={cancelEdit}
+                        className="px-3 py-2 text-xs font-semibold text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                      >
+Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => startEdit(r)}
+                        className="px-3 py-2 text-xs font-semibold text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      >
+Edit
+                      </button>
+                      <button
+                        onClick={() => del(r.id)}
+                        className="px-3 py-2 text-xs font-semibold text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                      >
+Delete
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            ))}
+            {data.length === 0 && (
+              <div className="bg-white rounded-2xl border border-gray-100 p-8 text-center text-gray-400">
+                <p className="font-medium">No certificates found</p>
+                {search ? (
+                  <p className="text-xs mt-1">Try a different search term</p>
+                ) : (
+                  <p className="text-xs mt-1">Issue your first certificate to get started</p>
+                )}
+              </div>
+            )}
+          </div>
+
           {/* ── Pagination ── */}
           {pages > 1 && (
             <div className="flex items-center justify-center gap-4">
               <button
                 disabled={page <= 1}
                 onClick={() => setPage((p) => p - 1)}
-                className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-all"
+                className="p-2.5 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-all"
               >
 Prev
               </button>
@@ -433,7 +532,7 @@ Prev
               <button
                 disabled={page >= pages}
                 onClick={() => setPage((p) => p + 1)}
-                className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-all"
+                className="p-2.5 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-all"
               >
 Next
               </button>
@@ -448,7 +547,7 @@ Next
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-6 sm:p-8 relative animate-in zoom-in-95">
             <button
               onClick={() => setShowCreate(false)}
-              className="absolute top-4 right-4 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all"
+              className="absolute top-4 right-4 px-3 py-2 text-xs font-semibold text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all"
             >
 
             </button>

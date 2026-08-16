@@ -395,7 +395,7 @@ export default function AdminImpact() {
 
   // ── Render ──
   return (
-    <div className="p-6 sm:p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -405,10 +405,10 @@ export default function AdminImpact() {
       </div>
 
       {/* Tab Switcher */}
-      <div className="flex gap-1 bg-gray-100 p-1 rounded-2xl w-fit mb-8">
+      <div className="flex gap-1 bg-gray-100 p-1 rounded-2xl w-fit mb-8 overflow-x-auto">
         <button
           onClick={() => setTab("districts")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+          className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
             tab === "districts" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
           }`}
         >
@@ -416,7 +416,7 @@ Districts
         </button>
         <button
           onClick={() => setTab("stories")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+          className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
             tab === "stories" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
           }`}
         >
@@ -424,7 +424,7 @@ Stories
         </button>
         <button
           onClick={() => setTab("targets")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+          className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
             tab === "targets" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
           }`}
         >
@@ -432,7 +432,7 @@ Targets
         </button>
         <button
           onClick={() => setTab("goals")}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+          className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
             tab === "goals" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
           }`}
         >
@@ -478,9 +478,9 @@ Goals
                           {d.province}
                         </span>
                       </div>
-                      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-<button onClick={() => openEditDistrict(d)} className="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg">Edit</button>
-<button onClick={() => deleteDistrict(d.id, d.district_name)} className="p-1.5 text-rose-400 hover:bg-rose-50 rounded-lg">Delete</button>
+                      <div className="flex gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+<button onClick={() => openEditDistrict(d)} className="px-3 py-2 text-xs font-semibold text-blue-500 hover:bg-blue-50 rounded-lg">Edit</button>
+<button onClick={() => deleteDistrict(d.id, d.district_name)} className="px-3 py-2 text-xs font-semibold text-rose-400 hover:bg-rose-50 rounded-lg">Delete</button>
                       </div>
                     </div>
                     {/* Mini metrics */}
@@ -658,28 +658,28 @@ New Target
                           <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Yearly Targets</span>
                         </div>
                       </div>
-                      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-<button onClick={() => openEditTarget(t)} className="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg">Edit</button>
-<button onClick={() => deleteTarget(t.id, t.year)} className="p-1.5 text-rose-400 hover:bg-rose-50 rounded-lg">Delete</button>
+                      <div className="flex gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+<button onClick={() => openEditTarget(t)} className="px-3 py-2 text-xs font-semibold text-blue-500 hover:bg-blue-50 rounded-lg">Edit</button>
+<button onClick={() => deleteTarget(t.id, t.year)} className="px-3 py-2 text-xs font-semibold text-rose-400 hover:bg-rose-50 rounded-lg">Delete</button>
                       </div>
                     </div>
 
                     {/* Metrics grid */}
-                    <div className="grid grid-cols-4 gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
                       <div className="bg-emerald-50 rounded-xl p-3 text-center">
-                        <div className="text-2xl font-display font-black text-emerald-700">{t.trees_target.toLocaleString()}</div>
+                        <div className="text-xl sm:text-2xl font-display font-black text-emerald-700">{t.trees_target.toLocaleString()}</div>
 <div className="text-[10px] text-emerald-500 font-bold uppercase tracking-wider mt-0.5">Trees</div>
                       </div>
                       <div className="bg-blue-50 rounded-xl p-3 text-center">
-                        <div className="text-2xl font-display font-black text-blue-700">{t.members_target.toLocaleString()}</div>
+                        <div className="text-xl sm:text-2xl font-display font-black text-blue-700">{t.members_target.toLocaleString()}</div>
 <div className="text-[10px] text-blue-500 font-bold uppercase tracking-wider mt-0.5">Members</div>
                       </div>
                       <div className="bg-amber-50 rounded-xl p-3 text-center">
-                        <div className="text-2xl font-display font-black text-amber-700">{t.farmers_target.toLocaleString()}</div>
+                        <div className="text-xl sm:text-2xl font-display font-black text-amber-700">{t.farmers_target.toLocaleString()}</div>
 <div className="text-[10px] text-amber-500 font-bold uppercase tracking-wider mt-0.5">Farmers</div>
                       </div>
                       <div className="bg-purple-50 rounded-xl p-3 text-center">
-                        <div className="text-2xl font-display font-black text-purple-700">{t.sites_target.toLocaleString()}</div>
+                        <div className="text-xl sm:text-2xl font-display font-black text-purple-700">{t.sites_target.toLocaleString()}</div>
 <div className="text-[10px] text-purple-500 font-bold uppercase tracking-wider mt-0.5">Sites</div>
                       </div>
                     </div>
@@ -786,10 +786,10 @@ New Goal
                           </span>
                         </div>
                       </div>
-                      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-<button onClick={() => openEditGoal(g)} className="p-1.5 text-blue-500 hover:bg-blue-50 rounded-lg">Edit</button>
-<button onClick={() => toggleGoalActive(g)} className="p-1.5 text-amber-500 hover:bg-amber-50 rounded-lg">{g.is_active ? 'Deactivate' : 'Activate'}</button>
-<button onClick={() => deleteGoal(g.id, g.title)} className="p-1.5 text-rose-400 hover:bg-rose-50 rounded-lg">Delete</button>
+                      <div className="flex gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+<button onClick={() => openEditGoal(g)} className="px-3 py-2 text-xs font-semibold text-blue-500 hover:bg-blue-50 rounded-lg">Edit</button>
+<button onClick={() => toggleGoalActive(g)} className="px-3 py-2 text-xs font-semibold text-amber-500 hover:bg-amber-50 rounded-lg">{g.is_active ? 'Deactivate' : 'Activate'}</button>
+<button onClick={() => deleteGoal(g.id, g.title)} className="px-3 py-2 text-xs font-semibold text-rose-400 hover:bg-rose-50 rounded-lg">Delete</button>
                       </div>
                     </div>
                     <p className="text-xs text-gray-500 line-clamp-2 mb-2">{g.description}</p>
@@ -890,9 +890,9 @@ New Story
                   }`}>
                     <div className="flex items-start gap-4">
                       {/* Reorder buttons */}
-                      <div className="flex flex-col gap-0.5 pt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-<button onClick={() => moveStory(s, -1)} disabled={idx === 0} className="p-0.5 text-gray-400 hover:text-gray-600 disabled:opacity-20">Up</button>
-<button onClick={() => moveStory(s, 1)} disabled={idx === stories.length - 1} className="p-0.5 text-gray-400 hover:text-gray-600 disabled:opacity-20">Down</button>
+                      <div className="flex flex-col gap-0.5 pt-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+<button onClick={() => moveStory(s, -1)} disabled={idx === 0} className="px-2 py-1.5 text-[10px] font-semibold text-gray-400 hover:text-gray-600 disabled:opacity-20">▲</button>
+<button onClick={() => moveStory(s, 1)} disabled={idx === stories.length - 1} className="px-2 py-1.5 text-[10px] font-semibold text-gray-400 hover:text-gray-600 disabled:opacity-20">▼</button>
                       </div>
 
                       {/* Avatar */}
@@ -917,11 +917,11 @@ New Story
 
                       {/* Actions */}
                       <div className="flex gap-1 shrink-0">
-                        <button onClick={() => toggleStoryActive(s)} className="p-2 text-gray-400 hover:text-amber-500 hover:bg-gray-100 rounded-lg transition-colors" title={s.is_active ? "Deactivate" : "Activate"}>
+                        <button onClick={() => toggleStoryActive(s)} className="px-3 py-2 text-[11px] font-semibold text-gray-400 hover:text-amber-500 hover:bg-gray-100 rounded-lg transition-colors" title={s.is_active ? "Deactivate" : "Activate"}>
 {s.is_active ? 'Deactivate' : 'Activate'}
                         </button>
-<button onClick={() => openEditStory(s)} className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg transition-colors">Edit</button>
-<button onClick={() => deleteStory(s.id, s.name)} className="p-2 text-rose-400 hover:bg-rose-50 rounded-lg transition-colors">Delete</button>
+<button onClick={() => openEditStory(s)} className="px-3 py-2 text-[11px] font-semibold text-blue-500 hover:bg-blue-50 rounded-lg transition-colors">Edit</button>
+<button onClick={() => deleteStory(s.id, s.name)} className="px-3 py-2 text-[11px] font-semibold text-rose-400 hover:bg-rose-50 rounded-lg transition-colors">Delete</button>
                       </div>
                     </div>
                   </div>

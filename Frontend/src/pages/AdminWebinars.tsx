@@ -101,7 +101,7 @@ export default function AdminWebinars() {
   };
 
   return (
-    <div className="p-6 sm:p-8 space-y-6">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6">
       {toast && (
         <div className={`fixed top-6 right-6 z-50 flex items-center gap-2.5 px-5 py-3 rounded-xl shadow-xl border text-sm font-medium transition-all animate-in slide-in-from-right ${
           toast.type === "success" ? "bg-emerald-50 border-emerald-200 text-emerald-800" : "bg-rose-50 border-rose-200 text-rose-800"
@@ -116,7 +116,7 @@ export default function AdminWebinars() {
           <h1 className="font-display font-bold text-2xl text-gray-900">Webinars</h1>
           <p className="text-sm text-gray-500 mt-0.5">Manage the Webinar Classroom — expert-led sessions</p>
         </div>
-        <button onClick={openCreate} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm">
+        <button onClick={openCreate} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm w-full sm:w-auto">
 New Webinar
         </button>
       </div>
@@ -171,13 +171,13 @@ Active
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5 flex-shrink-0">
-                  <button onClick={() => toggleActive(w)} className={`p-2 rounded-lg transition-colors ${w.is_active ? "text-emerald-600 hover:bg-emerald-50" : "text-gray-400 hover:bg-gray-100"}`} title={w.is_active ? "Deactivate" : "Activate"}>
+                  <button onClick={() => toggleActive(w)} className={`px-3 py-2.5 text-xs font-semibold rounded-lg transition-colors ${w.is_active ? "text-emerald-600 hover:bg-emerald-50" : "text-gray-400 hover:bg-gray-100"}`} title={w.is_active ? "Deactivate" : "Activate"}>
 {w.is_active ? 'Deactivate' : 'Activate'}
                   </button>
-                  <button onClick={() => openEdit(w)} className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
+                  <button onClick={() => openEdit(w)} className="px-3 py-2.5 text-xs font-semibold text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
 Edit
                   </button>
-                  <button onClick={() => del(w.id)} className="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors" title="Delete">
+                  <button onClick={() => del(w.id)} className="px-3 py-2.5 text-xs font-semibold text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors" title="Delete">
 Delete
                   </button>
                 </div>
@@ -192,7 +192,7 @@ Delete
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 backdrop-blur-sm p-4 overflow-y-auto pt-12">
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-xl p-6 sm:p-8 relative my-8">
-            <button onClick={() => setShowModal(false)} className="absolute top-4 right-4 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all">
+            <button onClick={() => setShowModal(false)} className="absolute top-4 right-4 p-2.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all">
 
             </button>
             <div className="flex items-center gap-3 mb-6">

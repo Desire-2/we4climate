@@ -174,7 +174,7 @@ export default function AdminWeeklyChallenges() {
   const todayStr = new Date().toISOString().slice(0, 10);
 
   return (
-    <div className="p-6 sm:p-8 space-y-6">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6">
       {/* Toast */}
       {toast && (
         <div className={`fixed top-6 right-6 z-50 flex items-center gap-2.5 px-5 py-3 rounded-xl shadow-xl border text-sm font-medium transition-all animate-in slide-in-from-right ${
@@ -244,7 +244,7 @@ Loading…
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-3 text-xs text-gray-400 mt-1">
+                      <div className="flex items-center gap-3 text-xs text-gray-400 mt-1 flex-wrap">
                         <span>
                           {new Date(c.week_start).toLocaleDateString()} – {new Date(c.week_end).toLocaleDateString()}
                         </span>
@@ -265,7 +265,7 @@ Loading…
                   <div className="flex items-center gap-1.5 flex-shrink-0">
                     <button
                       onClick={() => toggleActive(c)}
-                      className={`p-2 rounded-lg transition-colors ${
+                      className={`px-3 py-2.5 text-xs font-semibold rounded-lg transition-colors ${
                         isCurrent
                           ? "text-emerald-600 hover:bg-emerald-50"
                           : "text-gray-400 hover:bg-gray-100"
@@ -276,21 +276,21 @@ Loading…
                     </button>
                     <button
                       onClick={() => openEdit(c)}
-                      className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      className="px-3 py-2.5 text-xs font-semibold text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                       title="Edit"
                     >
 Edit
                     </button>
                     <button
                       onClick={() => del(c.id)}
-                      className="p-2 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                      className="px-3 py-2.5 text-xs font-semibold text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                       title="Delete"
                     >
 Delete
                     </button>
                     <button
                       onClick={() => setExpandedId(isExpanded ? null : c.id)}
-                      className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                      className="px-3 py-2.5 text-xs font-semibold text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                     >
 {isExpanded ? 'Collapse' : 'Expand'}
                     </button>

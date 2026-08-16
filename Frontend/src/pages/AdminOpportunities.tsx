@@ -138,15 +138,15 @@ export default function AdminOpportunities() {
   const filteredData = showActive ? data : data.filter((o) => !o.is_active);
 
   return (
-    <div className="p-6 sm:p-8">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-4 sm:p-6 lg:p-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="font-display font-bold text-2xl text-gray-900">Opportunities</h1>
           <p className="text-sm text-gray-500 mt-1">Create and manage job, internship, volunteer & workshop postings</p>
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-1.5 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-all shadow-md hover:shadow-lg active:scale-[0.97]"
+          className="flex items-center gap-1.5 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-all shadow-md hover:shadow-lg active:scale-[0.97] w-full sm:w-auto"
         >
           <span>New Posting</span>
         </button>
@@ -181,6 +181,7 @@ export default function AdminOpportunities() {
         </div>
       ) : (
         <>
+          <div className="hidden md:block">
           <div className="overflow-x-auto bg-white rounded-2xl border border-gray-100 shadow-sm">
             <table className="w-full text-sm">
               <thead>
@@ -233,21 +234,21 @@ export default function AdminOpportunities() {
                       <div className="flex items-center gap-1">
                         <button
                           onClick={() => toggleActive(r)}
-                          className="p-1.5 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                          className="px-3 py-2 text-xs font-semibold text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
                           title={r.is_active ? "Deactivate" : "Activate"}
                         >
                           {r.is_active ? 'Deactivate' : 'Activate'}
                         </button>
                         <button
                           onClick={() => openEdit(r)}
-                          className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          className="px-3 py-2 text-xs font-semibold text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                           title="Edit"
                         >
 Edit
                         </button>
                         <button
                           onClick={() => del(r.id)}
-                          className="p-1.5 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                          className="px-3 py-2 text-xs font-semibold text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                           title="Delete"
                         >
 Delete
@@ -272,21 +273,76 @@ Delete
               </tbody>
             </table>
           </div>
+          </div>
+
+          <div className="md:hidden space-y-3">
+            {filteredData.map((r) => (
+              <div key={r.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold border ${typeColors[r.type] || "bg-gray-100 text-gray-600"}`}>
+                    {r.type}
+                  </span>
+                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold border ${
+                    r.is_active
+                      ? "bg-emerald-100 text-emerald-800 border-emerald-200"
+                      : "bg-gray-100 text-gray-500 border-gray-200"
+                  }`}>
+                    {r.is_active ? "Active" : "Inactive"}
+                  </span>
+                </div>
+                <h3 className="font-medium text-sm text-gray-900 truncate">{r.title}</h3>
+                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500">
+                  <span>{r.location}</span>
+                  {r.deadline && <span className="font-mono">{r.deadline}</span>}
+                  <span>{r.is_external ? "External" : "Internal"}</span>
+                  <span className="text-gray-400">{new Date(r.created_at).toLocaleDateString()}</span>
+                </div>
+                <div className="flex items-center gap-2 pt-1">
+                  <button
+                    onClick={() => toggleActive(r)}
+                    className="px-3 py-2 text-xs font-semibold text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                  >
+                    {r.is_active ? "Deactivate" : "Activate"}
+                  </button>
+                  <button
+                    onClick={() => openEdit(r)}
+                    className="px-3 py-2 text-xs font-semibold text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => del(r.id)}
+                    className="px-3 py-2 text-xs font-semibold text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+            {filteredData.length === 0 && (
+              <div className="text-center py-12 text-gray-400">
+                <p className="text-sm">No {showActive ? "active" : "inactive"} opportunities found.</p>
+                <button onClick={openCreate} className="text-xs text-emerald-600 font-semibold hover:text-emerald-500 underline mt-2">
+                  Create your first posting
+                </button>
+              </div>
+            )}
+          </div>
 
           {pages > 1 && (
             <div className="flex items-center justify-center gap-3 mt-5">
               <button
                 disabled={page <= 1}
                 onClick={() => setPage((p) => p - 1)}
-                className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-all"
+                className="p-2.5 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-all"
               >
-Prev
+                Prev
               </button>
               <span className="text-xs text-gray-500 font-mono">{page} / {pages}</span>
               <button
                 disabled={page >= pages}
                 onClick={() => setPage((p) => p + 1)}
-                className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-all"
+                className="p-2.5 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-all"
               >
 Next
               </button>

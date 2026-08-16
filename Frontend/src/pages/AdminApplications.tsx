@@ -131,26 +131,26 @@ export default function AdminApplications() {
   };
 
   return (
-    <div className="p-6 sm:p-8">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-4 sm:p-6 lg:p-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="font-display font-bold text-2xl text-gray-900">Applications</h1>
           <p className="text-sm text-gray-500 mt-1">
             {total} total application{total !== 1 ? "s" : ""}
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           {selected.size > 0 && (
             <>
               <button
                 onClick={bulkAdvance}
-                className="px-3 py-1.5 text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg hover:bg-emerald-100 transition-colors"
+                className="px-3 py-1.5 text-[10px] sm:text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg hover:bg-emerald-100 transition-colors"
               >
                 Advance ({selected.size})
               </button>
               <button
                 onClick={bulkReject}
-                className="px-3 py-1.5 text-[10px] font-bold bg-rose-50 text-rose-600 border border-rose-200 rounded-lg hover:bg-rose-100 transition-colors"
+                className="px-3 py-1.5 text-[10px] sm:text-[10px] font-bold bg-rose-50 text-rose-600 border border-rose-200 rounded-lg hover:bg-rose-100 transition-colors"
               >
                 Reject ({selected.size})
               </button>
@@ -166,7 +166,7 @@ export default function AdminApplications() {
             <button
               key={s}
               onClick={() => { setFilterStatus(filterStatus === s ? "" : s); setPage(1); }}
-              className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-all ${
+              className={`px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg text-[9px] sm:text-[10px] font-bold border transition-all ${
                 filterStatus === s
                   ? `${statusColors[s]} shadow-sm`
                   : "bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100"
@@ -184,15 +184,16 @@ export default function AdminApplications() {
             </button>
           )}
         </div>
-        <div className="flex items-center gap-1 ml-auto">
-          <input
-            type="text"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            onKeyDown={handleSearchKeyDown}
-            placeholder="Search name or email..."
-            className="px-3 py-1.5 text-xs border border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none w-52"
-          />
+        <div className="w-full sm:w-auto ml-auto">
+          <div className="flex items-center gap-1">
+            <input
+              type="text"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
+              placeholder="Search name or email..."
+              className="px-3 py-1.5 text-xs border border-gray-200 rounded-lg focus:border-emerald-500 focus:outline-none w-full sm:w-52"
+            />
           <button
             onClick={handleSearch}
             className="px-2.5 py-1.5 text-[10px] font-bold bg-gray-100 text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-200 transition-colors"
@@ -201,12 +202,14 @@ export default function AdminApplications() {
           </button>
         </div>
       </div>
+    </div>
 
       {loading ? (
         <div className="text-center py-12 text-gray-400">Loading...</div>
       ) : (
         <>
-          <div className="overflow-x-auto bg-white rounded-2xl border border-gray-100">
+          {/* Desktop table */}
+          <div className="hidden md:block overflow-x-auto bg-white rounded-2xl border border-gray-100">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100 text-left text-[10px] uppercase tracking-widest text-gray-400 font-bold">
@@ -281,14 +284,14 @@ export default function AdminApplications() {
                       <div className="flex items-center gap-1">
                         <button
                           onClick={() => setDetailApp(r)}
-                          className="px-2 py-1 text-[10px] font-bold bg-gray-50 text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+                          className="px-3 py-2 text-[11px] font-semibold bg-gray-50 text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
                         >
                           View
                         </button>
                         {r.status !== "rejected" && r.status !== "accepted" && (
                           <button
                             onClick={() => updateStatus(r.id, nextStatus(r.status))}
-                            className="px-2 py-1 text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg hover:bg-emerald-100 transition-colors"
+                            className="px-3 py-2 text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg hover:bg-emerald-100 transition-colors"
                           >
                             Advance
                           </button>
@@ -296,12 +299,12 @@ export default function AdminApplications() {
                         {r.status !== "rejected" && r.status !== "accepted" && (
                           <button
                             onClick={() => updateStatus(r.id, "rejected")}
-                            className="px-2 py-1 text-[10px] font-bold bg-rose-50 text-rose-600 border border-rose-200 rounded-lg hover:bg-rose-100 transition-colors"
+                            className="px-3 py-2 text-[11px] font-semibold bg-rose-50 text-rose-600 border border-rose-200 rounded-lg hover:bg-rose-100 transition-colors"
                           >
                             Reject
                           </button>
                         )}
-                        <button onClick={() => del(r.id)} className="p-1.5 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors text-[10px] font-bold">
+                        <button onClick={() => del(r.id)} className="px-3 py-2 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors text-[11px] font-semibold">
                           Delete
                         </button>
                       </div>
@@ -318,13 +321,67 @@ export default function AdminApplications() {
               </tbody>
             </table>
           </div>
+
+          {/* Mobile card layout */}
+          <div className="md:hidden space-y-3">
+            {data.map((r) => (
+              <div key={r.id} className="bg-white rounded-2xl border border-gray-100 p-4">
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs text-gray-400">#{r.id}</span>
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold border ${statusColors[r.status] || statusColors.pending}`}>
+                      {statusIcon[r.status]}
+                      {r.status}
+                    </span>
+                  </div>
+                  <span className="text-xs text-gray-400">{new Date(r.submitted_at).toLocaleDateString()}</span>
+                </div>
+                <p className="text-sm font-medium text-gray-900 mb-0.5">{r.applicant_name}</p>
+                <p className="text-xs text-gray-500 mb-1">{r.applicant_email}</p>
+                <p className="text-xs text-gray-500 mb-3 truncate">{r.opportunity_title || `#${r.opportunity_id}`}</p>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setDetailApp(r)}
+                    className="px-3 py-2 text-[11px] font-semibold bg-gray-50 text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+                  >
+                    View
+                  </button>
+                  {r.status !== "rejected" && r.status !== "accepted" && (
+                    <button
+                      onClick={() => updateStatus(r.id, nextStatus(r.status))}
+                      className="px-3 py-2 text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg hover:bg-emerald-100 transition-colors"
+                    >
+                      Advance
+                    </button>
+                  )}
+                  {r.status !== "rejected" && r.status !== "accepted" && (
+                    <button
+                      onClick={() => updateStatus(r.id, "rejected")}
+                      className="px-3 py-2 text-[11px] font-semibold bg-rose-50 text-rose-600 border border-rose-200 rounded-lg hover:bg-rose-100 transition-colors"
+                    >
+                      Reject
+                    </button>
+                  )}
+                  <button onClick={() => del(r.id)} className="px-3 py-2 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors text-[11px] font-semibold ml-auto">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+            {data.length === 0 && (
+              <div className="text-center py-10 text-gray-400">
+                No applications found.
+              </div>
+            )}
+          </div>
+
           {pages > 1 && (
             <div className="flex items-center justify-center gap-3 mt-5">
-              <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50">
+              <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)} className="p-2.5 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50">
                 Prev
               </button>
               <span className="text-xs text-gray-500 font-mono">{page} / {pages}</span>
-              <button disabled={page >= pages} onClick={() => setPage((p) => p + 1)} className="p-2 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50">
+              <button disabled={page >= pages} onClick={() => setPage((p) => p + 1)} className="p-2.5 rounded-xl border border-gray-200 disabled:opacity-30 hover:bg-gray-50">
                 Next
               </button>
             </div>
