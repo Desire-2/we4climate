@@ -261,6 +261,7 @@ export default function AdminVolunteers() {
   const [hoursModal, setHoursModal] = useState<{ volId: number; name: string } | null>(null);
   const [hoursValue, setHoursValue] = useState("");
   const [statusModal, setStatusModal] = useState<{ vol: ApiVolunteer; newStatus: string } | null>(null);
+  const [filePreview, setFilePreview] = useState<{ url: string; label: string } | null>(null);
 
   const load = useCallback(async (p: number) => {
     setLoading(true);
@@ -620,12 +621,58 @@ export default function AdminVolunteers() {
                 ["Invitation Letter", detailVol.need_invitation_letter], ["Airport Pickup", detailVol.need_airport_pickup],
                 ["Arrival Airport", detailVol.expected_arrival_airport], ["Flight Details", detailVol.flight_details],
               ])}
-              {renderDetailGroup("Documents", [
-                ["Passport Copy", detailVol.passport_copy_url ? "✓ Uploaded" : "—"], ["Passport Photo", detailVol.passport_photo_url ? "✓ Uploaded" : "—"],
-                ["CV", detailVol.cv_url ? "✓ Uploaded" : "—"], ["Motivation Letter", detailVol.motivation_letter_url ? "✓ Uploaded" : "—"],
-                ["Recommendation Letter", detailVol.recommendation_letter_url ? "✓ Uploaded" : "—"],
-                ["Certificates", detailVol.certificates_url ? "✓ Uploaded" : "—"],
-              ])}
+              {/* Documents */}
+              <div>
+                <h4 className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-2">Documents</h4>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {([
+                    ["Passport Copy", detailVol.passport_copy_url],
+                    ["Passport Photo", detailVol.passport_photo_url],
+                    ["CV", detailVol.cv_url],
+                    ["Motivation Letter", detailVol.motivation_letter_url],
+                    ["Recommendation Letter", detailVol.recommendation_letter_url],
+                    ["Certificates", detailVol.certificates_url],
+                  ] as const).map(([label, url]) => {
+                    const isImage = url && /\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i.test(url);
+                    const isPdf = url && /\.pdf$/i.test(url);
+                    return (
+                      <div key={label} className={`relative group rounded-xl border overflow-hidden transition-all ${url ? "border-gray-200 hover:border-emerald-300 hover:shadow-md cursor-pointer bg-white" : "border-gray-100 bg-gray-50/50"}`} onClick={() => url && setFilePreview({ url, label })}>
+                        {url && isImage ? (
+                          <div className="aspect-[4/3] bg-gray-100 overflow-hidden">
+                            <img src={url} alt={label} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                          </div>
+                        ) : url ? (
+                          <div className="aspect-[4/3] bg-gradient-to-br from-blue-50 to-indigo-50 flex flex-col items-center justify-center gap-2 p-3">
+                            {isPdf ? (
+                              <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                            ) : (
+                              <svg className="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                            )}
+                            <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Click to view</span>
+                          </div>
+                        ) : (
+                          <div className="aspect-[4/3] flex flex-col items-center justify-center gap-1.5">
+                            <svg className="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                            <span className="text-[10px] text-gray-300 font-medium">Not uploaded</span>
+                          </div>
+                        )}
+                        <div className="px-3 py-2 flex items-center justify-between">
+                          <span className="text-[10px] font-bold text-gray-600 truncate">{label}</span>
+                          {url ? (
+                            <span className="flex items-center gap-1">
+                              <a href={url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-[9px] font-bold text-emerald-600 hover:text-emerald-700 transition-colors" title="Open in new tab">
+                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                              </a>
+                            </span>
+                          ) : (
+                            <span className="text-[9px] text-gray-300">—</span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
 
               {/* Status message if present */}
               {detailVol.status_message && (
@@ -664,6 +711,60 @@ export default function AdminVolunteers() {
           </div>
         </div>
       )}
+
+      {/* ── File Preview Modal ── */}
+      {filePreview && (() => {
+        const isImage = /\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i.test(filePreview.url);
+        const isPdf = /\.pdf$/i.test(filePreview.url);
+        return (
+          <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={() => setFilePreview(null)}>
+            <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+              <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between shrink-0">
+                <div className="flex items-center gap-3">
+                  {isPdf ? (
+                    <div className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                    </div>
+                  ) : (
+                    <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    </div>
+                  )}
+                  <div>
+                    <h3 className="font-display font-bold text-sm text-gray-900">{filePreview.label}</h3>
+                    <p className="text-[10px] text-gray-400 truncate max-w-xs">{filePreview.url.split("/").pop()}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <a href={filePreview.url} target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 text-[11px] font-bold bg-emerald-600 text-white rounded-lg hover:bg-emerald-500 transition-colors flex items-center gap-1.5">
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                    Open
+                  </a>
+                  <button onClick={() => setFilePreview(null)} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                  </button>
+                </div>
+              </div>
+              <div className="flex-1 overflow-auto bg-gray-50 flex items-center justify-center p-4 min-h-0">
+                {isImage ? (
+                  <img src={filePreview.url} alt={filePreview.label} className="max-w-full max-h-full object-contain rounded-lg shadow-sm" />
+                ) : isPdf ? (
+                  <iframe src={filePreview.url} title={filePreview.label} className="w-full h-full min-h-[60vh] rounded-lg border-0 bg-white" />
+                ) : (
+                  <div className="text-center py-12">
+                    <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    <p className="text-sm text-gray-500 font-medium">Preview not available for this file type</p>
+                    <a href={filePreview.url} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold bg-emerald-600 text-white rounded-xl hover:bg-emerald-500 transition-colors">
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                      Download File
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* ── Hours Modal ── */}
       {hoursModal && (
