@@ -4,17 +4,14 @@
 import csv
 import io
 import logging
-import uuid
-from pathlib import Path
 
-from flask import Blueprint, Response, current_app, g, jsonify, request
+from flask import Blueprint, Response, g, jsonify, request
 from marshmallow import ValidationError
-from werkzeug.utils import secure_filename
-import vercel_blob
 
 from app import db
 from app.models import AdminUser, Volunteer
 from app.routes.admin import require_admin
+from app.storage import delete_file, upload_file
 
 volunteers_bp = Blueprint("volunteers", __name__)
 logger = logging.getLogger(__name__)
@@ -32,27 +29,20 @@ VALID_VOLUNTEER_STATUSES = {"pending", "approved", "active", "completed", "suspe
 
 
 def _save_volunteer_files() -> tuple[dict[str, str], list[str]]:
-    """Upload validated multipart attachments to Vercel Blob and return URLs plus blob paths."""
+    """Upload validated multipart attachments and return URLs plus stored paths."""
     uploaded: dict[str, str] = {}
-    saved_blob_paths: list[str] = []
+    saved_paths: list[str] = []
 
     for field_name, allowed_extensions in VOLUNTEER_ATTACHMENT_RULES.items():
         file = request.files.get(field_name)
         if not file or not file.filename:
             continue
 
-        safe_name = secure_filename(file.filename)
-        extension = Path(safe_name).suffix.lower()
-        if not safe_name or extension not in allowed_extensions:
-            raise ValueError(f"Unsupported file type for {field_name}")
+        url = upload_file(field_name, file, allowed_extensions, prefix="volunteers")
+        saved_paths.append(url)
+        uploaded[field_name] = url
 
-        stored_name = f"volunteers/vol_{uuid.uuid4().hex[:12]}_{safe_name}"
-        file_data = file.read()
-        result = vercel_blob.put(stored_name, file_data, {"addRandomSuffix": "false"})
-        saved_blob_paths.append(stored_name)
-        uploaded[field_name] = result["url"]
-
-    return uploaded, saved_blob_paths
+    return uploaded, saved_paths
 
 
 # ---------------------------------------------------------------------------
@@ -72,9 +62,9 @@ def submit_volunteer():
     except ValidationError as err:
         return jsonify({"error": "Validation failed", "details": err.messages}), 422
 
-    saved_blob_paths: list[str] = []
+    saved_paths: list[str] = []
     try:
-        uploaded_files, saved_blob_paths = _save_volunteer_files()
+        uploaded_files, saved_paths = _save_volunteer_files()
 
         volunteer = Volunteer(
             full_name=validated["fullName"],
@@ -167,11 +157,8 @@ def submit_volunteer():
 
     except Exception as exc:
         db.session.rollback()
-        for blob_path in saved_blob_paths:
-            try:
-                vercel_blob.delete(blob_path)
-            except Exception:
-                pass
+        for path in saved_paths:
+            delete_file(path)
         logger.exception("Failed to submit volunteer application")
         return jsonify({"error": "Failed to submit volunteer application", "details": str(exc)}), 500
 

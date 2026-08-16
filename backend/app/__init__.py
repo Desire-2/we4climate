@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
@@ -37,6 +37,10 @@ def create_app() -> Flask:
     # JSON encoding and sorting
     app.config["JSON_SORT_KEYS"] = False
     app.config["MAX_CONTENT_LENGTH"] = 20 * 1024 * 1024
+    app.config["UPLOAD_FOLDER"] = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "uploads", "applications")
+    )
+    os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
     # ------------------------------------------------------------------
     # Initialize extensions
@@ -74,6 +78,10 @@ def create_app() -> Flask:
     @app.route("/api/health")
     def health():
         return {"status": "healthy", "service": "we4climate-api"}
+
+    @app.route("/uploads/applications/<path:filename>")
+    def uploaded_application_file(filename):
+        return send_from_directory(app.config["UPLOAD_FOLDER"], filename, as_attachment=True)
 
     # ------------------------------------------------------------------
     # Ensure models are imported and tables exist (needed for SQLite dev fallback)

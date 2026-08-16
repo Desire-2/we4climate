@@ -3,17 +3,14 @@
 """
 import json
 import logging
-import uuid
-from pathlib import Path
 
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, jsonify, request
 from marshmallow import ValidationError
-from werkzeug.utils import secure_filename
-import vercel_blob
 
 from app import db
 from app.models import Application, Opportunity
 from app.schemas import ApplicationRequestSchema
+from app.storage import delete_file, upload_file
 
 opportunities_bp = Blueprint("opportunities", __name__)
 logger = logging.getLogger(__name__)
@@ -29,27 +26,20 @@ ATTACHMENT_RULES = {
 
 
 def _save_application_files() -> tuple[dict[str, str], list[str]]:
-    """Upload validated multipart attachments to Vercel Blob and return URLs plus blob paths."""
+    """Upload validated multipart attachments and return URLs plus stored paths."""
     uploaded: dict[str, str] = {}
-    saved_blob_paths: list[str] = []
+    saved_paths: list[str] = []
 
     for field_name, allowed_extensions in ATTACHMENT_RULES.items():
         file = request.files.get(field_name)
         if not file or not file.filename:
             continue
 
-        safe_name = secure_filename(file.filename)
-        extension = Path(safe_name).suffix.lower()
-        if not safe_name or extension not in allowed_extensions:
-            raise ValueError(f"Unsupported file type for {field_name}")
+        url = upload_file(field_name, file, allowed_extensions, prefix="applications")
+        saved_paths.append(url)
+        uploaded[field_name] = url
 
-        stored_name = f"applications/{uuid.uuid4().hex}_{safe_name}"
-        file_data = file.read()
-        result = vercel_blob.put(stored_name, file_data, {"addRandomSuffix": "false"})
-        saved_blob_paths.append(stored_name)
-        uploaded[field_name] = result["url"]
-
-    return uploaded, saved_blob_paths
+    return uploaded, saved_paths
 
 
 @opportunities_bp.route("", methods=["GET"])
@@ -104,9 +94,9 @@ def submit_application():
             "application_id": existing.id,
         }), 409
 
-    saved_blob_paths: list[str] = []
+    saved_paths: list[str] = []
     try:
-        uploaded_files, saved_blob_paths = _save_application_files()
+        uploaded_files, saved_paths = _save_application_files()
         cover_letter = validated.get("cover_letter")
         if uploaded_files:
             try:
@@ -132,10 +122,7 @@ def submit_application():
         }), 201
     except Exception as exc:
         db.session.rollback()
-        for blob_path in saved_blob_paths:
-            try:
-                vercel_blob.delete(blob_path)
-            except Exception:
-                pass
+        for path in saved_paths:
+            delete_file(path)
         logger.exception("Failed to submit application")
         return jsonify({"error": "Failed to submit application", "details": str(exc)}), 500
