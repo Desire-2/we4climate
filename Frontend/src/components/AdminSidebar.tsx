@@ -116,7 +116,7 @@ export default function AdminSidebar() {
       </button>
 
       {/* Desktop sidebar — fixed */}
-      <aside className="hidden lg:flex w-64 bg-emerald-950 text-white h-screen sticky top-0 flex-col flex-shrink-0 z-40">
+      <aside className="hidden lg:flex w-64 bg-emerald-950 text-white h-full flex-col flex-shrink-0 z-40">
         {sidebarContent}
       </aside>
 
