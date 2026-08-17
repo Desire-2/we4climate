@@ -1,8 +1,14 @@
 import os
+import atexit
+import logging
+from threading import Thread, Event
+
 from flask import Flask, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
+
+logger = logging.getLogger(__name__)
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -92,7 +98,41 @@ def create_app() -> Flask:
             db.create_all()
         _seed_default_opportunities()
 
+    _start_keep_alive_worker(app)
+
     return app
+
+
+# ------------------------------------------------------------------
+# Background DB keep-alive worker
+# ------------------------------------------------------------------
+
+_shutdown_event = Event()
+
+
+def _db_keep_alive(app: Flask):
+    """Ping the database every 300 seconds to prevent idle shutdown."""
+    import time
+
+    _shutdown_event.wait(300)  # initial delay before first ping
+
+    while not _shutdown_event.is_set():
+        try:
+            with app.app_context():
+                db.session.execute(db.text("SELECT 1"))
+                db.session.commit()
+            logger.info("DB keep-alive ping succeeded")
+        except Exception:
+            logger.exception("DB keep-alive ping failed")
+        _shutdown_event.wait(300)
+
+
+def _start_keep_alive_worker(app: Flask):
+    """Start the background keep-alive thread (non-daemon so it dies with the process)."""
+    thread = Thread(target=_db_keep_alive, args=(app,), daemon=True, name="db-keep-alive")
+    thread.start()
+    logger.info("DB keep-alive worker started")
+    atexit.register(lambda: _shutdown_event.set())
 
 
 def _seed_default_opportunities():
