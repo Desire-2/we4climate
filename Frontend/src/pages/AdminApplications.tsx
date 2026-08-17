@@ -6,7 +6,9 @@ import {
   adminUpdateApplicationNotes,
   adminBulkUpdateApplications,
   adminDeleteApplication,
+  adminFetchOpportunities,
   type ApiApplication,
+  type ApiOpportunity,
 } from "../api/client";
 
 const statusColors: Record<string, string> = {
@@ -35,6 +37,8 @@ export default function AdminApplications() {
   const [loading, setLoading] = useState(true);
   const [statusCounts, setStatusCounts] = useState<Record<string, number>>({});
   const [filterStatus, setFilterStatus] = useState("");
+  const [filterOppId, setFilterOppId] = useState("");
+  const [opportunities, setOpportunities] = useState<ApiOpportunity[]>([]);
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [selected, setSelected] = useState<Set<number>>(new Set());
@@ -46,6 +50,7 @@ export default function AdminApplications() {
     setLoading(true);
     const res = await adminFetchApplications(p, {
       status: filterStatus || undefined,
+      opportunity_id: filterOppId || undefined,
       search: search || undefined,
     });
     if (res) {
@@ -58,7 +63,13 @@ export default function AdminApplications() {
     setLoading(false);
   };
 
-  useEffect(() => { load(page); }, [page, filterStatus, search]);
+  useEffect(() => {
+    adminFetchOpportunities(1).then((res) => {
+      if (res) setOpportunities(res.items);
+    });
+  }, []);
+
+  useEffect(() => { load(page); }, [page, filterStatus, filterOppId, search]);
 
   const updateStatus = async (id: number, status: string) => {
     if (await adminUpdateApplicationStatus(id, status)) load(page);
@@ -180,7 +191,29 @@ export default function AdminApplications() {
               onClick={() => { setFilterStatus(""); setPage(1); }}
               className="px-2 py-1 text-[10px] font-bold text-gray-400 hover:text-gray-600 underline"
             >
-              Clear
+              Clear Status
+            </button>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <select
+            value={filterOppId}
+            onChange={(e) => { setFilterOppId(e.target.value); setPage(1); }}
+            className="px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg text-[10px] font-bold border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 transition-all focus:outline-none focus:border-emerald-500"
+          >
+            <option value="">All Opportunities</option>
+            {opportunities.map((opp) => (
+              <option key={opp.id} value={String(opp.id)}>
+                {opp.title}
+              </option>
+            ))}
+          </select>
+          {filterOppId && (
+            <button
+              onClick={() => { setFilterOppId(""); setPage(1); }}
+              className="px-2 py-1 text-[10px] font-bold text-gray-400 hover:text-gray-600 underline"
+            >
+              Clear Opp
             </button>
           )}
         </div>
@@ -225,6 +258,7 @@ export default function AdminApplications() {
                   <th className="px-4 py-3">Opportunity</th>
                   <th className="px-4 py-3">Applicant</th>
                   <th className="px-4 py-3">Email</th>
+                  <th className="px-4 py-3">Resume</th>
                   <th className="px-4 py-3">Status</th>
                   <th className="px-4 py-3">Notes</th>
                   <th className="px-4 py-3">Date</th>
@@ -248,6 +282,20 @@ export default function AdminApplications() {
                     </td>
                     <td className="px-4 py-3 font-medium text-xs">{r.applicant_name}</td>
                     <td className="px-4 py-3 text-xs text-gray-500 max-w-[180px] truncate">{r.applicant_email}</td>
+                    <td className="px-4 py-3">
+                      {r.resume_url ? (
+                        <a
+                          href={r.resume_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[11px] text-emerald-600 hover:underline font-semibold"
+                        >
+                          View
+                        </a>
+                      ) : (
+                        <span className="text-[10px] text-gray-400">—</span>
+                      )}
+                    </td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold border ${statusColors[r.status] || statusColors.pending}`}>
                         {statusIcon[r.status]}
@@ -313,7 +361,7 @@ export default function AdminApplications() {
                 ))}
                 {data.length === 0 && (
                   <tr>
-                    <td colSpan={9} className="text-center py-10 text-gray-400">
+                    <td colSpan={10} className="text-center py-10 text-gray-400">
                       No applications found.
                     </td>
                   </tr>

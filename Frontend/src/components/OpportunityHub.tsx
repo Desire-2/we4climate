@@ -3,33 +3,6 @@ import { useState, useEffect, FormEvent } from 'react';
 import { Opportunity, Webinar } from '../types';
 import { submitApplication, fetchOpportunities, fetchWebinars, registerForWebinar, type ApiOpportunity, type ApiWebinar } from '../api/client';
 
-const HARDCODED_OPPORTUNITIES: Opportunity[] = [
-  {
-    id: 'opp1', title: "Forestry & Agroforestry Field Assistant", type: 'Internship',
-    location: 'Musanze (Northern Province)', deadline: "June 30, 2026",
-    description: "Collaborate directly with senior local foresters and support community-led tree planting coordinates.",
-    requirements: ["Enrolled in Environment, Forestry, or Agronomy", "Based in or able to relocate to Musanze", "Passion for soil and ecosystem restoration"],
-  },
-  {
-    id: 'opp2', title: "District Environmental Club Coordinator", type: 'Volunteer',
-    location: 'Bugesera & Kayonza', deadline: "July 05, 2026",
-    description: "Empower primary and secondary school student units. Set up interactive nature tables and plant school orchards.",
-    requirements: ["Exceptional team leadership skills", "Comfortable organizing district learning seminars", "Available at least 8 hours a week"],
-  },
-  {
-    id: 'opp3', title: "Urban Wetland Advocacy Officer", type: 'Job',
-    location: 'Kigali (Kicukiro HQ)', deadline: "July 15, 2026",
-    description: "Manage campaigns raising urban biodiversity awareness around Kigali's major valleys and restored parks.",
-    requirements: ["Bachelor's in Environmental Science or PR", "Fluent in English and Kinyarwanda", "Proven history of running ecological campaigns"],
-  },
-  {
-    id: 'opp4', title: "Nature-Based Solutions Development Leader", type: 'Job',
-    location: 'Kigali (Kicukiro HQ)', deadline: "July 28, 2026",
-    description: "Design technical models for community soil restoration and hillside binding across Rwanda.",
-    requirements: ["2+ years in biodiversity conservation or NBS", "Understanding of CBD and Paris Agreement targets", "Passionate trainer for intergenerational equity"],
-  },
-];
-
 function apiOppToOpportunity(api: ApiOpportunity): Opportunity {
   return {
     id: String(api.id),
@@ -56,9 +29,11 @@ export default function OpportunityHub() {
   const [activeFilter, setActiveFilter] = useState<'All' | 'Job' | 'Internship' | 'Volunteer' | 'Workshop'>('All');
   const [selectedOpp, setSelectedOpp] = useState<Opportunity | null>(null);
   const [applySuccess, setApplySuccess] = useState(false);
+  const [applyError, setApplyError] = useState('');
+  const [applicantName, setApplicantName] = useState('');
   const [applicantEmail, setApplicantEmail] = useState('');
   const [applicantCover, setApplicantCover] = useState('');
-  const [opportunities, setOpportunities] = useState<Opportunity[]>(HARDCODED_OPPORTUNITIES);
+  const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [loadingOpps, setLoadingOpps] = useState(true);
 
   // Webinar state (fetched from API)
@@ -133,18 +108,28 @@ export default function OpportunityHub() {
 
   const handleApplySubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!applicantEmail.trim() || !selectedOpp) return;
+    if (!applicantName.trim() || !applicantEmail.trim() || !selectedOpp) return;
 
+    setApplyError('');
     const result = await submitApplication({
       opportunity_id: selectedOpp.id,
-      applicant_name: applicantEmail.trim().split('@')[0] || 'Opportunity Applicant',
+      applicant_name: applicantName.trim(),
       applicant_email: applicantEmail.trim(),
       cover_letter: applicantCover.trim(),
     });
 
-    if (!result) console.warn('Backend unreachable – application saved locally only');
+    if (!result) {
+      setApplyError('Backend is unreachable. Please try again later.');
+      return;
+    }
+
+    if ('error' in result) {
+      setApplyError(result.details || result.error);
+      return;
+    }
 
     setApplySuccess(true);
+    setApplicantName('');
     setApplicantEmail('');
     setApplicantCover('');
     setTimeout(() => {
@@ -425,6 +410,17 @@ Located: {selectedOpp.location}
 
                   <div className="space-y-3 pt-2 border-t border-gray-100">
                     <div>
+                      <label className="block text-xs font-semibold text-gray-700 mb-1">Your Full Name</label>
+                      <input 
+                        type="text" 
+                        value={applicantName}
+                        onChange={(e) => setApplicantName(e.target.value)}
+                        placeholder="e.g. Grace Uwimana"
+                        className="w-full bg-gray-50 border border-gray-200 focus:border-emerald-500 focus:bg-white rounded-xl px-4 py-2.5 text-xs text-gray-900 focus:outline-none transition-all"
+                        required
+                      />
+                    </div>
+                    <div>
                       <label className="block text-xs font-semibold text-gray-700 mb-1">Your Email Address</label>
                       <input 
                         type="email" 
@@ -447,6 +443,12 @@ Located: {selectedOpp.location}
                       />
                     </div>
                   </div>
+
+                  {applyError && (
+                    <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700">
+                      {applyError}
+                    </div>
+                  )}
 
                   <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
                     <button type="submit" id="opp-submit-apply-btn" className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-all shadow-md focus:outline-none">

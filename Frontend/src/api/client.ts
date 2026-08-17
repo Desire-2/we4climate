@@ -157,11 +157,22 @@ export async function submitApplication(payload: {
   applicant_email: string;
   resume_url?: string;
   cover_letter?: string;
-}): Promise<{ message: string; application: ApiApplication } | null> {
-  return request("/opportunities/apply", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+}): Promise<{ message: string; application: ApiApplication } | { error: string; details?: string } | null> {
+  try {
+    const res = await fetch(`${API_BASE}/opportunities/apply`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const body = await res.json().catch(() => null);
+    if (!res.ok) {
+      if (body) return { error: body.error || "Submission failed", details: body.details };
+      return null;
+    }
+    return body as { message: string; application: ApiApplication };
+  } catch {
+    return null;
+  }
 }
 
 /** Submit the full LRC volunteer application, including its attachments. */
@@ -507,14 +518,15 @@ async function adminRequest<T>(
 ): Promise<T | null> {
   const token = getAdminToken();
   if (!token) return null;
+  const { headers: customHeaders, ...rest } = options;
   try {
     const res = await fetch(`${API_BASE}${path}`, {
+      ...rest,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
-        ...options.headers,
+        ...customHeaders,
       },
-      ...options,
     });
     if (res.status === 401) {
       setAdminToken(null);

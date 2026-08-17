@@ -90,5 +90,50 @@ def create_app() -> Flask:
         from app import models  # noqa: F401
         if app.config["SQLALCHEMY_DATABASE_URI"].startswith("sqlite"):
             db.create_all()
+        _seed_default_opportunities()
 
     return app
+
+
+def _seed_default_opportunities():
+    """Insert default opportunities if the table is empty."""
+    from app.models import Opportunity
+    if Opportunity.query.count() > 0:
+        return
+    defaults = [
+        {
+            "title": "Forestry & Agroforestry Field Assistant",
+            "type": "Internship",
+            "location": "Musanze (Northern Province)",
+            "deadline": "June 30, 2026",
+            "description": "Collaborate directly with senior local foresters and support community-led tree planting coordinates.",
+            "requirements": ["Enrolled in Environment, Forestry, or Agronomy", "Based in or able to relocate to Musanze", "Passion for soil and ecosystem restoration"],
+        },
+        {
+            "title": "District Environmental Club Coordinator",
+            "type": "Volunteer",
+            "location": "Bugesera & Kayonza",
+            "deadline": "July 05, 2026",
+            "description": "Empower primary and secondary school student units. Set up interactive nature tables and plant school orchards.",
+            "requirements": ["Exceptional team leadership skills", "Comfortable organizing district learning seminars", "Available at least 8 hours a week"],
+        },
+        {
+            "title": "Urban Wetland Advocacy Officer",
+            "type": "Job",
+            "location": "Kigali (Kicukiro HQ)",
+            "deadline": "July 15, 2026",
+            "description": "Manage campaigns raising urban biodiversity awareness around Kigali's major valleys and restored parks.",
+            "requirements": ["Bachelor's in Environmental Science or PR", "Fluent in English and Kinyarwanda", "Proven history of running ecological campaigns"],
+        },
+        {
+            "title": "Nature-Based Solutions Development Leader",
+            "type": "Job",
+            "location": "Kigali (Kicukiro HQ)",
+            "deadline": "July 28, 2026",
+            "description": "Design technical models for community soil restoration and hillside binding across Rwanda.",
+            "requirements": ["2+ years in biodiversity conservation or NBS", "Understanding of CBD and Paris Agreement targets", "Passionate trainer for intergenerational equity"],
+        },
+    ]
+    for d in defaults:
+        db.session.add(Opportunity(**d))
+    db.session.commit()

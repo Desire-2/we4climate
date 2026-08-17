@@ -731,8 +731,29 @@ def list_applications_admin():
     pag = q.order_by(Application.submitted_at.desc()).paginate(
         page=page, per_page=per, error_out=False
     )
+
+    opp_ids = set()
+    for a in pag.items:
+        try:
+            opp_ids.add(int(a.opportunity_id))
+        except (ValueError, TypeError):
+            pass
+    opp_titles = {}
+    if opp_ids:
+        opps = Opportunity.query.filter(Opportunity.id.in_(opp_ids)).all()
+        opp_titles = {o.id: o.title for o in opps}
+
+    items = []
+    for a in pag.items:
+        d = a.to_dict()
+        d["opportunity_title"] = opp_titles.get(
+            int(a.opportunity_id) if a.opportunity_id and a.opportunity_id.isdigit() else -1,
+            None,
+        )
+        items.append(d)
+
     return jsonify({
-        "items": [a.to_dict() for a in pag.items],
+        "items": items,
         "total": pag.total,
         "total_filtered": total_filtered,
         "page": pag.page,

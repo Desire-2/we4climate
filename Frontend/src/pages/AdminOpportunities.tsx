@@ -48,6 +48,12 @@ export default function AdminOpportunities() {
   const [saving, setSaving] = useState(false);
   const [showActive, setShowActive] = useState(true);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  const showToast = (type: 'success' | 'error', message: string) => {
+    setToast({ type, message });
+    setTimeout(() => setToast(null), 4000);
+  };
 
   const load = async (p: number) => {
     setLoading(true);
@@ -115,9 +121,19 @@ export default function AdminOpportunities() {
     };
 
     if (editing) {
-      await adminUpdateOpportunity(editing.id, payload);
+      const result = await adminUpdateOpportunity(editing.id, payload);
+      if (result) {
+        showToast('success', 'Opportunity updated successfully');
+      } else {
+        showToast('error', 'Failed to update opportunity');
+      }
     } else {
-      await adminCreateOpportunity(payload);
+      const result = await adminCreateOpportunity(payload);
+      if (result) {
+        showToast('success', 'Opportunity created successfully');
+      } else {
+        showToast('error', 'Failed to create opportunity');
+      }
     }
 
     setSaving(false);
@@ -127,11 +143,21 @@ export default function AdminOpportunities() {
 
   const del = async (id: number) => {
     if (!confirm("Delete this opportunity permanently?")) return;
-    if (await adminDeleteOpportunity(id)) load(page);
+    if (await adminDeleteOpportunity(id)) {
+      showToast('success', 'Opportunity deleted');
+      load(page);
+    } else {
+      showToast('error', 'Failed to delete opportunity');
+    }
   };
 
   const toggleActive = async (opp: ApiOpportunity) => {
-    await adminUpdateOpportunity(opp.id, { is_active: !opp.is_active });
+    const result = await adminUpdateOpportunity(opp.id, { is_active: !opp.is_active });
+    if (result) {
+      showToast('success', opp.is_active ? 'Opportunity deactivated' : 'Opportunity activated');
+    } else {
+      showToast('error', 'Failed to update status');
+    }
     load(page);
   };
 
@@ -139,6 +165,16 @@ export default function AdminOpportunities() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
+      {toast && (
+        <div className={`fixed top-4 right-4 z-50 px-4 py-2.5 rounded-xl text-xs font-bold shadow-lg transition-all ${
+          toast.type === 'success'
+            ? 'bg-emerald-600 text-white'
+            : 'bg-rose-600 text-white'
+        }`}>
+          {toast.message}
+        </div>
+      )}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="font-display font-bold text-2xl text-gray-900">Opportunities</h1>
