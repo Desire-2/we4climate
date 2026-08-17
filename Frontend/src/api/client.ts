@@ -369,8 +369,13 @@ export async function fetchWebinars(): Promise<ApiWebinar[]> {
 /** Register for a webinar (public). */
 export async function registerForWebinar(
   id: number,
+  email: string,
 ): Promise<{ message: string; registered_count: number } | null> {
-  return request(`/webinars/${id}/register`, { method: "POST" });
+  return request(`/webinars/${id}/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
 }
 
 /** List all webinars (admin). */

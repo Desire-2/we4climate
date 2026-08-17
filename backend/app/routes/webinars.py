@@ -4,7 +4,7 @@
 from flask import Blueprint, jsonify, request
 
 from app import db
-from app.models import Webinar
+from app.models import Webinar, WebinarRegistration
 
 webinar_bp = Blueprint("webinars", __name__)
 
@@ -22,7 +22,12 @@ def list_webinars():
 
 @webinar_bp.route("/<int:webinar_id>/register", methods=["POST"])
 def register_for_webinar(webinar_id):
-    """Increment the registered count for a webinar."""
+    """Register an email for a webinar (prevents duplicates)."""
+    data = request.get_json(silent=True) or {}
+    email = (data.get("email") or "").strip().lower()
+    if not email:
+        return jsonify({"error": "Email is required"}), 400
+
     webinar = db.session.get(Webinar, webinar_id)
     if not webinar:
         return jsonify({"error": "Webinar not found"}), 404
@@ -31,6 +36,13 @@ def register_for_webinar(webinar_id):
     if webinar.max_capacity and (webinar.registered_count or 0) >= webinar.max_capacity:
         return jsonify({"error": "Webinar is full"}), 400
 
+    existing = WebinarRegistration.query.filter_by(
+        webinar_id=webinar_id, email=email
+    ).first()
+    if existing:
+        return jsonify({"error": "You are already registered for this webinar"}), 409
+
+    db.session.add(WebinarRegistration(webinar_id=webinar_id, email=email))
     webinar.registered_count = (webinar.registered_count or 0) + 1
     db.session.commit()
     return jsonify({

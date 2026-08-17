@@ -97,6 +97,7 @@ def create_app() -> Flask:
         if app.config["SQLALCHEMY_DATABASE_URI"].startswith("sqlite"):
             db.create_all()
         _seed_default_opportunities()
+        _seed_default_webinars()
 
     _start_keep_alive_worker(app)
 
@@ -176,4 +177,34 @@ def _seed_default_opportunities():
     ]
     for d in defaults:
         db.session.add(Opportunity(**d))
+    db.session.commit()
+
+
+def _seed_default_webinars():
+    """Insert default webinars if the table is empty."""
+    from app.models import Webinar
+    if Webinar.query.count() > 0:
+        return
+    defaults = [
+        {
+            "title": "Intergenerational Action: Community Dialogue with Elder Experts",
+            "speaker": "Dr. Jean d'Amour",
+            "speaker_title": "REMA & We4Climate Delegates",
+            "date": "June 25, 2026",
+            "time": "2:00 PM - 4:00 PM CAT",
+            "description": "Establishing vital knowledge channels between seasoned conservation guardians and active community members.",
+            "max_capacity": 100,
+        },
+        {
+            "title": "Radical Terracing and Nature-Based Hillside Solutions",
+            "speaker": "Umuhoza Sonia",
+            "speaker_title": "Ecosystem Integrity Lead",
+            "date": "July 12, 2026",
+            "time": "10:30 AM - 12:00 PM CAT",
+            "description": "Practical methods for land degradation prevention, agroforestry integration, and hillside binding.",
+            "max_capacity": 80,
+        },
+    ]
+    for d in defaults:
+        db.session.add(Webinar(**d))
     db.session.commit()

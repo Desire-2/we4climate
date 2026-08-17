@@ -38,8 +38,11 @@ export default function OpportunityHub() {
 
   // Webinar state (fetched from API)
   const [webinars, setWebinars] = useState<Webinar[]>([]);
-  const [registeredWebinarIds, setRegisteredWebinarIds] = useState<number[]>([]);
+  const [registeredWebinarIds, setRegisteredWebinarIds] = useState<Set<number>>(new Set());
   const [webinarsLoading, setWebinarsLoading] = useState(true);
+  const [webinarEmail, setWebinarEmail] = useState('');
+  const [webinarRegisterError, setWebinarRegisterError] = useState('');
+  const [registeringWebinarId, setRegisteringWebinarId] = useState<string | null>(null);
 
   // Fetch opportunities and webinars from the backend API
   useEffect(() => {
@@ -52,36 +55,19 @@ export default function OpportunityHub() {
       setLoadingOpps(false);
 
       const apiWebinars = await fetchWebinars();
-      if (apiWebinars.length > 0) {
+      if (apiWebinars && apiWebinars.length > 0) {
         setWebinars(apiWebinars.map((w) => ({
           id: String(w.id),
           title: w.title,
-          speaker: w.speaker_title ? `${w.speaker} (${w.speaker_title})` : w.speaker,
+          speaker: w.speaker,
+          speakerTitle: w.speaker_title,
           date: w.date,
           time: w.time,
           registeredCount: w.registered_count,
+          maxCapacity: w.max_capacity,
           description: w.description,
+          isActive: w.is_active,
         })));
-      } else {
-        // Fallback hardcoded webinars when API is unreachable
-        setWebinars([
-          {
-            id: 'w1',
-            title: "Intergenerational Action: Community Dialogue with Elder Experts",
-            speaker: "Dr. Jean d'Amour (REMA) & We4Climate Delegates",
-            date: "June 25, 2026", time: "2:00 PM - 4:00 PM CAT",
-            registeredCount: 84,
-            description: "Establishing vital knowledge channels between seasoned conservation guardians and active community members."
-          },
-          {
-            id: 'w2',
-            title: "Radical Terracing and Nature-Based Hillside Solutions",
-            speaker: "Umuhoza Sonia (Ecosystem Integrity Lead)",
-            date: "July 12, 2026", time: "10:30 AM - 12:00 PM CAT",
-            registeredCount: 42,
-            description: "Practical methods for land degradation prevention, agroforestry integration, and hillside binding."
-          }
-        ]);
       }
       setWebinarsLoading(false);
     };
@@ -140,20 +126,25 @@ export default function OpportunityHub() {
 
   const handleRegisterWebinar = async (id: string) => {
     const numId = parseInt(id, 10);
-    if (isNaN(numId)) {
-      // Fallback for hardcoded webinars (no API)
-      if (registeredWebinarIds.includes(id)) return;
-      setRegisteredWebinarIds(prev => [...prev, id]);
-      setWebinars(prev => prev.map(web => web.id === id ? { ...web, registeredCount: web.registeredCount + 1 } : web));
+    if (isNaN(numId) || registeredWebinarIds.has(numId)) return;
+
+    if (!webinarEmail.trim()) {
+      setRegisteringWebinarId(id);
+      setWebinarRegisterError('');
       return;
     }
-    if (registeredWebinarIds.includes(numId)) return;
-    const result = await registerForWebinar(numId);
+
+    setWebinarRegisterError('');
+    const result = await registerForWebinar(numId, webinarEmail.trim());
     if (result) {
-      setRegisteredWebinarIds(prev => [...prev, numId]);
+      setRegisteredWebinarIds(prev => new Set([...prev, numId]));
       setWebinars(prev => prev.map(web =>
         web.id === id ? { ...web, registeredCount: result.registered_count } : web
       ));
+      setWebinarEmail('');
+      setRegisteringWebinarId(null);
+    } else {
+      setWebinarRegisterError('Registration failed. Please try again.');
     }
   };
 
@@ -167,9 +158,6 @@ export default function OpportunityHub() {
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-emerald-700 font-mono text-sm font-semibold tracking-wider uppercase bg-emerald-100 px-4 py-1.5 rounded-full inline-block mb-3">
-            Get Involved
-          </span>
           <h1 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-gray-900 tracking-tight">
             Decent Green Jobs & Learning Platforms
           </h1>
@@ -308,38 +296,84 @@ export default function OpportunityHub() {
             </div>
 
             <div className="space-y-6">
-              {webinars.map((web) => (
+              {webinarsLoading ? (
+                <div className="text-center py-8">
+                  <div className="animate-pulse flex flex-col items-center gap-3">
+                    <div className="h-8 w-8 bg-emerald-800 rounded-full" />
+                    <p className="text-xs text-emerald-300/70">Loading webinars…</p>
+                  </div>
+                </div>
+              ) : webinars.length > 0 ? webinars.map((web) => {
+                const numId = parseInt(web.id, 10);
+                const isRegistered = registeredWebinarIds.has(numId);
+                const seatsLeft = web.maxCapacity != null ? web.maxCapacity - web.registeredCount : null;
+                return (
                 <div key={web.id} className="p-4 border border-emerald-800/60 bg-emerald-900/30 rounded-2xl space-y-3 hover:border-emerald-500/30 transition-all">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <span className="text-[10px] font-mono text-emerald-400 font-semibold uppercase flex items-center gap-1">
 {web.date} @ {web.time}
                     </span>
                     <span className="text-[9px] bg-emerald-950 border border-emerald-800 text-emerald-300 px-2 py-0.5 rounded-full font-mono">
-                      {web.registeredCount} active seats
+                      {seatsLeft != null ? `${seatsLeft} seats left` : `${web.registeredCount} registered`}
                     </span>
                   </div>
                   <h4 className="font-display font-bold text-sm text-white hover:text-emerald-300 transition-colors">{web.title}</h4>
                   <div className="text-[11px] text-emerald-100/70 leading-relaxed">
-                    <span className="block font-semibold text-emerald-300">Host: {web.speaker}</span>
+                    <span className="block font-semibold text-emerald-300">
+                      Host: {web.speaker}{web.speakerTitle ? ` (${web.speakerTitle})` : ''}
+                    </span>
                     <p className="mt-1">{web.description}</p>
                   </div>
                   <button
                     onClick={() => handleRegisterWebinar(web.id)}
-                    disabled={registeredWebinarIds.includes(parseInt(web.id, 10)) || registeredWebinarIds.includes(web.id)}
+                    disabled={isRegistered}
                     className={`w-full py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 focus:outline-none ${
-                      registeredWebinarIds.includes(parseInt(web.id, 10)) || registeredWebinarIds.includes(web.id)
+                      isRegistered
                         ? 'bg-emerald-900 border border-emerald-700 text-emerald-400 cursor-not-allowed'
                         : 'bg-emerald-500 hover:bg-emerald-400 text-emerald-950 shadow-md shadow-emerald-950/20 active:scale-95'
                     }`}
                   >
-                    {registeredWebinarIds.includes(parseInt(web.id, 10)) || registeredWebinarIds.includes(web.id) ? (
-                      <><span>Seat Registered!</span></>
-                    ) : (
-                      <span>Secure Register Invitation</span>
-                    )}
+                    {isRegistered ? (
+                    <span>Seat Registered!</span>
+                  ) : registeringWebinarId === web.id ? (
+                    <div className="w-full space-y-2">
+                      <input
+                        type="email"
+                        value={webinarEmail}
+                        onChange={(e) => setWebinarEmail(e.target.value)}
+                        placeholder="Enter your email to register"
+                        className="w-full px-3 py-2 bg-emerald-950 border border-emerald-700 text-white text-xs rounded-lg focus:outline-none focus:border-emerald-400 placeholder:text-emerald-500"
+                        autoFocus
+                      />
+                      {webinarRegisterError && (
+                        <p className="text-[10px] text-rose-400">{webinarRegisterError}</p>
+                      )}
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleRegisterWebinar(web.id)}
+                          className="flex-1 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 rounded-lg text-[11px] font-bold transition-all"
+                        >
+                          Confirm
+                        </button>
+                        <button
+                          onClick={() => { setRegisteringWebinarId(null); setWebinarRegisterError(''); }}
+                          className="flex-1 py-1.5 bg-emerald-900 hover:bg-emerald-800 text-emerald-300 rounded-lg text-[11px] font-bold transition-all"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <span>Secure Register Invitation</span>
+                  )}
                   </button>
                 </div>
-              ))}
+              );
+              }) : (
+                <div className="text-center py-8">
+                  <p className="text-xs text-emerald-300/70">No upcoming webinars at this time.</p>
+                </div>
+              )}
             </div>
 
             <div className="mt-6 p-4 rounded-xl border border-dashed border-emerald-800 bg-emerald-950/40 text-center">

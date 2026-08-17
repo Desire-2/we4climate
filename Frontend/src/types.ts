@@ -23,10 +23,13 @@ export interface Webinar {
   id: string;
   title: string;
   speaker: string;
+  speakerTitle: string | null;
   date: string;
   time: string;
   registeredCount: number;
+  maxCapacity: number | null;
   description: string;
+  isActive: boolean;
 }
 
 export interface Pledge {

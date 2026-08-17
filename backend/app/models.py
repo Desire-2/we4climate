@@ -239,6 +239,24 @@ class Webinar(db.Model):
 
 
 # -----------------------------------------------------------------------
+# WebinarRegistration (prevents duplicate registrations)
+# -----------------------------------------------------------------------
+class WebinarRegistration(db.Model):
+    __tablename__ = "webinar_registrations"
+
+    id = db.Column(db.Integer, primary_key=True)
+    webinar_id = db.Column(db.Integer, db.ForeignKey("webinars.id"), nullable=False)
+    email = db.Column(db.String(255), nullable=False)
+    registered_at = db.Column(
+        db.DateTime, default=lambda: datetime.now(timezone.utc), nullable=False
+    )
+
+    __table_args__ = (
+        db.UniqueConstraint("webinar_id", "email", name="uq_webinar_email"),
+    )
+
+
+# -----------------------------------------------------------------------
 # WeeklyChallenge
 # -----------------------------------------------------------------------
 class WeeklyChallenge(db.Model):
