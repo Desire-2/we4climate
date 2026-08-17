@@ -6,6 +6,17 @@
  */
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const REQUEST_TIMEOUT = 15_000;
+
+function withTimeout(ms: number): AbortSignal {
+  const controller = new AbortController();
+  setTimeout(() => controller.abort(), ms);
+  return controller.signal;
+}
+
+function isFormData(body: unknown): body is FormData {
+  return typeof FormData !== "undefined" && body instanceof FormData;
+}
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                            */
@@ -15,18 +26,35 @@ async function request<T>(
   path: string,
   options: RequestInit = {},
 ): Promise<T | null> {
+  const {headers: customHeaders, signal: userSignal, ...rest} = options;
+  const timeoutSignal = withTimeout(REQUEST_TIMEOUT);
+  const signal = userSignal
+    ? AbortSignal.any([userSignal, timeoutSignal])
+    : timeoutSignal;
+
+  const isForm = isFormData(rest.body);
+  const defaultHeaders: Record<string, string> = isForm
+    ? {}
+    : {"Content-Type": "application/json"};
+
   try {
     const res = await fetch(`${API_BASE}${path}`, {
-      headers: { "Content-Type": "application/json", ...options.headers },
-      ...options,
+      ...rest,
+      signal,
+      headers: {...defaultHeaders, ...customHeaders},
     });
     if (!res.ok) {
-      console.warn(`API ${res.status} on ${path}`, await res.text().catch(() => ""));
+      const body = await res.text().catch(() => "");
+      console.warn(`API ${res.status} on ${path}`, body);
       return null;
     }
     return (await res.json()) as T;
-  } catch (err) {
-    console.warn(`API request to ${path} failed – backend may be offline`, err);
+  } catch (err: unknown) {
+    if (err instanceof DOMException && err.name === "AbortError") {
+      console.warn(`API request to ${path} timed out after ${REQUEST_TIMEOUT}ms`);
+    } else {
+      console.warn(`API request to ${path} failed – backend may be offline`, err);
+    }
     return null;
   }
 }
@@ -161,16 +189,20 @@ export async function submitApplication(payload: {
   try {
     const res = await fetch(`${API_BASE}/opportunities/apply`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {"Content-Type": "application/json"},
       body: JSON.stringify(payload),
+      signal: withTimeout(REQUEST_TIMEOUT),
     });
     const body = await res.json().catch(() => null);
     if (!res.ok) {
-      if (body) return { error: body.error || "Submission failed", details: body.details };
+      if (body) return {error: body.error || "Submission failed", details: body.details};
       return null;
     }
-    return body as { message: string; application: ApiApplication };
-  } catch {
+    return body as {message: string; application: ApiApplication};
+  } catch (err: unknown) {
+    if (err instanceof DOMException && err.name === "AbortError") {
+      console.warn("submitApplication timed out");
+    }
     return null;
   }
 }
@@ -197,14 +229,19 @@ export async function submitVolunteerApplication(payload: {
     const res = await fetch(`${API_BASE}/opportunities/apply`, {
       method: "POST",
       body,
+      signal: withTimeout(REQUEST_TIMEOUT),
     });
     if (!res.ok) {
       console.warn(`API ${res.status} on /opportunities/apply`, await res.text().catch(() => ""));
       return null;
     }
-    return (await res.json()) as { message: string; application: ApiApplication };
-  } catch (err) {
-    console.warn("Volunteer application request failed – backend may be offline", err);
+    return (await res.json()) as {message: string; application: ApiApplication};
+  } catch (err: unknown) {
+    if (err instanceof DOMException && err.name === "AbortError") {
+      console.warn("submitVolunteerApplication timed out");
+    } else {
+      console.warn("Volunteer application request failed – backend may be offline", err);
+    }
     return null;
   }
 }
@@ -523,12 +560,23 @@ async function adminRequest<T>(
 ): Promise<T | null> {
   const token = getAdminToken();
   if (!token) return null;
-  const { headers: customHeaders, ...rest } = options;
+  const {headers: customHeaders, signal: userSignal, ...rest} = options;
+  const timeoutSignal = withTimeout(REQUEST_TIMEOUT);
+  const signal = userSignal
+    ? AbortSignal.any([userSignal, timeoutSignal])
+    : timeoutSignal;
+
+  const isForm = isFormData(rest.body);
+  const defaultHeaders: Record<string, string> = isForm
+    ? {}
+    : {"Content-Type": "application/json"};
+
   try {
     const res = await fetch(`${API_BASE}${path}`, {
       ...rest,
+      signal,
       headers: {
-        "Content-Type": "application/json",
+        ...defaultHeaders,
         Authorization: `Bearer ${token}`,
         ...customHeaders,
       },
@@ -539,7 +587,10 @@ async function adminRequest<T>(
     }
     if (!res.ok) return null;
     return (await res.json()) as T;
-  } catch {
+  } catch (err: unknown) {
+    if (err instanceof DOMException && err.name === "AbortError") {
+      console.warn(`Admin request to ${path} timed out`);
+    }
     return null;
   }
 }
@@ -564,22 +615,23 @@ export async function adminVerify(): Promise<{
   admin?: { id: number; username: string; created_at?: string };
 } | null> {
   const token = getAdminToken();
-  if (!token) return { valid: false };
+  if (!token) return {valid: false};
   try {
     const res = await fetch(`${API_BASE}/admin/verify`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
+      signal: withTimeout(REQUEST_TIMEOUT),
     });
     if (res.status === 401) {
       setAdminToken(null);
-      return { valid: false };
+      return {valid: false};
     }
-    if (!res.ok) return null; // transient error — don't clear token
+    if (!res.ok) return null;
     return (await res.json()) as { valid: boolean; admin?: { id: number; username: string; created_at?: string } };
   } catch {
-    return null; // network error — don't clear token
+    return null;
   }
 }
 
@@ -1016,14 +1068,19 @@ export async function submitVolunteerApplicationNew(payload: {
     const res = await fetch(`${API_BASE}/volunteers`, {
       method: "POST",
       body,
+      signal: withTimeout(REQUEST_TIMEOUT),
     });
     if (!res.ok) {
       console.warn(`API ${res.status} on /volunteers`, await res.text().catch(() => ""));
       return null;
     }
-    return (await res.json()) as { message: string; volunteer: ApiVolunteer };
-  } catch (err) {
-    console.warn("Volunteer application request failed – backend may be offline", err);
+    return (await res.json()) as {message: string; volunteer: ApiVolunteer};
+  } catch (err: unknown) {
+    if (err instanceof DOMException && err.name === "AbortError") {
+      console.warn("submitVolunteerApplicationNew timed out");
+    } else {
+      console.warn("Volunteer application request failed – backend may be offline", err);
+    }
     return null;
   }
 }

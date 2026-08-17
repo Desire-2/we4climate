@@ -53,7 +53,13 @@ def create_app() -> Flask:
     # ------------------------------------------------------------------
     db.init_app(app)
     migrate.init_app(app, db)
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+    # CORS: use FRONTEND_URL whitelist in production, allow all in development.
+    frontend_url = os.environ.get("FRONTEND_URL")
+    if frontend_url:
+        CORS(app, resources={r"/api/*": {"origins": [frontend_url]}})
+    else:
+        CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     # ------------------------------------------------------------------
     # Register blueprints
